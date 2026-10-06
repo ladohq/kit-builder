@@ -33,8 +33,9 @@ started there.
 - The human only wants to know how good a kit is (theirs, an installed one or a folder):
   `evaluate`, with the kit's installed name or absolute folder path as the task (a relative
   path breaks in the run's worktree). When the run ends, merge its branch as
-  `lado-kit-format` says ("A report-only run"), then `finish_worker`. To check a kit again after changes, name its previous
-  report in the task, so the critic reviews the change.
+  `lado-kit-format` says ("A report-only run"), then `finish_worker`. To check a kit
+  again after changes, name its previous report in the task, so the critic reviews the
+  change.
 - Unclear which: ask, in one round (below).
 
 The task you pass to `flow_start` is what every agent in the run reads first: the human's
