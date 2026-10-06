@@ -8,14 +8,14 @@ A LADO kit that builds and evaluates LADO kits.
   critic checks it against a complexity budget and a 12-criterion rubric. You approve the
   blueprint and the release, and the supervisor tags it.
 - **Improve** a kit you already have, from the critic's report to a new tag. You decide
-  with the supervisor which findings to fix; a kit without a `BLUEPRINT.md` gets one
+  with the supervisor which findings to fix. A kit without a `BLUEPRINT.md` gets one
   restored from its roles and flows on the way.
 - **Evaluate** any kit, yours or someone else's, before you put it to work. The critic runs
   `lado kits check` and the budget script and reviews the text against the rubric. It
   writes a report with quoted findings and the few things to fix first.
 
-The rule behind all three is the simplest kit that solves your task. A role, step, gate or skill
-goes into the kit only when one of your requirements needs it.
+The rule behind all three is the simplest kit that solves your task. A role, step, gate or
+skill goes into the kit only when one of your requirements needs it.
 
 Requires LADO 0.23 or newer (`lado kits check` checks flow graphs from 0.23 on).
 

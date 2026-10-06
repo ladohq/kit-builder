@@ -72,6 +72,9 @@ Archetype 2 of `kit-archetypes`, **Feature with design gate** (3 / 3 / 2), adapt
 Evaluating a kit alone is the **Solo** archetype (1 / 1 / 0): the flow `evaluate` with the
 critic and no gate, since it changes nothing but a report file.
 
+Improving a kit, the flow `improve`, is the same shape as `create` with five work steps and
+two gates: `assess` (critic) and `triage` (supervisor) take the place of `design`.
+
 ## 3. Traceability
 
 | Element | Kind | Covers | Why it exists / why nothing simpler |
@@ -118,7 +121,8 @@ Reverse check:
 - R7: `critic`, `evaluate`, `evaluate.evaluate`, `kit-rubric`.
 - R8: `supervisor`, `create`, `create.release_ok`, `create.release`, `improve`,
   `improve.release_ok`, `improve.release`, `lado-kit-format`.
-- R9: `create.evaluate`, `improve.evaluate`, `kit-archetypes`, `kit-budget`, and this blueprint's budget below.
+- R9: `create.evaluate`, `improve.evaluate`, `kit-archetypes`, `kit-budget`, and this
+  blueprint's budget below.
 - R10: `lado-kit-format` (provider neutrality); the README and `dependencies.lado: ">=0.23"`
   in `kit.yaml` (not kit elements in the sense of section 3).
 - R11: `supervisor`, `author`, `critic`, `improve` and its seven states, `kit-interview`.
@@ -158,7 +162,8 @@ yellow and needs a reason here. The supervisor's prompt is near it (753 of 800 w
 
 ## 5. Change log
 
-Filled by `improve` (stage 3); empty for this first version.
+Filled by `improve`, newest first.
 
 | Date | Version | Change | ← Fact (session, run, metric or report) |
 |---|---|---|---|
+| 2026-10-06 | 0.2.0 | Flow `improve` (R11), the branch "Existing kit" of `kit-interview`; the shared rules of build, evaluate and release moved into the roles | The human's notes on the session over the kit lado-dev 0.9.1–0.9.4: fixes assembled outside a run, tags outside `release`, "nothing justifies the yellow measures" in every report |

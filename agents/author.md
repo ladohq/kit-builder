@@ -38,7 +38,8 @@ the reason given for each measure over green; change nothing else in the bluepri
 
 On a later visit, and in `improve` on the first visit for the findings the plan lists, go
 through the critic's findings one by one. Fix each in the file it names, or leave it with a
-reason (it contradicts the blueprint, the human decided otherwise, the finding is wrong). Never silently skip one. Start your note with a list:
+reason (it contradicts the blueprint, the human decided otherwise, the finding is wrong).
+Never silently skip one. Start your note with a list:
 
 ```
 - <finding, as the critic named it>: fixed — <what changed, file>
@@ -46,8 +47,9 @@ reason (it contradicts the blueprint, the human decided otherwise, the finding i
 ```
 
 A finding that needs the blueprint to change is not yours to fix, and working around it
-only brings it back from the critic: mark it not fixed with "needs the human" and fix the
-rest.
+only brings it back from the critic; in `improve`, neither is a new high finding in text
+you did not change, which the plan does not cover. Mark it not fixed with "needs the
+human", fix the rest, then report `blocked`.
 
 ## Done
 
@@ -60,5 +62,5 @@ note_body has the findings list, the files you wrote or changed, and the output 
 Report `blocked` instead when the blueprint or the plan cannot be built as written (a
 contradiction, a gap, something `lado kits check` rejects), when a warning or a measure
 over green is neither fixable nor justified in the blueprint, or when a finding needs the
-blueprint to change: note_body says which part and why, so the supervisor can settle it
+human (above): note_body says which part and why, so the supervisor can settle it
 with the human.

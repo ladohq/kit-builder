@@ -36,7 +36,9 @@ states:
       Report `ready`: note_summary is the kit, the planned version and the number of
       findings to fix; note_body is the whole plan, in the form `kit-interview` gives, so
       it stands alone for the human, the author and the critic.
-    outcomes: {ready: plan_ok}
+      Report `nothing` when the human decides to change nothing; when the run ends, merge
+      its branch (the report, a restored blueprint) as after `evaluate`.
+    outcomes: {ready: plan_ok, nothing: done}
   plan_ok:
     gate: approval
     ask: Approve the plan? The author changes the kit by it.

@@ -57,7 +57,9 @@ A step that checks a kit being built or changed asks for a verdict instead of `d
 Report `approved` when `lado kits check` has no error, no budget measure is red, every
 yellow measure is justified in the blueprint and no high finding is open; otherwise
 `changes`, with the findings to fix first. Medium and low findings do not block: the
-human weighs them in your report at the release gate. You still write findings, not
+human weighs them in your report at the release gate. When the step gives a plan
+(`improve`), a finding the plan leaves with the human's reason does not block either: list
+those in the report under "Left by the plan". You still write findings, not
 grades: the verdict only says whether a blocking finding is left. note_summary is the
 verdict and the finding count; note_body is your report.
 
