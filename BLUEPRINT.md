@@ -66,7 +66,7 @@ critic and no gate, since it changes nothing but a report file.
 
 | Element | Kind | Covers | Why it exists / why nothing simpler |
 |---|---|---|---|
-| `supervisor` | role (lead) | R1, R2, R3, R4, R8 | Holds the conversation with the human: interview, blueprint, gates explained, release and the push question. LADO gives the chat to the lead only. |
+| `supervisor` | role (lead) | R1, R2, R3, R4, R6, R8 | Holds the conversation with the human: interview, blueprint, gates explained (with the critic's open findings and questions answered before the human decides), release and the push question. LADO gives the chat to the lead only. |
 | `author` | role | R1 | Writes the kit's files. A separate role so the critic's check is independent of the writer, and the supervisor stays the human's partner rather than a coder. |
 | `critic` | role | R5, R6, R7 | Read-only evaluation with its own rights (writes only the report) and a fresh look; the same role serves `create` and `evaluate`. |
 | `create` | flow | R1, R4, R8 | The path interview → approved blueprint → kit → check → approved release → tag. |
@@ -94,8 +94,8 @@ Reverse check:
 - R3: `supervisor`, `create.design`, `kit-archetypes`.
 - R4: `supervisor`, `create`, `create.design`, `create.design_ok`, `kit-interview`.
 - R5: `critic`, `kit-budget`.
-- R6: `critic`, `create.evaluate`, `evaluate`, `evaluate.evaluate`, `lado-kit-format`,
-  `kit-rubric`.
+- R6: `supervisor`, `critic`, `create.evaluate`, `evaluate`, `evaluate.evaluate`,
+  `lado-kit-format`, `kit-rubric`.
 - R7: `critic`, `evaluate`, `evaluate.evaluate`, `kit-rubric`.
 - R8: `supervisor`, `create`, `create.release_ok`, `create.release`.
 - R9: `create.evaluate`, `kit-archetypes`, `kit-budget`, and this blueprint's budget below.
@@ -120,7 +120,7 @@ root (exit status 0), after the fixes from the self-evaluation
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
 | Words in a role prompt | agents/author.md | 468 | 800 / 1500 | green |
 | Words in a role prompt | agents/critic.md | 556 | 800 / 1500 | green |
-| Words in a role prompt | agents/supervisor.md | 788 | 800 / 1500 | green |
+| Words in a role prompt | agents/supervisor.md | 794 | 800 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
@@ -132,7 +132,7 @@ Overall: green
 ```
 
 No measure is over green, so none needs a reason. Three sit at the edge of green: gates in
-`create` (2 of 2), own skills (5 of 5) and the supervisor's prompt (788 of 800 words). A
+`create` (2 of 2), own skills (5 of 5) and the supervisor's prompt (794 of 800 words). A
 new gate, skill or supervisor rule therefore makes the kit yellow and needs a reason here.
 
 ## 5. Change log
