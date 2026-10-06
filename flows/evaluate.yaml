@@ -1,0 +1,25 @@
+name: evaluate
+description: >-
+  Evaluate a LADO kit, yours or someone else's, before you use or release it: the critic
+  runs `lado kits check` and the complexity budget, reviews the text against a
+  12-criterion rubric and writes a report to kit-reports/. The task names the kit: a
+  folder path or the name of an installed kit.
+start: evaluate
+states:
+  evaluate:
+    agent: critic
+    do: |
+      Evaluate the kit the task names (a folder path or the name of an installed kit),
+      read-only, as your role describes: `lado kits check`, the budget script, then the
+      `kit-rubric` review in three passes.
+      Write the report to `kit-reports/<kit>-<version>-<YYYY-MM-DD>.md` in the run's
+      worktree and commit it on the run's branch; it is the only file you change. When the
+      run ends, LADO asks the supervisor to merge that branch, which brings the report into
+      the session's repository.
+      Done when each of the 12 criteria has a verdict, every quote in the report was found
+      word for word in its file, "Fix first" has at most 5 items and the report is
+      committed. Report `done`: note_summary is the kit, its version, the overall budget
+      zone, the finding count and the report's path; note_body is the whole report.
+    outcomes: {done: done}
+  done:
+    end: true
