@@ -1,6 +1,6 @@
 ---
 name: kit-budget
-description: Complexity budget of a LADO kit — a script that counts roles, flow steps, gates, prompt words, skills, MCP servers and duplicate paragraphs and gives each a green, yellow or red zone. Use when evaluating a kit, when a blueprint needs its budget section, or before adding a role, step, gate or skill.
+description: Complexity budget of a LADO kit — a script that counts roles, flow steps, gates, prompt words, skills, MCP servers and similar paragraphs and gives each a green, yellow or red zone. Use when evaluating a kit, when a blueprint needs its budget section, or before adding a role, step, gate or skill.
 ---
 
 # Kit budget
@@ -9,6 +9,10 @@ The simplest kit that solves the task wins. The budget makes "simple" a number: 
 over green needs a reason written in the kit's `BLUEPRINT.md` (section "Complexity budget").
 
 ## Run it
+
+The script is `scripts/kit_budget.py` in this skill's folder (the folder this SKILL.md is
+in). Your agent CLI may expand `${SKILL_DIR}` to that folder; if it does not, put the
+folder's path there yourself:
 
 ```bash
 uv run --script ${SKILL_DIR}/scripts/kit_budget.py <kit folder>
@@ -29,6 +33,7 @@ not a mapping.
 | Work steps in a flow | flow | ≤ 5 | 6–8 | > 8 |
 | Gates in a flow | flow | ≤ 2 | 3 | > 3 |
 | Words in a role prompt | role | ≤ 800 | 801–1500 | > 1500 |
+| Words in the lead's prompt | lead | ≤ 1000 | 1001–1500 | > 1500 |
 | Own skills | kit | ≤ 5 | 6–10 | > 10 |
 | MCP servers | kit | ≤ 2 | 3–4 | > 4 |
 
@@ -39,7 +44,10 @@ How each is counted:
   steps. Each flow gets its own row and zone.
 - **Gates**: states of one flow that have `gate:` (approval or choice).
 - **Words in a role prompt**: the body of `agents/<role>.md` after the YAML frontmatter,
-  split on whitespace. Every role, the supervisor too, gets its own row.
+  split on whitespace. Every worker role gets its own row.
+- **Words in the lead's prompt**: the same count for the lead (the supervisor, as in
+  "Worker roles"). The lead gets a higher green limit: it runs the session and the flows
+  and talks to the human, so it carries more rules than one worker.
 - **Own skills**: folders `skills/<name>/` that hold a `SKILL.md`. Skills from
   `dependencies.skills` are not counted: they are shared, not the kit's text.
 - **MCP servers**: distinct server names under `mcp:` in the frontmatter of all
@@ -48,17 +56,37 @@ How each is counted:
 A flow-less or role-less kit gets one row with value 0 for those measures. The overall zone
 is the worst row.
 
-## Duplicate paragraphs
+## Similar paragraphs
 
 One rule, one place. A paragraph is a block between blank lines in a role prompt or in a
-flow state's `do`. Two paragraphs are the same when they match ignoring case, line breaks
-and spacing. Paragraphs under 8 words are skipped. A paragraph found in two or more places
-(roles, states, or a role and a state) is listed with its places. A repeat inside one place
-is not listed.
+flow state's `do`. The script compares every two paragraphs in different places (roles,
+states, or a role and a state) and lists each pair at 55% similar or more, most similar
+first, with both places. A repeat inside one place is not listed.
 
-Each duplicate is yellow: it makes the overall zone at least yellow but never red. Fix it by
+Similarity is the Jaccard index of the two paragraphs' content words: the distinct words
+both have, divided by the distinct words either has. Words are lowercased, punctuation is
+dropped, and common function words ("the", "you", "when") are left out, since any two
+English paragraphs share them. The same paragraph, ignoring case and spacing, is 100%.
+The list of function words is English only: in a kit written in another language they
+stay in, and similarity comes out too high. The method catches close repeats of a whole
+paragraph; a rule repeated inside a longer paragraph scores lower and is left to rubric
+criterion 6 (`kit-rubric`).
+
+Paragraphs under 8 words are not compared. A short paragraph is most often a pointer
+("Follow `lado-checks`, "Merging a run's branch"."), which is the fix, not the repeat; and
+in a few words one shared term moves the score a lot. Point to a rule in under 8 words.
+
+The 55% was calibrated on lado-dev 0.9.1–0.9.4 and kit-builder 0.1.1. Whole-paragraph
+repeats scored 57% (a merge step reworded in one flow) to 100%. Below the line are repeats
+the script misses: the roles' "Most tasks come as a step of a flow run..." openings, worded
+apart (48–52%), and rules repeated inside longer paragraphs (the verdict and
+`flow_advance` rule of architect and reviewer, 41–45%; RESOLVED / STILL OPEN, 38%).
+Different paragraphs scored lower; kit-builder's highest pair was 28%.
+
+Each pair is yellow: it makes the overall zone at least yellow but never red. Fix it by
 keeping the rule where it belongs (the role if it holds in every step, the `do` if it
 belongs to one step, a skill if several roles need it) and pointing to it from the others.
+Rewording a repeat until it scores under 55% does not fix it.
 
 ## Reading the result
 

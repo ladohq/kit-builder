@@ -83,8 +83,8 @@ gate, to skip `flow_advance` in a run, or to do what LADO does itself.
 
 **6. Duplication.** One rule, one place: the role if it holds in every step, the `do` if
 it belongs to one step, a skill if several roles need it. The budget script lists
-paragraphs that match word for word; this criterion covers the same meaning in other
-words.
+pairs of paragraphs that share 55% or more of their content words; this criterion covers
+repeats it misses: a rule restated inside a longer paragraph or in other words.
 Violation: a rule restated in two roles, in a role and a `do`, or in two `do`s, beyond a
 short pointer to its one place; two copies that already differ.
 
