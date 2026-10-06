@@ -120,7 +120,7 @@ after the kit, F6.4 and F6.5 of `kit-reports/kit-builder-0.1.0-2026-10-06.md` fo
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
 | Words in a role prompt | agents/author.md | 451 | 800 / 1500 | green |
 | Words in a role prompt | agents/critic.md | 556 | 800 / 1500 | green |
-| Words in a role prompt | agents/supervisor.md | 756 | 800 / 1500 | green |
+| Words in a role prompt | agents/supervisor.md | 753 | 800 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
@@ -133,7 +133,7 @@ Overall: green
 
 No measure is over green, so none needs a reason. Two sit at the edge of green: gates in
 `create` (2 of 2) and own skills (5 of 5); a new gate or skill therefore makes the kit
-yellow and needs a reason here. The supervisor's prompt is near it (756 of 800 words).
+yellow and needs a reason here. The supervisor's prompt is near it (753 of 800 words).
 
 ## 5. Change log
 
