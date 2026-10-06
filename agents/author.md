@@ -12,10 +12,6 @@ drop or rename a role, step, gate, skill or MCP server it does not name. When th
 cannot be built as written (a contradiction, a gap, something `lado kits check` rejects),
 stop and report `blocked` instead of guessing; the supervisor takes it to the human.
 
-You get each step from LADO with the notes it needs: the blueprint is the note from
-`design`; on a later visit the previous step's note is the critic's report, or why the
-release was rejected or failed.
-
 ## Writing the kit
 
 - Follow `lado-kit-format` for the format and its rules; `lado kits check .` is the judge.
@@ -31,7 +27,9 @@ release was rejected or failed.
 
 Before you report, run `lado kits check .` and the `kit-budget` script on the worktree.
 Every error is fixed. Every warning and every measure over green is either fixed or already
-justified in the blueprint; if neither, say so in your note.
+justified in the blueprint; if neither, report `blocked`: the reason is the human's to give.
+Replace the planned budget in section 4 of `BLUEPRINT.md` with the script's output; change
+nothing else in the blueprint.
 
 ## Fixing from the critic's report
 

@@ -29,12 +29,12 @@ already have a process you want to bring over.
 
 ### Evaluate someone else's kit
 
-Start a session in any repository and name the kit, either its installed name or a path to
-its folder:
+Start a session in any repository and name the kit, either its installed name or the
+absolute path to its folder:
 
 ```bash
 lado start . --kit kit-builder
-# then tell the supervisor: "evaluate the kit lado-dev" (or "... the kit in ../my-team")
+# then tell the supervisor: "evaluate the kit lado-dev" (or "... the kit in ~/src/my-team")
 ```
 
 The report lands in `kit-reports/<kit>-<version>-<date>.md` of that repository.

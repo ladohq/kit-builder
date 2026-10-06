@@ -1,6 +1,6 @@
 ---
 name: lado-kit-format
-description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, paths, one lead, needs, gates, max_visits. Use when writing or reviewing kit.yaml, a role, a flow or a skill of a kit.
+description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, paths, one lead, needs, gates, max_visits. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format; for judging a kit's text against review criteria use kit-rubric.
 ---
 
 # LADO kit format
