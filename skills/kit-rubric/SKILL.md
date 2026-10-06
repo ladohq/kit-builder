@@ -155,7 +155,9 @@ restatement.
 use it, and how it differs from a neighbour that could be confused with it; each skill a
 role lists is one the role needs.
 Violation: a description without "when"; two skills whose descriptions trigger on the
-same case; a skill in a role's `skills:` that nothing in the role or its steps calls for;
+same case; a skill in a role's `skills:` that nothing in the role or its steps calls for; a skill
+from outside the kit not declared by its own folder, or a declared folder no role uses
+(`lado-kit-format`);
 a skill's text pasted into a prompt instead of listed.
 
 **11. Provider neutrality.** The kit runs under any agent CLI LADO supports (see

@@ -1,6 +1,6 @@
 ---
 name: lado-kit-format
-description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, paths, one lead, needs, gates, max_visits. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format; for judging a kit's text against review criteria use kit-rubric.
+description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit, paths, one lead, needs, gates, max_visits. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format; for judging a kit's text against review criteria use kit-rubric.
 ---
 
 # LADO kit format
@@ -35,6 +35,12 @@ skills/<name>/        SKILL.md and its files, always moved as a whole
 CLI's tools, slash commands, models or config files: "run the tests", "read the file", not a
 tool name. Skills come in through `skills:` and MCP servers through `mcp:`; never paste a
 skill's text into a prompt.
+
+**Skills from outside the kit.** `kit.yaml` cannot list the kit's own skills: LADO finds
+them in `skills/`. So every other skill a role lists in `skills:` is declared in
+`dependencies.skills`, by its own folder (the one holding its SKILL.md) in `folders`, from
+a pack pinned to a tag or commit. A folder above the skill installs every skill under it,
+and the ones no role uses only add noise to the session.
 
 **Paths.** Roles and MCP commands reach kit files through `${KIT_DIR}`; a skill reaches its
 own files through `${SKILL_DIR}` (only inside a skill). The command scans only SKILL.md of a
