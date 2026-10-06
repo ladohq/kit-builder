@@ -11,7 +11,7 @@ find the rest yourself.
 
 ## Round format
 
-One decision per round, in this order:
+A round is one message. Each decision in it gets its own block, in this order:
 
 ```
 **Question.** <one question, answerable in a sentence>
@@ -19,7 +19,9 @@ One decision per round, in this order:
 **Recommendation.** <your answer and why; usually the simpler option>
 ```
 
-Several rounds may go in one message when they do not depend on each other; number them.
+Put several questions in one round when none of their answers changes another; number
+them, so the human can answer "1 yes, 2 as you recommend". A question whose sense or
+options depend on an earlier answer waits for that answer, in a round of its own.
 Write each answer down as a requirement (R-number) or as a decision in the blueprint at
 once, so nothing lives only in the chat. When an answer contradicts an earlier one, say so
 and ask which holds.
