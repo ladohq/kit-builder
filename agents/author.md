@@ -56,8 +56,9 @@ Never silently skip one. Start your note with a list:
 When the release failed on a merge conflict, merge the branch the run started from into
 the run's branch, resolve the conflicts and commit; a conflict between two decisions on
 content needs the human ("Done"). A failed command: `lado-kit-format` ("Releasing").
-When the merge brought in changed kit text, change none of it: when it contradicts the blueprint or adds an element the blueprint does not name,
-report `blocked` with the list, since which one changes is the human's decision.
+When the merge brought in changed kit text, change none of it: when it contradicts the
+blueprint or adds an element the blueprint does not name, report `blocked` with the list,
+since which one changes is the human's decision.
 
 A finding that needs the blueprint to change is not yours to fix, and working around it
 only brings it back from the critic. Mark it not fixed with "needs the human", fix the
