@@ -45,10 +45,10 @@ that adds roles or skills to another kit has no supervisor, so adding it never c
 leads. A supervisor's step in a flow goes to whoever leads the session.
 
 **Notes and `needs`.** A step gets the note of the step before it, nothing else, unless
-`needs` names earlier states; then it also gets their latest notes. After a gate, the note
-is the human's answer with the note that led to the gate (which the gate showed the
-human), so a step after a gate still gets the work step's note before it. So a note that a later
-step needs (a design, a blueprint) is written whole, never "as above". A reviewing state on
+`needs` names earlier states; then it also gets their latest notes. After a gate, the
+step's note is the human's answer together with the note that led to the gate, the one the
+gate showed the human. A note that a later step needs (a design, a blueprint) is written
+whole, never "as above". A reviewing state on
 a loop needs itself, to mark its previous findings RESOLVED or STILL OPEN.
 
 **Gates.** A gate is the human's decision. Put one before anything that is hard to undo or

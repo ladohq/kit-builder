@@ -1,0 +1,99 @@
+name: create
+description: >-
+  A new LADO kit from the interview to a release tag: the supervisor interviews the human
+  and writes the blueprint, the human approves it, the author writes the kit, the critic
+  checks it against the budget and the rubric, the human approves the release, the
+  supervisor tags it. The kit's repository is the session's repository.
+start: design
+states:
+  design:
+    agent: supervisor
+    needs: [design]
+    do: |
+      Design the kit with the human, in the chat, as your role describes (section
+      "Interview in rounds"; the branches and the template are in `kit-interview`).
+      1. Interview the human. Done when every requirement R1..Rn is written down and the
+         human agrees with the list.
+      2. Choose the shape with the human: the transferred process mapped to roles, steps and
+         gates, or an archetype from `kit-archetypes`.
+      3. Write `BLUEPRINT.md` with all five sections at the root of the run's worktree (its
+         path is in `flow_status` for the run) and commit only that file on the run's
+         branch. Every element of the kit traces to a requirement in section 3; the planned
+         budget is in section 4.
+      On a later visit your previous blueprint is the note from design: revise that text,
+      not one from memory. The previous step's note says why you are back: the human's
+      reason for rejecting it at the gate, or what the author could not build. Settle it
+      with the human, then update `BLUEPRINT.md` and commit only that file.
+      Done when the blueprint answers every open question and is committed. Report `ready`:
+      note_summary is the kit's name and its shape in one line; note_body is the whole
+      blueprint, as committed. LADO hands it to the human at the gate, to the author and to
+      the critic as the note from design, so it must stand alone.
+    outcomes: {ready: design_ok}
+  design_ok:
+    gate: approval
+    ask: Approve the blueprint? The author builds the kit from it.
+    outcomes: {approved: build, rejected: design}
+  build:
+    agent: author
+    needs: [design]
+    do: |
+      Write the kit in the run's worktree from the blueprint (the note from design, as the
+      human approved it), as your role describes.
+      On a later visit the previous step's note is the critic's report, or why the release
+      was rejected or failed: go through each finding and mark it fixed or not fixed, with
+      the reason (your role, "Fixing from the critic's report").
+      Done when `lado kits check .` shows no error, every warning and every measure of the
+      budget script over green is fixed or justified in the blueprint, and the work is
+      committed on the run's branch. Report `done` with your note as your role describes.
+      Report `blocked` when the blueprint cannot be built as written, or a finding needs the
+      blueprint to change: note_body says which part and why, so the supervisor can settle
+      it with the human.
+    outcomes: {done: evaluate, blocked: design}
+  evaluate:
+    agent: critic
+    max_visits: 3
+    needs: [design, evaluate]
+    do: |
+      Evaluate the kit in the run's worktree against its blueprint (the note from design),
+      as your role describes: `lado kits check .`, the `kit-budget` script and the rubric
+      in `kit-rubric`. The author's note (the previous step's) lists what it changed.
+      On a later visit, your previous report is the note from evaluate: mark each of its
+      findings RESOLVED or STILL OPEN first, checking the author's fixed / not fixed list
+      against the files, then look for new findings.
+      Done when every criterion of the rubric has a verdict with its quote and file. Report
+      `approved` when `lado kits check .` has no error, no measure is red, every yellow
+      measure is justified in the blueprint and no finding needs a change before release;
+      otherwise `changes`, with the findings to fix first. note_summary is the verdict and
+      the finding count; note_body is your report.
+    outcomes: {approved: release_ok, changes: build}
+  release_ok:
+    gate: approval
+    needs: [design]
+    ask: Release the kit? The supervisor sets the version, checks it and tags it locally.
+    outcomes: {approved: release, rejected: build}
+  release:
+    agent: supervisor
+    do: |
+      Release the kit as your role describes (section "Release").
+      1. Pick the version with the human: 0.1.0 for a first release unless they want
+         another, otherwise the next one by what changed. In the run's worktree set
+         `version` in `kit.yaml` to it and commit on the run's branch.
+      2. In the run's worktree run `lado kits check . --tag vX.Y.Z` with that version. If it
+         does not print OK, report `failed` with its output in the note; the author fixes
+         it.
+      3. In your repository, on the branch the run started from (checked out there; main,
+         or master after a plain `git init`), `git merge --ff-only <the run's branch>`. If
+         that branch moved and the merge cannot fast-forward, `git merge <the run's
+         branch>` and run `lado kits check . --tag vX.Y.Z` again on the result; on a
+         conflict or a failed check, report `failed`. Then `git tag vX.Y.Z` there. Never
+         move or delete a tag that exists.
+      4. Ask the human whether to push the branch and the tag, and then whether to open a
+         marketplace pull request, with the ready text your role lists. Do each only after
+         their yes; the pull request only after the push.
+      Done when the branch the run started from holds the run's work with a green check and
+      the tag is on it. Report
+      `released`: note_summary is the tag; note_body the check's output and what the human
+      chose about push and pull request, or what is left for them to do.
+    outcomes: {released: done, failed: build}
+  done:
+    end: true

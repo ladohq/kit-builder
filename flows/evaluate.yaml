@@ -10,16 +10,13 @@ states:
     agent: critic
     do: |
       Evaluate the kit the task names (a folder path or the name of an installed kit),
-      read-only, as your role describes: `lado kits check`, the budget script, then the
-      `kit-rubric` review in three passes.
-      Write the report to `kit-reports/<kit>-<version>-<YYYY-MM-DD>.md` in the run's
-      worktree and commit it on the run's branch; it is the only file you change. When the
-      run ends, LADO asks the supervisor to merge that branch, which brings the report into
-      the session's repository.
-      Done when each of the 12 criteria has a verdict, every quote in the report was found
-      word for word in its file, "Fix first" has at most 5 items and the report is
+      read-only, as your role describes, and commit the report on the run's branch. When
+      the run ends, LADO asks the supervisor to merge that branch, which brings the report
+      into the session's repository.
+      Done when each of the 12 criteria of `kit-rubric` has a verdict and the report is
       committed. Report `done`: note_summary is the kit, its version, the overall budget
-      zone, the finding count and the report's path; note_body is the whole report.
+      zone, the finding count and the report's path; note_body is the whole report, so the
+      human gets it without opening the file.
     outcomes: {done: done}
   done:
     end: true

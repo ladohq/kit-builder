@@ -132,7 +132,9 @@ the blueprint does not justify.
 
 ## Report
 
-Copy the template `${SKILL_DIR}/report-template.md` and fill every section; delete only
-the lines its comments say may go. "Fix first" holds at most 5 items: the highest-impact
+The report is one file, `kit-reports/<kit>-<version>-<YYYY-MM-DD>.md` at the root of the
+repository you work in, with the kit's `name` and `version` from its `kit.yaml`. Copy the
+template `${SKILL_DIR}/report-template.md` and fill every section; delete only the lines
+its comments say may go. "Fix first" holds at most 5 items: the highest-impact
 findings, a red budget measure, an error of `lado kits check`, each pointing to its
 finding id.

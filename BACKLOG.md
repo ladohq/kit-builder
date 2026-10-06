@@ -13,7 +13,3 @@ friction in LADO itself, to move to the LADO repository.
   and the docstring of `lado/flows.py` say only that a step gets the previous step's note.
   All three rubric passes on lado-dev read that as "the note is lost at a gate" (3 false
   findings). `lado-kit-format` now states it; LADO's docs should too.
-- An `evaluate` run ends with the critic's report committed on the run's branch, which is
-  not merged, so LADO keeps the worktree and asks the supervisor to merge it. The
-  supervisor role (T3) should say to merge that branch so the report lands in the
-  session's repository.

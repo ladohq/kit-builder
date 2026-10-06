@@ -29,8 +29,8 @@ Findings are candidates for the human to weigh, not a pass/fail grade.
 
 ## Fix first
 
-<!-- At most 5 items, most harmful first. Each: one line, what to change, and the finding
-id, budget measure or check error it comes from. -->
+<!-- Most harmful first, as kit-rubric says. Each: one line, what to change, and the
+finding id, budget measure or check error it comes from. -->
 
 1. <...> (F<id>)
 
