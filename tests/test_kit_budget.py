@@ -248,6 +248,22 @@ class Similar(unittest.TestCase):
         )
         self.assertEqual(self.similar(kit), [])
 
+    def test_paragraph_of_min_words_compared_one_less_not(self):
+        n = kit_budget.MIN_PARAGRAPH_WORDS
+        for size, pairs in ((n, 1), (n - 1, 0)):
+            with self.subTest(size=size):
+                text = words(size, "rule")
+                kit = Kit(self, agents={"a": agent("a", text), "b": agent("b", text)})
+                self.assertEqual(len(self.similar(kit)), pairs)
+
+    def test_pair_at_threshold_listed(self):
+        # 11 shared content words of 20 in all: 0.55, exactly SIMILAR_FROM
+        a = words(11, "same") + " " + words(4, "left")
+        b = words(11, "same") + " " + words(5, "right")
+        self.assertEqual(kit_budget.similarity(a, b), kit_budget.SIMILAR_FROM)
+        kit = Kit(self, agents={"a": agent("a", a), "b": agent("b", b)})
+        self.assertEqual(self.similar(kit), [(55, "agents/a.md", "agents/b.md")])
+
     def test_repeat_inside_one_place_not_counted(self):
         kit = Kit(self, agents={"a": agent("a", f"{RULE}\n\n{REWORDED}")})
         self.assertEqual(self.similar(kit), [])

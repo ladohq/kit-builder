@@ -40,8 +40,9 @@ ZONES = ("green", "yellow", "red")
 LEAD = "supervisor"  # the name LADO reserves for a kit's lead
 MIN_PARAGRAPH_WORDS = 8  # shorter paragraphs (a pointer, "Be brief.") are not compared
 # Two paragraphs are similar from this Jaccard similarity of their content words on.
-# Calibrated on lado-dev 0.9.1-0.9.4 and kit-builder: a reworded repeat scored 0.57, the
-# closest different paragraphs (the roles' "Most tasks come as a step..." intros) 0.52.
+# Calibrated on lado-dev 0.9.1-0.9.4 and kit-builder (SKILL.md): whole-paragraph repeats
+# scored 0.57 and up; repeats worded apart or inside longer paragraphs, 0.52 and less,
+# are left to rubric criterion 6.
 SIMILAR_FROM = 0.55
 # Function words: shared by any two English paragraphs, so they would only add noise.
 STOP_WORDS = frozenset("""

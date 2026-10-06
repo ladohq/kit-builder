@@ -67,16 +67,21 @@ Similarity is the Jaccard index of the two paragraphs' content words: the distin
 both have, divided by the distinct words either has. Words are lowercased, punctuation is
 dropped, and common function words ("the", "you", "when") are left out, since any two
 English paragraphs share them. The same paragraph, ignoring case and spacing, is 100%.
-Rewording keeps most content words, so a reworded repeat still scores high.
+The list of function words is English only: in a kit written in another language they
+stay in, and similarity comes out too high. The method catches close repeats of a whole
+paragraph; a rule repeated inside a longer paragraph scores lower and is left to rubric
+criterion 6 (`kit-rubric`).
 
 Paragraphs under 8 words are not compared. A short paragraph is most often a pointer
 ("Follow `lado-checks`, "Merging a run's branch"."), which is the fix, not the repeat; and
 in a few words one shared term moves the score a lot. Point to a rule in under 8 words.
 
-The 55% was calibrated on lado-dev 0.9.1–0.9.4 and kit-builder 0.1.1: repeats scored 57%
-(a merge step reworded in one flow) to 100%; the closest different paragraphs, the roles'
-"Most tasks come as a step of a flow run..." openings, scored up to 52%; kit-builder's
-highest pair, 28%.
+The 55% was calibrated on lado-dev 0.9.1–0.9.4 and kit-builder 0.1.1. Whole-paragraph
+repeats scored 57% (a merge step reworded in one flow) to 100%. Below the line are repeats
+the script misses: the roles' "Most tasks come as a step of a flow run..." openings, worded
+apart (48–52%), and rules repeated inside longer paragraphs (the verdict and
+`flow_advance` rule of architect and reviewer, 41–45%; RESOLVED / STILL OPEN, 38%).
+Different paragraphs scored lower; kit-builder's highest pair was 28%.
 
 Each pair is yellow: it makes the overall zone at least yellow but never red. Fix it by
 keeping the rule where it belongs (the role if it holds in every step, the `do` if it
