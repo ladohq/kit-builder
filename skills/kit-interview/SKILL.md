@@ -128,3 +128,10 @@ All five sections are required; section 5 starts empty for a new kit and gets a 
 change in `improve`. Every element of the
 kit appears in section 3 with the requirements it covers; an element with none is cut
 before the blueprint goes to the human, or kept with a written reason.
+
+The flow skeletons in section 2 are what the human approves at the gate, so they show the
+whole graph: every state, every outcome and where it goes, as the author must build it.
+Each time you change one, draw it again with the `kit-budget` flow script,
+`--out blueprint-flows` at the same root, and commit the SVGs with `BLUEPRINT.md`; your
+note gives the human their paths. A restored blueprint gets skeletons of the kit's flows
+as they are; the plan's changes to a flow change its skeleton.

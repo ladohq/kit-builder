@@ -173,8 +173,10 @@ Violation: such an action with no gate or yes before it; a destructive command w
 its condition; a role invited to change things outside its task.
 
 When the kit has a `BLUEPRINT.md`, also list under "Not traced" each role, step, gate,
-skill or MCP server that no requirement R names, and each yellow or red budget measure
-the blueprint does not justify.
+skill or MCP server that no requirement R names, each yellow or red budget measure
+the blueprint does not justify, and each difference the flow script's `--compare` prints
+between the flows and the blueprint's skeletons: the kit drifted from what the human
+approved, or the blueprint was not updated. A blueprint without skeletons: say so there.
 
 ## Re-evaluation
 
@@ -241,7 +243,9 @@ human's to weigh.
 The report is one file, `kit-reports/<kit>-<version>-<YYYY-MM-DD>.md` at the root of the
 repository you work in, with the kit's `name` and `version` from its `kit.yaml`; in
 `improve`, after `assess`, the planned version the plan names, so the report before the
-change and the one after it are different files. Copy the
+change and the one after it are different files. Its flow
+diagrams go into the folder of the same name without `.md`, one `<flow>.svg` per flow,
+drawn by the `kit-budget` flow script with `--out`. Copy the
 template `${SKILL_DIR}/report-template.md` and fill every section; delete only the lines
 its comments say may go. "Fix first" holds at most 5 items: the highest-impact
 findings, a red budget measure, an error of `lado kits check`, each pointing to its

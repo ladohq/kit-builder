@@ -30,7 +30,8 @@ states:
       assess), as `kit-interview` describes (branch "Existing kit"): restore
       `BLUEPRINT.md` first when the kit has none, then go through the findings, the
       critic's "Questions for the human" and every measure over green. Commit only
-      `BLUEPRINT.md` in the run's worktree (its path is in `flow_status` for the run).
+      `BLUEPRINT.md` and its diagrams in `blueprint-flows/` in the run's worktree (its
+      path is in `flow_status` for the run).
       On a later visit the previous step's note says why you are back: the human's reason
       for rejecting the plan, or what the author could not build. Settle it with the
       human, starting from your own previous plan and the committed `BLUEPRINT.md`.
@@ -44,7 +45,9 @@ states:
     outcomes: {ready: plan_ok, nothing: done}
   plan_ok:
     gate: approval
-    ask: Approve the plan? The author changes the kit by it.
+    ask: >-
+      Approve the plan and the flow diagrams it changes (`blueprint-flows/`)? The author
+      changes the kit by it.
     outcomes: {approved: build, rejected: triage}
   build:
     agent: author

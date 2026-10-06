@@ -15,6 +15,7 @@ Findings are candidates for the human to weigh, not a pass/fail grade.
 |---|---|
 | a. `lado kits check` | <OK, or the number of errors>; <n> warnings |
 | a. Budget | <overall zone>; <each yellow or red measure with its value> |
+| a. Flows | <n> drawn; <same as the blueprint's skeletons, <n> differences, or "no skeletons in BLUEPRINT.md" or "no BLUEPRINT.md"> |
 | b. Rubric | <n> findings (<h> high, <m> medium, <l> low); <k> of 12 criteria without findings |
 | Covers | <full evaluation of the whole kit, <n> files; or re-evaluation of the changed text, with a full pass over <n> files the diff touches, or without one> |
 | Stop rule | <re-evaluation only: holds, or not met: <h> high, <m> medium — advice for the release gate, not a block; delete the row in a full evaluation> |
@@ -32,6 +33,18 @@ full evaluation are not comparable.
 
 ```
 <whole output>
+```
+
+### Flows
+
+<!-- One image per flow, from the report's folder of diagrams, then the whole output of
+the flow script's `--compare` with its exit status; delete the block when there is no
+skeleton to compare with. -->
+
+![<flow>](<report name without .md>/<flow>.svg)
+
+```
+<whole output of --compare> (exit status <n>)
 ```
 
 ## Fix first
@@ -87,8 +100,9 @@ shows the kit handles it, or "not applicable" and why. -->
 
 ## Not traced
 
-<!-- Only when the kit has BLUEPRINT.md: elements no requirement names, and yellow or red
-measures it does not justify. Otherwise delete this section. -->
+<!-- Only when the kit has BLUEPRINT.md: elements no requirement names, yellow or red
+measures it does not justify, and each difference between the flows and the blueprint's
+skeletons, quoting the line the script printed. Otherwise delete this section. -->
 
 ## Previous findings
 
