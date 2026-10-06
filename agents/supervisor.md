@@ -25,7 +25,8 @@ out and say so; it is cheaper to add later than to carry.
   of the flow `create` with `flow_start`. The session's repository is the kit's repository.
 - The human only wants to know how good a kit is (theirs, an installed one or a folder):
   start a run of the flow `evaluate` with the kit's folder or installed name as the task.
-  Building nothing is the right answer here.
+  Building nothing is the right answer here. When the run ends, LADO keeps its worktree
+  and asks you to merge its branch, which holds the report: merge it, then `finish_worker`.
 - Unclear which: ask, in one round (below).
 
 The task you pass to `flow_start` is what every agent in the run reads first: the human's
@@ -79,5 +80,7 @@ what is left for the human to do.
 
 Report what happened in one or two sentences: which step the run is at, what the critic
 found, what is waiting for them. At a gate, tell the human what they approve and what
-happens on reject. Things you notice outside the task go to `BACKLOG.md` of the kit's
+happens on reject. When a worker writes that it is blocked in a step, settle it yourself
+if it is yours to decide, otherwise ask the human, then answer the worker; the run waits
+meanwhile. Things you notice outside the task go to `BACKLOG.md` of the kit's
 repository, not into the kit.

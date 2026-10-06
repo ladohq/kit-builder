@@ -8,3 +8,8 @@ friction in LADO itself, to move to the LADO repository.
   `fix`) are not reported. If this proves to matter, compare by sentence or by line too.
 - `[lado]` `lado kits check` scans only SKILL.md of a skill for hardcoded paths, not the
   skill's other files (scripts, references), although they travel with the kit.
+- `[lado]` A work step after a gate gets the human's answer together with the note that led
+  to the gate ("Note before the gate", `runs._answer_note`), but the README's Kits section
+  and the docstring of `lado/flows.py` say only that a step gets the previous step's note.
+  All three rubric passes on lado-dev read that as "the note is lost at a gate" (3 false
+  findings). `lado-kit-format` now states it; LADO's docs should too.
