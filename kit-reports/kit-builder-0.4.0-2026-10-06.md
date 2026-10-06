@@ -1,28 +1,40 @@
 # Kit report: kit-builder 0.4.0
 
 - Date: 2026-10-06
-- Kit: the repository root of kit-builder (path given), branch `lado/kit-builder/critic`.
-  `kit.yaml` still says `version: 0.3.0`; the report is named for the planned 0.4.0, as the
-  supervisor's task asks (the version is set at release).
-- Commit: d4868fe
+- Kit: the repository root of kit-builder (path given), branch `lado/kit-builder/critic`,
+  with `lado/kit-builder/author` merged in. `kit.yaml` still says `version: 0.3.0`; the
+  report is named for the planned 0.4.0 (the version is set at release).
+- Commit: 2bc37d1 (the author's fixes; merged into the critic's branch)
 - Evaluated by: kit-builder critic (layers a and b), run on kit-builder itself following
   `agents/critic.md` and `kit-rubric` as in the `evaluate` step of `improve`, outside a run
-- Mode: full evaluation of the whole kit. There is no report of 0.3.0 in `kit-reports/`, so
-  no re-evaluation. The change since `v0.3.0` (`git diff v0.3.0..HEAD`: flow diagrams, R12)
-  got extra attention, and each finding in text that diff touches is marked **[changed]**.
-- Passes: three independent sub-agents, each with `kit-rubric`, the kit folder and the two
-  dependency skills' folders only (no diff). Pass 1 started from kit.yaml and the roles,
-  pass 2 from the flows state by state, pass 3 from the skills and the two scripts, then
-  back to the roles. Findings were merged by place and reason; where passes gave different
-  impacts or criteria, the higher impact and the criterion closest to the fix were taken
-  (said in the finding). 6 one-pass findings dropped, 4 kept as confirmed. One more
-  finding (F2.1) came from the critic's own reading of the diff and is kept because the
-  command output in it shows the harm; it is marked "critic's check, confirmed".
+- Mode: re-evaluation against this file's previous version (commit 0456710, the full
+  evaluation of d4868fe): `git diff 0456710..HEAD -- kit.yaml README.md BLUEPRINT.md agents
+  flows skills`. That diff touches 10 files, with 137 lines added and 88 removed. The base
+  is the commit of the previous report, because the kit's text at 0456710 is the text that
+  report evaluated (d4868fe).
+  This file replaces the previous version, since its name is unchanged; git keeps the
+  earlier version.
+- Passes: five independent sub-agents, each with `kit-rubric`, the kit folder, the two
+  dependency skills' folders, the diff and the previous report:
+  - pass 1 started from kit.yaml and the roles;
+  - pass 2 started from the flows, state by state;
+  - pass 3 started from the skills, then went back to the roles;
+  - a fourth did the cut-rule check over `git diff --word-diff`;
+  - a fifth did the full pass over the whole of the 10 files the diff touches.
+
+  Findings were merged by place and reason. Where passes gave different impacts or
+  criteria, the finding says which was kept. 0 one-pass findings dropped, 6 kept as
+  confirmed (the full pass's findings included).
+  The human's answers to the previous report's five questions were all "as recommended"
+  (the supervisor's message).
 
 Findings are candidates for the human to weigh, not a pass/fail grade.
 
-**Verdict: `changes`** — one high finding is open (F3.1). `lado kits check` has no error,
-no budget measure is over green, and the flows match the blueprint's skeletons.
+**Verdict: `approved`.** `lado kits check` has no error, no budget measure is over green,
+`--compare` prints no difference, and no high finding is open: all 15 previous findings
+are RESOLVED, except F2.2, which is STILL OPEN as a medium. The full pass found no high.
+**Stop rule: not met.** The changed text holds 7 medium findings. This is advice for the
+release gate, not a block.
 
 ## Card
 
@@ -31,8 +43,9 @@ no budget measure is over green, and the flows match the blueprint's skeletons.
 | a. `lado kits check` | OK; 0 warnings |
 | a. Budget | green; no measure over green, no similar paragraphs |
 | a. Flows | 3 drawn; same as the blueprint's skeletons (0 differences) |
-| b. Rubric | 15 findings (1 high, 10 medium, 4 low); 4 of 12 criteria without findings |
-| Covers | full evaluation of the whole kit, 18 files (kit.yaml, README.md, BLUEPRINT.md, 3 roles, 3 flows, 5 SKILL.md, 2 templates, 2 scripts) and the 2 dependency skills; 5 findings in the text changed since v0.3.0 |
+| b. Rubric | 9 findings in the changed text (0 high, 7 medium, 2 low), one of them F2.2 still open; 8 of 12 criteria without findings; 3 more under "Missed earlier" (1 medium, 2 low) |
+| Covers | re-evaluation of the changed text (10 files), with a full pass over those 10 files |
+| Stop rule | not met: 0 high, 7 medium — advice for the release gate, not a block |
 
 The count covers only what the row "Covers" names: a count of a re-evaluation and one of a
 full evaluation are not comparable.
@@ -57,9 +70,9 @@ kit-builder: OK (2 agents, 7 skills, 1 packs and 3 flows)
 | Gates in a flow | flows/create.yaml | 2 | 2 / 3 | green |
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
 | Gates in a flow | flows/improve.yaml | 2 | 2 / 3 | green |
-| Words in a role prompt | agents/author.md | 730 | 800 / 1500 | green |
-| Words in a role prompt | agents/critic.md | 700 | 800 / 1500 | green |
-| Words in the lead's prompt | agents/supervisor.md | 952 | 1000 / 1500 | green |
+| Words in a role prompt | agents/author.md | 769 | 800 / 1500 | green |
+| Words in a role prompt | agents/critic.md | 651 | 800 / 1500 | green |
+| Words in the lead's prompt | agents/supervisor.md | 752 | 1000 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
@@ -73,7 +86,8 @@ Overall: green
 ### Flows
 
 `uv run --script skills/kit-budget/scripts/flow_diagram.py . --out kit-reports/kit-builder-0.4.0-2026-10-06`
-(exit status 0). The three SVGs are byte-identical to `blueprint-flows/*.svg`.
+(exit status 0). The fixes changed no flow's shape, so the SVGs are byte-identical to the
+previous report's.
 
 ![create](kit-builder-0.4.0-2026-10-06/create.svg)
 
@@ -89,325 +103,324 @@ same as the plan in BLUEPRINT.md (exit status 0)
 
 ## Fix first
 
-1. Tell a fault of the environment from one of the kit before the release sends a red
-   `lado kits check --tag` back to the author (F3.1).
-2. Make a difference that `--compare` prints block `approved`, or show it to the human at
-   `release_ok`. R12 promises this, but the verdict leaves it out (F3.3, **[changed]**).
-3. Give an existing blueprint without flow skeletons its skeletons in `triage`. Otherwise
-   the author's `--compare` exits 2 on every kit built by kit-builder ≤ 0.3.0 (F2.1,
-   **[changed]**).
-4. Read a refused `git merge --ff-only` by its cause: a moved branch goes back to step 2,
-   a dirty or other checkout goes to the human (F3.2).
-5. Name the target branch and the content check for the merge after `evaluate` and after
-   `nothing`, and say how to merge "only the report" (F12.1).
+Nothing blocks. These are the mediums most worth fixing before the tag, since each one is
+in the text the fixes just wrote:
+
+1. Say how `release` ends when an environment failure is left to the human. It has only
+   `released` and `failed`, and `failed` is now reserved for kit faults (F3.5).
+2. Taking "only the report" with `git checkout <run> -- kit-reports/` overwrites the
+   human's uncommitted reports and commits whatever they had staged. Take the run's own
+   paths and commit only those (F12.2).
+3. Release step 2 counts `docs/` and `tests/` as kit text, so a test-only commit on main
+   sends the release back through build, evaluate and the gate. Use kit-rubric's list
+   (F3.6).
+4. "Changed since the previous plan" must be measured against the plan the author last
+   built, not the last rejected one (F2.2, still open).
+5. Merged kit text that contradicts the blueprint goes to the human (`blocked`). The
+   author does not "check it as your own" and revert it (F7.2).
 
 ## Findings
 
+Findings in text the diff touches. Ids continue the previous report's numbering.
+
 ### 1. Role boundaries
 
-No finding. Every role states its rights. The supervisor: "the kit's roles, flows or skills
-yourself: the author writes them, the critic checks them." (`agents/supervisor.md:15`). The
-author does not add or drop parts it is not told to: "so you do not add, drop or rename a
-role, step, gate, skill or MCP server they do not name." (`agents/author.md:13`). The critic:
-"it. You change no file of the kit you evaluate; you write only the report and its flow"
-(`agents/critic.md:10`), which the diff widened to the diagrams consistently in all three
-places.
+No finding. "Releasing" lives in `lado-kit-format`, which the author and the critic also
+load, but it is scoped by its first line: "The supervisor's step `release` of `create` and
+`improve`, in this order. "The start" (`skills/lado-kit-format/SKILL.md:76`). The critic's
+rights stay in its opening (`agents/critic.md:10`).
 
 ### 2. Handoffs between steps
 
-- **F2.1** [medium] **[changed]** `agents/author.md:33` (state `build` of `improve`)
-  > and its flow script with `--compare BLUEPRINT.md`. The flow skeletons are the human's
+- **F2.2** STILL OPEN [medium] `flows/improve.yaml:38` (state `triage` on a later visit,
+  then `build` after `blocked`)
+  > human, starting from your own previous plan and the committed `BLUEPRINT.md`; the
 
-  The author always runs `--compare`. But `triage` adds skeletons only to a blueprint it
-  restores: `skills/kit-interview/SKILL.md:136-137` says "A restored blueprint gets
-  skeletons of the kit's flows" / "as they are; the plan's changes to a flow change its
-  skeleton.". A kit whose `BLUEPRINT.md` predates R12 has no skeletons, and that includes
-  every kit built by kit-builder ≤ 0.3.0 and kit-builder's own blueprint at v0.3.0. On
-  such a kit the author's check fails, and the author reports `blocked`. The run then goes
-  back to `triage` and through `plan_ok` once more, and the human approves a plan again
-  for a gap in the kit's own instructions.
-  Fix: in `kit-interview` ("The blueprint"), "a blueprint without skeletons, restored or
-  not, gets skeletons of the kit's flows as they are". Optionally, make the author's
-  check conditional the way the critic's step 3 is ("when `BLUEPRINT.md` has flow
-  skeletons").
-  Passes: critic's check, confirmed. Evidence: `git show v0.3.0:BLUEPRINT.md` checked with
-  `flow_diagram.py . --compare` printed
-  `error: …/bp030.md: no ```yaml block with states:` (exit 2).
+  The fix makes the new plan start with "Changed since the previous plan: …"
+  (`flows/improve.yaml:39`), and `build` changes only what that lists
+  (`flows/improve.yaml:63-64`). Take this path:
+  1. `build` reports `blocked`, and triage writes plan 2;
+  2. the human rejects plan 2 at `plan_ok` (`rejected: triage`, `flows/improve.yaml:55`),
+     and triage writes plan 3;
+  3. the human approves plan 3, and the author builds it.
 
-- **F2.2** [medium] `flows/improve.yaml:59` (state `build`, after `blocked`)
-  > After `blocked`, the previous note is the revised plan: change what differs from the
-  > plan you built.
-
-  `build` has `needs: [triage]` (`flows/improve.yaml:54`), so it gets only triage's latest
-  note. The plan it built before is in neither the previous note nor a `needs` state, and
-  the plan is a note, not a committed file. A fresh author cannot tell what differs, so it
-  either rebuilds everything or guesses. `create.build` avoids this by pointing at the
-  committed blueprint's diff ("change what its diff on the run's branch changed",
-  `flows/create.yaml:45`).
-  Fix: triage's later-visit note starts with "Changed since the previous plan: …", or
-  `improve.build` gets `needs: [triage, build]`.
-  Passes: 1/3, confirmed. Evidence: `flows/improve.yaml:54` "needs: [triage]".
+  Plan 3's list is measured against plan 2, which was never built. So the author skips
+  what changed between plan 1 and plan 2, and the critic then sends it back, spending one
+  of `evaluate`'s three visits.
+  Fix: "Changed since the plan the author last built: …". Or give `improve.build`
+  `needs: [triage, build]`.
+  Passes: 3/3
 
 ### 3. Done and outcomes
 
-- **F3.1** [high] `agents/supervisor.md:67` (state `release` of `create` and `improve`)
-  > `lado kits check . --tag vX.Y.Z` there; if it does not print OK, report `failed` with
-  > its output. The author fixes either on the run's branch.
+- **F3.5** [medium] `skills/lado-kit-format/SKILL.md:103-104` (state `release` of `create`
+  and `improve`)
+  > wait for them; run it again once they say it is settled, and after a second failure from
+  > the same cause leave it to them. Never stash, reset or clean the human's checkout, and
 
-  This is known hole 1. Every red `--tag` check goes to `build` as a fault of the kit,
-  whatever its cause:
-  - no network to fetch the `mattpocock-skills` pack;
-  - a missing `uv` or `lado`;
-  - a tag that already exists;
-  - a version the supervisor set wrongly in step 1.
+  The same gap is at line 91 ("go back to step 2, at most twice; then ask the"). `release`
+  has only "outcomes: {released: done, failed: build}" (`flows/create.yaml:68`,
+  `flows/improve.yaml:86`), and `failed` is now "only for a fault in the kit's files"
+  (line 98-99). When the bound is reached, no outcome fits. One supervisor reports `failed`
+  anyway, which sends an environment fault to the author, the harm F3.1 was about.
+  Another leaves the run parked with the start branch perhaps fast-forwarded but untagged,
+  and says nothing about what is left.
+  Fix: "leave the run in `release`; tell the human which of steps 2–4 are left and how to
+  go on: ask you to retry once it is settled, finish by hand and run `lado flow-set …
+  done`, or cancel. Never report `failed` for it."
+  Passes: 3/3 and the full pass
 
-  The author's own done condition uses `lado kits check .` without `--tag`, so it cannot
-  even reproduce such a failure. Its way out is `blocked` ("something `lado kits check`
-  rejects", `agents/author.md:74`). That sends `create` back to `design` and `improve`
-  back to `triage`, and from there through a gate and another critic visit, all for a
-  fault no one in the kit can fix. Worse, the author may "fix" the kit to get past it, for
-  example by dropping a dependency.
-  The critic's verdict has the same gap: "`approved` when `lado kits check` has no error"
-  (`skills/kit-rubric/SKILL.md:230`) counts an environment error as `changes`.
-  Passes 2 and 3 rated this high, pass 1 medium; high is kept, since the run can loop
-  through gates and the author can damage the kit.
-  Fix: in Release step 2, "a failure the kit's files do not cause (network, a missing
-  tool, an existing tag, a dirty checkout): settle it or ask the human; report `failed`
-  only for a fault in the kit". Say the same in kit-rubric "Verdict", and tell the author
-  to rerun the failing command as given, `--tag` included.
-  Passes: 3/3
+- **F3.6** [medium] `skills/lado-kit-format/SKILL.md:85-86` (state `release`, step 2)
+  > (`git diff --name-only <the noted commit> HEAD` lists any file outside `kit-reports/`
+  > and `BACKLOG.md`), report `failed` with that list: neither the critic nor the human has
 
-- **F3.2** [medium] `agents/supervisor.md:71` (state `release`)
-  > fast-forward, the branch moved meanwhile: go back to step 2. Then `git tag vX.Y.Z`
+  This test counts everything except `kit-reports/` and `BACKLOG.md` as "the kit's text".
+  kit-rubric defines the kit's text as "`kit.yaml`, `README.md`, `BLUEPRINT.md`,
+  `agents/`, `flows/` and" `skills/`, which leaves out `docs/` and `tests/`
+  (`skills/kit-rubric/SKILL.md:189-191`). kit-builder's own repository tracks `docs/` and
+  `tests/`. A start-branch commit that touches only those fails the release, then goes
+  through `build` (nothing to fix), an `evaluate` visit (of 3) and `release_ok` again.
+  Fix: "lists a file of the kit's text (`kit-rubric`, "Re-evaluation" 1, plus
+  `blueprint-flows/`)".
+  Passes: 3/3 and the full pass
 
-  This is known hole 1. The line names one cause for a refused `git merge --ff-only` in
-  the human's checkout. Uncommitted or untracked files the merge would overwrite cause it
-  too, and so does another branch being checked out; the role itself writes `BACKLOG.md`
-  there (`agents/supervisor.md:95-96`). Going back to step 2 changes nothing in those
-  cases, so steps 2–3 repeat with no bound inside one step, or the supervisor "cleans"
-  the human's checkout to get through.
-  Fix: "if it cannot fast-forward because the branch moved, go back to step 2; for any
-  other error (local changes, another branch checked out), show it to the human and
-  wait; never stash or reset their changes".
-  Passes: 3/3
+- **F3.7** [low] `skills/lado-kit-format/SKILL.md:101`
+  > `uv` or `lado`, a tag that already exists, uncommitted changes in the way, another branch
 
-- **F3.3** [medium] **[changed]** `skills/kit-rubric/SKILL.md:231` (states `evaluate` of
-  `create` and `improve`, gate `release_ok`)
-  > is red, every yellow measure is justified in the blueprint and no high finding is open;
-
-  The verdict leaves out the differences `--compare` prints. The changed text files them
-  under "Not traced" (`skills/kit-rubric/SKILL.md:178`, "between the flows and the
-  blueprint's skeletons: the kit drifted from what the human"). At `release_ok` the
-  supervisor shows "the critic's open findings (with "Missed earlier"), whether its stop
-  rule holds" (`agents/supervisor.md:87`), not "Not traced". So a flow that drifted
-  from the skeleton the human approved can be `approved` and tagged without the human
-  seeing the drift. R12 promises the opposite: "skeletons as a finding, so drift from the
-  approved plan is visible" (`BLUEPRINT.md:78`).
-  Pass 2 filed this under criterion 3; pass 3 noted only the wording mismatch with R12,
-  under "Not traced". Criterion 3 is kept, since the fix is the outcome's condition.
-  Fix: add "and the flow script's `--compare` prints no difference" to the verdict, or
-  have the supervisor show "Not traced" at `release_ok`.
+  An existing tag is listed as a cause outside the kit, for the human. But it usually
+  means the version from step 1 is wrong, and line 105 says "A wrong version from step 1
+  is yours:" / "correct it.". The two rules overlap, so supervisors will handle the same
+  failure differently. Both paths reach the human, so the harm is small.
+  Fix: "an existing tag: settle the version again with the human (step 1)", and drop it
+  from the outside causes.
   Passes: 2/3
 
-- **F3.4** [low] `skills/kit-budget/SKILL.md:86`
-  > Each pair is yellow: it makes the overall zone at least yellow but never red. Fix it by
+- **F3.8** [medium] `skills/lado-kit-format/SKILL.md:117` ("A report-only run": after
+  `evaluate`, and after `improve.triage` → `nothing`)
+  > branch and commit it. A failed merge is read as above.
 
-  The verdict asks that "every yellow measure is justified in the blueprint"
-  (`skills/kit-rubric/SKILL.md:231`). A similar-paragraph pair is yellow, but it is not a
-  measure, and kit-budget says to fix it rather than justify it. Whether an open pair
-  blocks `approved` is left to each critic.
-  Fix: in kit-rubric "Verdict", say whether a pair blocks, or that it is a finding under
-  criterion 6 with its own impact.
-  Passes: 1/3, confirmed. Evidence: both quotes as given; neither file says how a pair
-  counts in the verdict.
+  This merge runs in the human's checkout after the run has ended. "Above" says to `git
+  merge --abort` and report `failed` for a kit fault, but there is no step left to report
+  to. A conflict is likely here, because a re-evaluation rewrites a report file of the
+  same name. The supervisor then has no rule: it leaves the checkout half-merged, or
+  cleans it against "Never stash, reset or clean".
+  Fix: "On a conflict, `git merge --abort` and show the human the files; any other failure
+  goes to the human as a cause outside the kit (above)."
+  Passes: 1/3, confirmed. Evidence: `flows/evaluate.yaml:15` "outcomes: {done: done}", and
+  line 112 "When it ends, merge its branch".
 
 ### 4. Independent verification
 
-- **F4.1** [medium] `agents/supervisor.md:64` (state `release`, after gate `release_ok`)
-  > 2. In the run's worktree, merge the branch the run started from (checked out in your
-
-  After the critic's `approved` and the human's `release_ok`, the supervisor merges in
-  whatever the start branch gained since, such as another run's change or the human's own
-  commits. On a clean merge it tags the result after `lado kits check --tag` alone; only
-  a merge conflict (`agents/supervisor.md:65-66`) goes back to the author. The tagged text was
-  then never seen by the critic or shown to the human, and a clean git merge can still
-  join two role texts that contradict each other.
-  Passes 1 and 3 rated this medium, pass 2 low; medium is kept.
-  Fix: "if the merge brought commits that change `kit.yaml`, `README.md`, `BLUEPRINT.md`,
-  `agents/`, `flows/` or `skills/`, report `failed` so the merged kit passes `evaluate`
-  again".
-  Passes: 3/3
-
-- **F4.2** [medium] **[changed]** `flows/improve.yaml:49` (gate `plan_ok`)
-  > Approve the plan and the flow diagrams it changes (`blueprint-flows/`)? The author
-
-  The gate shows triage's note, the plan, whose blueprint line is a summary: "Blueprint:
-  <what changed in sections 1–4, or "unchanged">" (`skills/kit-interview/SKILL.md:81`).
-  When triage restored `BLUEPRINT.md`, the human approves inferred requirements and a
-  trace they never saw whole, and the author and the critic then work against them. The
-  kit itself asks for the whole blueprint in the `nothing` case: "it whole, says yes
-  (otherwise only the report)." (`flows/improve.yaml:44`).
-  Fix: in triage's `do`, "when you restored `BLUEPRINT.md`, the note carries it whole
-  after the plan".
-  Passes: 1/3, confirmed. Evidence: the plan's form at `skills/kit-interview/SKILL.md:76-81`
-  holds no blueprint text, and `plan_ok` has no `needs`.
+No finding. F4.1 is resolved: kit text that the release merge brings in goes back through
+the critic (`skills/lado-kit-format/SKILL.md:84-88`; the width of that test is F3.6). A
+`--compare` difference now blocks `approved` (`skills/kit-rubric/SKILL.md:233-234`).
+`plan_ok` shows a restored blueprint whole (`flows/improve.yaml:44-46`).
 
 ### 5. Contradictions
 
-- **F5.1** [medium] `agents/supervisor.md:49` (states `design`, `triage`)
-  > Use `grilling` to find what is still the human's to decide; never decide for them what only
+- **F5.3** [medium] `agents/supervisor.md:50-51` (states `design`, `triage`)
+  > Use `grilling` to find what is still the human's to decide; where it differs from
+  > `kit-interview` (the round's format, how far to ask), `kit-interview` wins. Never decide for
 
-  The supervisor gets two interview prescriptions that cannot both hold:
-  - **Round format.** grilling: "❓ **Q1** - **<question title>**: <question body, might
-    be multiple paragraphs, including multiple choices>". kit-interview: "**Question.**
-    <one question, answerable in a sentence>" (`skills/kit-interview/SKILL.md:17`), then
-    Context and Recommendation.
-  - **How far to go.** grilling: "Interview the user relentlessly until you reach a
-    shared understanding." kit-interview: "ask only what changes the kit, and find the
-    rest yourself" (`skills/kit-interview/SKILL.md:9-10`).
+  The fix settles the round format and the scope, as the human answered. It leaves
+  grilling's "When a frontier question needs a fact from the environment (filesystem,
+  tools, etc.), dispatch a sub-agent to find it" (grilling `SKILL.md:20`), which the
+  previous F5.1 named. That instruction is neither format nor scope, so `kit-interview`
+  does not win on it. Two harms follow:
+  - in LADO the lead may start an exploring worker with no run around it, against "never a
+    worker or a" (`agents/supervisor.md:16`, known hole 2);
+  - a CLI without sub-agents cannot follow it (criterion 11).
 
-  grilling also says "dispatch a sub-agent to find it". Not every CLI can follow that, and
-  in LADO it may turn into a worker outside a run. The interview's format and length will
-  vary from run to run.
-  Fix: in supervisor §2, "rounds in `kit-interview`'s format and scope; from `grilling`
-  take only the design tree and the frontier". Or drop `grilling`, since kit-interview
-  lines 22–24 already hold the frontier rule.
-  Passes: 3/3
-
-- **F5.2** [medium] `skills/kit-budget/SKILL.md:96-97` (on the author and the critic)
-  > - Red: cut it before release (merge roles or steps, move text into a skill). The thresholds
-  > are starting values: if a red measure truly cannot be cut, tell the human; changing a
-
-  This is known hole 5. kit-budget is listed on the author and the critic, and it tells
-  them to merge roles or steps and to "tell the human". The author: "so you do not add,
-  drop or rename a role, step, gate, skill or MCP server they do not name."
-  (`agents/author.md:13`). The critic: "Ask nothing of the human directly"
-  (`agents/critic.md:81`). A worker that follows the skill writes to the human directly
-  or cuts a role on its own.
-  Fix: "If a red measure cannot be cut, the lead takes it to the human: the author
-  reports `blocked`, the critic puts it under "Questions for the human"".
-  Passes: 1/3, confirmed. Evidence: the three quotes above.
+  Pass 2 and pass 3 read F5.1 as fully resolved. Pass 1 and the full pass found this part
+  open; it is kept as confirmed.
+  Fix: add "facts you look up yourself, never through a sub-agent or worker" to the
+  parenthesis.
+  Passes: 1/3 and the full pass, confirmed. Evidence: the grilling line quoted above.
 
 ### 6. Duplication
 
-- **F6.1** [low] **[changed]** `agents/critic.md:79`
-  > - Read and run checks; change no file but your report and its diagrams. A fix you would
+- **F6.2** [low] `skills/kit-rubric/SKILL.md:239-242` and
+  `skills/lado-kit-format/SKILL.md:100-104`
+  > A check that fails for a cause outside the kit's files (no network to fetch a skill pack,
 
-  This restates the role's opening, `agents/critic.md:10` "it. You change no file of the kit
-  you evaluate; you write only the report and its flow". The diff had to change both
-  copies for R12, which is the cost of the repeat. "Candidates, not a pass/fail grade" is
-  likewise in `agents/critic.md:12`, `agents/critic.md:64` and `skills/kit-rubric/SKILL.md:10`.
-  Fix: keep the rights in the opening and the "candidates" rule in kit-rubric; cut the
-  repeats.
-  Passes: 3/3
+  One rule, telling an environment failure from a kit fault, now has two copies, and they
+  already differ. The release gives up after a second failure, while the critic is told
+  to "the check again once it answers" with no bound (`skills/kit-rubric/SKILL.md:242`).
+  Fix: keep the rule and its list of causes in `lado-kit-format`. kit-rubric points to it
+  and keeps only "no verdict either way".
+  Passes: 1/3, confirmed. Evidence: the two lines quoted.
 
 ### 7. When to call the human
 
-- **F7.1** [low] `agents/critic.md:26` (state `evaluate` of flow `evaluate`)
-  > printed with `send_message`, and leave the run where it is.
+- **F7.2** [medium] `agents/author.md:59-60` (state `build` after `release` → `failed` on
+  merged kit text)
+  > gives it (`--tag` included). When the merge brought in changed kit text, check that text
+  > against the blueprint as your own, so the critic sees it next.
 
-  The step's only outcome is `done` (`flows/evaluate.yaml:15`). When the kit cannot be
-  found, the run stays parked. The supervisor's blocked rule ("settle it yourself if it
-  is yours to decide", `agents/supervisor.md:94`) doesn't say whether to correct the task
-  or cancel the run.
-  Pass 1 filed this under criterion 7, pass 3 under 3; 7 is kept, since the fix is a path
-  to the human.
-  Fix: in supervisor §5, "a critic that cannot find the kit: give it the corrected path
-  or name, or ask the human to cancel the run".
-  Passes: 2/3
+  The merged text is a commit by the human or by another run, and the blueprint does not
+  name it. "As your own" invites the author to bring it in line with the blueprint, which
+  reverts the human's change without asking. Meanwhile line 13 forbids keeping or
+  dropping an element the blueprint does not name. Some runs will revert the change and
+  others will report `blocked`, and no path to the human is named for the decision that
+  is theirs: does the blueprint change, or the merged text?
+  Fix: "Change none of the merged text; when it contradicts the blueprint or adds an
+  element it does not name, report `blocked` with the list."
+  Passes: 1/3 and the full pass, confirmed. Evidence: `agents/author.md:13` "so you do not
+  add, drop or rename a role, step, gate, skill or MCP server they do not name."
 
 ### 8. Loops on a later visit
 
-No finding. `design`, `triage` and `evaluate` need themselves. Their later visits are
-described ("On a later visit revise `BLUEPRINT.md` as committed in the run's worktree, not
-your", `flows/create.yaml:24`; the critic's "Re-evaluation"). `evaluate` has
-`max_visits: 3`, and the other loops pass through gates. One gap of `improve.build`'s
-later visit is F2.2.
+No finding beyond F2.2. The release's step 3 loop is bounded: "go back to step 2, at most
+twice; then ask the" (`skills/lado-kit-format/SKILL.md:91`).
 
 ### 9. Concision and why
 
-- **F9.1** [low] **[changed]** `skills/kit-budget/SKILL.md:125`
-  > The drawing is ported from the Tessera kit-builder's `render_workflow_diagram.py`.
-
-  This is history in a skill every role loads, and it changes nothing an agent does. The
-  script's docstring already credits Tessera. The calibration paragraph at lines 79–84 is
-  similar exposition beyond the reason it gives for 55%.
-  Fix: delete line 125, and cut lines 79–84 to the one sentence that justifies the
-  threshold.
-  Passes: 3/3
+No finding. The history line is gone, and the calibration paragraph is down to two lines
+(`skills/kit-budget/SKILL.md:79-80`). The new rules carry their reasons, for example
+"neither the critic nor the human has seen the merged kit, and a clean merge can still
+join two texts that contradict each other" (`skills/lado-kit-format/SKILL.md:86-88`).
 
 ### 10. Skill descriptions
 
-No finding. Each own skill's description says when to use it and names its neighbour, for
-example "for judging a kit's text against review criteria use kit-rubric"
-(`skills/lado-kit-format/SKILL.md:3`). kit-budget's new description adds the flow script
-and its "when" ("or its flow diagrams"). Every listed skill is used by its role or steps.
-Both dependency skills are declared by their own folders: "folders:
-[skills/productivity/grilling, skills/productivity/writing-for-agents]" (`kit.yaml:15`).
-Both were found in LADO's cache and read.
+No finding. `lado-kit-format`'s description adds "and how a kit is released and published
+… or releasing it", and the skill is on the supervisor, which releases.
 
 ### 11. Provider neutrality
 
-No finding in the kit's own text. Kit files are reached through `${SKILL_DIR}`, with a
-fallback: "Your agent CLI may expand `${SKILL_DIR}` to that folder; if it does not, put
-the" (`skills/kit-budget/SKILL.md:14`). The new script holds no absolute or home path, and
-only LADO's tools are named. grilling's "dispatch a sub-agent" is part of F5.1.
+No finding in the kit's own text. The new text names only `git`, `lado`, `uv` and LADO's
+tools. grilling's sub-agent dispatch is F5.3.
 
 ### 12. Safety and scope
 
-- **F12.1** [medium] `agents/supervisor.md:35` (after a run of `evaluate`; after
-  `improve.triage` → `nothing`)
-  > path breaks in the run's worktree). When the run ends, merge its branch (it holds the
+- **F12.2** [medium] `skills/lado-kit-format/SKILL.md:116` (after `evaluate`, or after
+  `improve.triage` → `nothing`, in the human's checkout)
+  > take only the report: `git checkout <the run's branch> -- kit-reports/` on the start
 
-  This is known hole 2. A merge into the human's repository happens after the run, with
-  no gate and no yes. Nothing says onto which branch, or how (fast-forward or not), and
-  nothing checks the premise "it only adds a report file" (`BLUEPRINT.md:202`). In the
-  `nothing` case, `flows/improve.yaml:43-44` says "its branch as after `evaluate`, with a
-  restored blueprint only if the human, shown" / "it whole, says yes (otherwise only the
-  report).". But triage has already committed `BLUEPRINT.md` on that branch, and nothing
-  says how to merge only the report, so the supervisor merges the unapproved blueprint or
-  improvises.
-  Pass 2 rated this low, passes 1 and 3 medium; medium is kept.
-  Fix: "merge it into the branch the run started from when `git diff --stat` shows only
-  `kit-reports/` (and `blueprint-flows/`/`BLUEPRINT.md` after the human's yes); otherwise
-  show the human", plus how to take only the report (check out `kit-reports/` from the
-  run's branch and commit).
-  Passes: 3/3
+  This runs without a yes, and it has three side effects:
+  1. It overwrites any uncommitted edit the human has under `kit-reports/`.
+  2. It reverts any report the start branch holds in a newer version, back to the run's
+     copy.
+  3. A bare "commit it" also commits whatever the human had staged.
+
+  Pass 3 reproduced this in a scratch repository: after `echo "human edit" >>
+  kit-reports/r.md; git add other.txt; git checkout run -- kit-reports/; git commit`, the
+  edit was lost and the commit included `other.txt`. "Never stash, reset or clean the
+  human's checkout" (line 104) does not cover it.
+  Passes 1 and 3 rated this medium, the full pass low; medium is kept.
+  Fix: take only the paths the run added (`git diff --name-only --diff-filter=A
+  <start>...<run> -- kit-reports/`), ask first when any of them has local changes, and
+  commit with `git commit -- <those paths>`.
+  Passes: 2/3 and the full pass
 
 ## Known holes
 
 | Known hole | Finding, or how the kit handles it |
 |---|---|
-| 1. Red check sent back with no environment cause considered | F3.1 (red `--tag` check → author; the verdict counts any check error), F3.2 (refused ff-merge always read as "branch moved") |
-| 2. Work outside a flow, merge without a gate | Changes are handled: "Every change to a kit goes through a run of `create` or `improve`, never a worker or a" (`agents/supervisor.md:16`); tag behind `release_ok`, push and PR behind "the human's yes in the chat, in this session" (`agents/supervisor.md:75`). Open: F12.1 (merge after `evaluate` / `nothing`). |
-| 3. Path outside the run's worktree | Handled: "`evaluate`, with the kit's installed name or absolute folder path as the task (a relative" (`agents/supervisor.md:34`); "path is in `flow_status` for the run), draw its flow skeletons into" (`flows/create.yaml:20`); "during a run that root is the run's worktree" (`skills/kit-interview/SKILL.md:126`). The release's merge in the human's checkout is deliberate, behind `release_ok`; its failure handling is F3.2. |
-| 4. Verdict without a severity threshold | Handled: "is red, every yellow measure is justified in the blueprint and no high finding is open;" / "otherwise `changes`. Medium and low findings, findings under "Missed earlier" and those" (`skills/kit-rubric/SKILL.md:231-232`). Gaps: flow drift (F3.3), similar pairs (F3.4). |
-| 5. Dependency skill that writes or asks where its role must not | `grilling` (asks the user) is only on the supervisor, the lead; `writing-for-agents` neither writes nor asks; the critic lists no dependency skill. Open: the own skill kit-budget tells the author and critic to "tell the human" (F5.2). |
+| 1. Red check sent back with no environment cause considered | Release: "When a command fails, find its cause before you report. Report `failed` only for a fault" (`skills/lado-kit-format/SKILL.md:98`). Verdict: "A check that fails for a cause outside the kit's files (no network to fetch a skill pack," (`skills/kit-rubric/SKILL.md:239`). Open: F3.5 (no outcome after the bound), F3.6 (non-kit files counted as kit text). Missed earlier: F3.9 (the author's own checks), F3.10 (the critic's `assess`). |
+| 2. Work outside a flow, merge without a gate | A report-only run merges without a yes only when it touches "nothing outside" `kit-reports/`; anything more is shown to the human (`skills/lado-kit-format/SKILL.md:112-116`). Open: F12.2 (how "only the report" is taken), F3.8 (a failed merge after the run), F5.3 (grilling's sub-agent). |
+| 3. Path outside the run's worktree | The work in the human's checkout is deliberate and named: "branch" is the branch the run started from, "checked out in the supervisor's repository" (`skills/lado-kit-format/SKILL.md:77`), under "Never stash, reset or clean the human's checkout". Its harm to that checkout: F12.2. |
+| 4. Verdict without a severity threshold | Handled: "prints no difference and no high finding is open; otherwise `changes`." (`skills/kit-rubric/SKILL.md:234`); a similar pair is "a finding under criterion 6, and its impact decides" (line 237). |
+| 5. Dependency skill that writes or asks where its role must not | Handled: kit-budget's red measure goes "the lead takes it to the" human (`skills/kit-budget/SKILL.md:93`); `grilling` is on the lead only, and `kit-interview` wins on format and scope. |
 
 ## Not traced
 
-- Elements: none untraced. Every role, every work and gate state of the three flows, all
-  five own skills and the dependency pack appear in `BLUEPRINT.md` section 3 with a
-  requirement, and the reverse check covers R1–R12. No MCP servers.
-- Measures: none yellow or red. Section 4 matches the script's output except its
-  header's version, which is still `kit-builder 0.3.0`, as is `kit.yaml`.
-- Flows against skeletons: `same as the plan in BLUEPRINT.md` (exit 0), no difference.
-- Wording: R12 says differences are listed "as a finding" (`BLUEPRINT.md:78`), while
-  `kit-rubric` puts them here, under "Not traced", outside the verdict. See F3.3.
+- Elements: none untraced, and no measure over green. `--compare` reports no difference.
+- Trace mismatch (low; confirmed by the critic, pass 1):
+  - The reverse check for R8 lists `evaluate.evaluate` (`BLUEPRINT.md:233`), but that
+    element's row covers only "R6, R7" (`BLUEPRINT.md:211`).
+  - The `lado-kit-format` row says "the author reruns the release's failing command"
+    (R8), but the `author` row covers "R1, R11, R12" (`BLUEPRINT.md:193`), and the
+    reverse check for R8 does not list the author.
+
+  Add R8 to both rows, or drop the element from the reverse check.
+- Section 4 matches the script's output. Its header still says `kit-builder 0.3.0`, as
+  `kit.yaml` does.
+
+## Previous findings
+
+| Finding | Status | Evidence |
+|---|---|---|
+| F3.1 [high] release `--tag` failure → author | RESOLVED | "Report `failed` only for a fault in the kit's files, with the command and its whole output" (`skills/lado-kit-format/SKILL.md:98-99`); the verdict paragraph at `skills/kit-rubric/SKILL.md:239`; "run it again as the note" (`agents/author.md:58`). Its weak spot after the retry bound is F3.5. |
+| F2.1 blueprint without skeletons | RESOLVED | "A blueprint without skeletons, restored or written" (`skills/kit-interview/SKILL.md:136`); "give it flow skeletons when it has none" (`flows/improve.yaml:31`) |
+| F2.2 build after `blocked` | STILL OPEN (in part) | See F2.2 above: "Changed since the previous plan" is measured against the last plan, not the built one |
+| F3.2 refused ff-merge | RESOLVED | "because the start branch gained commits, go back to step 2, at most twice; then ask the" (`skills/lado-kit-format/SKILL.md:91`); other causes at lines 98-104 |
+| F3.3 flow drift outside the verdict | RESOLVED | "prints no difference and no high finding is open" (`skills/kit-rubric/SKILL.md:234`) |
+| F3.4 similar pair in the verdict | RESOLVED | "is not a measure: it is a finding under criterion 6" (`skills/kit-rubric/SKILL.md:237`) |
+| F4.1 merged start branch tagged unchecked | RESOLVED | "When the merge brought in changes to the kit's text" (`skills/lado-kit-format/SKILL.md:84`); the width of that test is F3.6 |
+| F4.2 restored blueprint not shown at `plan_ok` | RESOLVED | "`BLUEPRINT.md`, the note carries it whole after the plan" (`flows/improve.yaml:45`); the ask names it (line 53) |
+| F5.1 grilling vs kit-interview | RESOLVED, as the human answered | "`kit-interview` (the round's format, how far to ask), `kit-interview` wins." (`agents/supervisor.md:51`); the sub-agent part left over is F5.3 |
+| F5.2 kit-budget "tell the human" | RESOLVED | "the lead takes it to the" human (`skills/kit-budget/SKILL.md:93`) |
+| F6.1 critic repeats | RESOLVED | The working-rules repeat is gone (`agents/critic.md:76`), and "candidates" lives in `skills/kit-rubric/SKILL.md:10-12` only |
+| F7.1 critic cannot find the kit | RESOLVED | "corrected path or name, or ask the human to cancel the run" (`agents/supervisor.md:80`) |
+| F9.1 Tessera history | RESOLVED | `grep -rn Tessera skills/*/SKILL.md` finds nothing; the credit stays in the script's docstring and BLUEPRINT |
+| F12.1 report-only merge | RESOLVED | "**A report-only run.**" (`skills/lado-kit-format/SKILL.md:111-117`); its new side effects are F12.2 and F3.8 |
+
+## Cut rules
+
+The fourth sub-agent checked all 73 removed segments of the word diff; no rule is lost.
+The main ones:
+
+| Removed rule (file:line at base 0456710) | Where it is now |
+|---|---|
+| `agents/supervisor.md:60-79` the release procedure, steps 1–4 and "Report `released`…" | `skills/lado-kit-format/SKILL.md:74-109`, sentence by sentence, around "the start branch". Added: the merged-text check, the retry bound, and the failure paragraph |
+| `agents/supervisor.md:65-66` "On a conflict, `git merge --abort` and report `failed` with the conflicting files." | `skills/lado-kit-format/SKILL.md:83-84`, word for word |
+| `agents/supervisor.md:71-72` "Never move or delete a tag that exists." | `skills/lado-kit-format/SKILL.md:92` |
+| `agents/supervisor.md:73-76` push and pull request each need the human's yes; otherwise the release ends at the local tag | `skills/lado-kit-format/SKILL.md:93-96` |
+| `agents/supervisor.md:35` "merge its branch (it holds the report)" | `skills/lado-kit-format/SKILL.md:111-117`, narrowed to a content check |
+| `flows/improve.yaml:43-44` a restored blueprint merged "only if the human, shown it whole, says yes (otherwise only the report)" | `skills/lado-kit-format/SKILL.md:114-117` |
+| `flows/improve.yaml:59-60` "change what differs from the plan you built" | `flows/improve.yaml:63-64` "Changed since the previous plan"; the rule kept its topic but changed its reference point, which is F2.2 still open, not a lost rule |
+| `agents/critic.md:12-13` "candidates … each one carries the quote …" | `skills/kit-rubric/SKILL.md:10-12` |
+| `agents/critic.md:64` "You still write findings, not grades" | `agents/critic.md:62-63` and `skills/kit-rubric/SKILL.md:10-11` |
+| `agents/critic.md:79` "change no file but your report and its diagrams" | `agents/critic.md:10-11` (it was a repeat) |
+| `skills/kit-budget/SKILL.md:79-84` calibration examples | The numbers are at lines 79-80; the rule about repeats the script misses is at lines 71-73 and `skills/kit-rubric/SKILL.md:127-129` |
+| `skills/kit-budget/SKILL.md:97` "tell the human" | `skills/kit-budget/SKILL.md:93-94`, routed through the lead |
+
+## Missed earlier
+
+Findings in text the diff does not touch. They do not block a verdict and do not count for
+the stop rule.
+
+- **F3.9** [medium] `agents/author.md:76` (state `build` of `create` and `improve`)
+  > contradiction, a gap, something `lado kits check` rejects), when a warning or a measure
+
+  This is known hole 1, on the author's side. The supervisor and the critic now tell an
+  environment failure from a kit fault, but the author's own pre-report runs of `lado kits
+  check .` and the scripts (`agents/author.md:32`) have no such rule. Without network or
+  `uv`, the author reports `blocked`, which sends the run back to `design` or `triage`
+  and through a gate.
+  Fix: "a check that fails for a cause outside the kit's files: send the supervisor the
+  command and its output with `send_message` and wait; it is not `blocked`."
+  Passes: 1/3 and the full pass, confirmed.
+
+- **F3.10** [low] `agents/critic.md:31` (states `assess` of `improve`, `evaluate` of
+  `evaluate`)
+  > 1. Run `lado kits check <folder>` and keep its whole output.
+
+  The new environment rule sits in "Verdict", so it covers only steps that ask for a
+  verdict. In `assess`, a network failure goes into the card as an error, and "Fix first"
+  must list "an error of `lado kits check`" (`skills/kit-rubric/SKILL.md:260`). `triage`
+  then plans a kit fix for a fault the kit does not have.
+  Fix: move the environment paragraph out of "Verdict" so it covers every check the
+  critic runs. That also settles F6.2 if it moves to `lado-kit-format`.
+  Passes: 1/3, confirmed. Evidence: `skills/kit-rubric/SKILL.md:239` and `:260`.
+
+- **F12.3** [low] `README.md:106`
+  > The supervisor merges the run's branch, which brings the report into your repository.
+
+  The merge is now conditional: when the run touches more than `kit-reports/`, the human
+  is asked first. A reader of the README expects an unconditional merge.
+  Fix: "…merges the run's branch when it adds only the report; anything more needs your
+  yes."
+  Passes: 1/3, confirmed.
 
 ## Questions for the human
 
-1. Should a flow that differs from its approved skeleton block `approved` (F3.3)?
-   Recommended: yes, add "`--compare` prints no difference" to the verdict, as R12 already
-   promises.
-2. In `improve`, should every blueprint without skeletons get them in `triage`, not only a
-   restored one (F2.1)? Recommended: yes. It touches every kit built by kit-builder ≤ 0.3.0.
-3. After `release_ok`, if merging the start branch brings in changed kit text, should the
-   release go back through `evaluate` (F4.1)? Recommended: yes, report `failed` when kit
-   text changed. A clean merge of only `kit-reports/` or `BACKLOG.md` goes on.
-4. Keep `grilling` as a dependency (F5.1)? Recommended: keep it, with one line saying that
-   `kit-interview`'s round format and scope win. Dropping it is the simpler alternative,
-   since kit-interview already holds the frontier rule.
-5. Should the merge after `evaluate` / `nothing` stay without a yes (F12.1)? Recommended:
-   no yes, but a content check: merge only when the diff touches `kit-reports/` alone.
-   Anything else goes to the human.
+1. When `release` stops on an environment failure the human must settle, how should the
+   run end (F3.5)? Recommended: it stays in `release`; the supervisor tells the human
+   what is left and offers to retry once it is settled. Otherwise the human runs `lado
+   flow-set … done` after finishing by hand, or cancels.
+2. Merged kit text that contradicts the blueprint: should the author change it, or send
+   it to you (F7.2)? Recommended: send it to you (`blocked`); the author changes none of
+   it.
+3. Should the supervisor look facts up only itself during the interview, never through a
+   sub-agent or worker (F5.3)? Recommended: yes.
