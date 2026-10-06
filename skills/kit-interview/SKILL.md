@@ -87,7 +87,8 @@ Rules of the mapping:
 
 ## The blueprint
 
-Write `BLUEPRINT.md` at the kit repository's root from `${SKILL_DIR}/blueprint-template.md`.
+Write `BLUEPRINT.md` at the kit repository's root from `${SKILL_DIR}/blueprint-template.md`;
+during a run that root is the run's worktree, because the author works there.
 All five sections are required; section 5 starts empty for a new kit. Every element of the
 kit appears in section 3 with the requirements it covers; an element with none is cut
 before the blueprint goes to the human, or kept with a written reason.

@@ -33,29 +33,24 @@ goal in their words, and for `evaluate` the kit to check.
 
 ## 2. Interview in rounds
 
-You run the interview in the step `design` (the skill `kit-interview` has the branches,
-the question bank and how to read the human's material). Each round is one decision:
-
-- **Question**: one, answerable in a sentence.
-- **Context**: why it matters for the kit and what you already found, so the human need not
-  repeat it.
-- **Recommendation**: the answer you would give and why, usually the simpler option.
+You run the interview in the step `design`, in rounds of one decision each: question,
+context, recommendation. The round format, the branches, the question bank and how to read
+the human's material are in `kit-interview`.
 
 Your first question is always: "Do you already have a process you want to bring over?"
-Yes leads to the branch **transfer** (read their material, map it to roles, steps and
-gates); no leads to **from scratch** (offer archetypes from `kit-archetypes`, starting
-with Solo). Use `grilling` to find what is still the human's to decide; never decide for
-them what only they know (their process, their risks, what must not happen without them).
-Look up facts yourself instead of asking for them.
+Use `grilling` to find what is still the human's to decide; never decide for them what only
+they know (their process, their risks, what must not happen without them). Look up facts
+yourself instead of asking for them.
 
 Stop when every requirement is written down and every element of the kit traces to one.
 
 ## 3. Write the blueprint
 
 `BLUEPRINT.md` at the root of the kit's repository is the one place that says why each
-part of the kit exists; the author builds from it and the critic checks against it. Write
-it from the template in `kit-interview`, with all five sections, in the language of the kit
-(English for a kit meant for a marketplace). The `kit-budget` script counts files, and
+part of the kit exists; the author builds from it and the critic checks against it. During
+a run, that root is the run's worktree (its path is in `flow_status` for the run), because
+the author works there. Write it from the template in `kit-interview`, with all five
+sections, in the language of the kit (English for a kit meant for a marketplace). The `kit-budget` script counts files, and
 the kit has none yet: count the planned roles, steps, gates and skills against its table
 and justify every measure over green; the critic runs the script on what the author
 builds. Write it for agents that never saw the interview (`writing-for-agents`).
@@ -65,7 +60,9 @@ builds. Write it for agents that never saw the interview (`writing-for-agents`).
 You tag a version only in the step `release`, after the human approved it at the gate.
 Pushing the kit's repository, and opening a pull request to a marketplace, leave the
 machine: do them only after the human says yes to each in the chat, in this session, after
-the tag. Ask once, after the release, with this ready for them:
+the tag. Push the branch and the tag first: the marketplace's CI checks the kit's latest
+tag, so a pull request before the push fails. Ask once, after the release, with this
+ready for them:
 
 - the line for `marketplace.yaml`: `<name>: <git url of the kit's repository>`, the name as
   in `kit.yaml`;
@@ -74,8 +71,9 @@ the tag. Ask once, after the release, with this ready for them:
 - the pull request's title and a short body: what the kit does, its flows, the output of
   `lado kits check . --tag vX.Y.Z`.
 
-Repository names follow the marketplace convention `lado-kit-<name>`. Without a yes, the
-release ends at the local tag; say what is left for the human to do.
+Repository names follow the marketplace convention `lado-kit-<name>`, with the GitHub
+topic `lado-kit` so people find it. Without a yes, the release ends at the local tag; say
+what is left for the human to do.
 
 ## 5. Talking to the human
 

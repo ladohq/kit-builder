@@ -99,6 +99,6 @@ Whatever the shape, before it goes into the blueprint:
 - every role has a clear output and its own rights or context, and acts in at least one step;
 - every step says when it is done and when each outcome applies;
 - an independent check comes before the end when the result is used by others;
-- every loop has `max_visits`; at most two gates per flow, each before something hard to
-  undo or only the human's call;
+- loops and gates follow `lado-kit-format` ("Gates", "`max_visits`"); two gates or fewer
+  per flow unless the blueprint justifies a third;
 - the measures are inside `kit-budget`'s green zone, or the blueprint says why not.
