@@ -2,8 +2,10 @@
 
 - Date: <YYYY-MM-DD>
 - Kit: <folder>, <how it was found: path given, or `lado kits show <name>`>
+- Commit: <the commit evaluated, or "not a git repository">
 - Evaluated by: kit-builder critic (layers a and b)
-- Passes: <how the three passes ran>; <n> one-pass findings dropped
+- Mode: <full, or re-evaluation against <previous report>, `git diff <base>`>
+- Passes: <how the three passes ran>; <n> one-pass findings dropped, <k> kept as confirmed
 
 Findings are candidates for the human to weigh, not a pass/fail grade.
 
@@ -14,6 +16,7 @@ Findings are candidates for the human to weigh, not a pass/fail grade.
 | a. `lado kits check` | <OK, or the number of errors>; <n> warnings |
 | a. Budget | <overall zone>; <each yellow or red measure with its value> |
 | b. Rubric | <n> findings (<h> high, <m> medium, <l> low); <k> of 12 criteria without findings |
+| Stop rule | <re-evaluation only: holds, or not: <h> high and <m> medium in the changed text; delete the row in a full evaluation> |
 
 ### `lado kits check <folder>`
 
@@ -38,7 +41,8 @@ finding id, budget measure or check error it comes from. -->
 
 <!-- One subsection per criterion, all 12, in this order. A criterion without findings
 gets one line: what was checked and the quote that shows it is handled, or "Not
-applicable" and why. Finding format: see the kit-rubric skill. -->
+applicable" and why. Finding format: see the kit-rubric skill. In a re-evaluation,
+only findings in the changed text, lost rules included. -->
 
 ### 1. Role boundaries
 
@@ -71,8 +75,22 @@ measures it does not justify. Otherwise delete this section. -->
 
 ## Previous findings
 
-<!-- Only on a later visit: each finding of the previous report, RESOLVED or STILL OPEN,
-with the quote or output that shows it. Otherwise delete this section. -->
+<!-- Re-evaluation only (kit-rubric, "Re-evaluation"), as are the next two sections; in a
+full evaluation delete all three. Each finding of the previous report, RESOLVED or STILL
+OPEN, with the quote or output that shows it. -->
+
+## Cut rules
+
+<!-- Each rule in a removed line of the diff: where it is now (file:line), or "lost" with
+the finding id. "None removed" when the diff removes no rule. -->
+
+| Removed rule (file:line at base) | Where it is now |
+|---|---|
+
+## Missed earlier
+
+<!-- Findings in text the diff does not touch, in the finding format. They do not block a
+verdict. "None" when there are none. -->
 
 ## Questions for the human
 

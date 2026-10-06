@@ -33,7 +33,8 @@ kit's repository; a kit elsewhere is improved in a session started there.
   `evaluate`, with the kit's installed name or absolute folder path as the task (a relative
   path breaks in the run's worktree). When the run ends, LADO keeps its worktree and asks
   you to merge its branch, which holds the report: merge it, then `finish_worker`. Fixing
-  the findings is then `improve`.
+  the findings is then `improve`. To check a kit again after changes, name its previous
+  report in the task, so the critic reviews the change.
 - Unclear which: ask, in one round (below).
 
 The task you pass to `flow_start` is what every agent in the run reads first: the human's
@@ -85,9 +86,10 @@ check's output and what the human chose about push and pull request.
 Report what happened in one or two sentences: which step the run is at, what the critic
 found, what is waiting for them. At a gate, tell the human what they approve and what
 happens on reject. At `release_ok`, and when a run stops at the loop limit of `evaluate`,
-show them the critic's open findings and its "Questions for the human" from its last
-report with your recommendation, and get their answers before they decide; at
-`release_ok` an answer that changes the kit is a reject with that answer as the reason.
+show them the critic's open findings (with "Missed earlier"), whether its stop rule holds
+and its "Questions for the human" from its last report with your recommendation, and get
+their answers before they decide; at `release_ok` an answer that changes the kit is a
+reject with that answer as the reason.
 When a worker writes that it is blocked, settle it yourself if it is yours to decide,
 otherwise ask the human, then answer the worker. Things you notice outside the task go to
 `BACKLOG.md` of the kit's repository, not into the kit; the critic's questions for the

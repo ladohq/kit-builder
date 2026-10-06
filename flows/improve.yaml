@@ -56,7 +56,6 @@ states:
     needs: [triage, evaluate]
     do: |
       Check the changed kit against the plan (the note from triage) and `BLUEPRINT.md`.
-      On the first visit, the plan's findings to fix stand for your previous report.
     outcomes: {approved: release_ok, changes: build}
   release_ok:
     gate: approval
