@@ -38,24 +38,16 @@ states:
     agent: author
     needs: [design]
     do: |
-      Write the kit in the run's worktree from the blueprint (the note from design, as the
-      human approved it), as your role describes.
-      On a later visit the previous step's note says why you are back: the critic's report,
-      or why the release was rejected or failed. After you reported `blocked`, it is the
-      revised blueprint the human approved, committed as `BLUEPRINT.md` in the worktree:
-      change what the revision changed (its diff on the run's branch).
-      Report `done` or `blocked` as your role says ("Done"); `blocked` goes back to design.
+      Write the kit from the blueprint (the note from design). After `blocked`, the
+      previous step's note is the revised blueprint: change what its diff on the run's
+      branch changed.
     outcomes: {done: evaluate, blocked: design}
   evaluate:
     agent: critic
     max_visits: 3
     needs: [design, evaluate]
     do: |
-      Evaluate the kit in the run's worktree against its blueprint (the note from design),
-      as your role describes, and give a verdict as it says ("5. Report"). The author's
-      note (the previous step's) lists what it changed.
-      On a later visit, start as your role says ("Later visits"), checking the author's
-      fixed / not fixed list against the files.
+      Check the kit against its blueprint (the note from design).
     outcomes: {approved: release_ok, changes: build}
   release_ok:
     gate: approval

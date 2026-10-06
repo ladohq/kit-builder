@@ -47,24 +47,16 @@ states:
     agent: author
     needs: [triage]
     do: |
-      Change the kit in the run's worktree by the plan (the note from triage, as the human
-      approved it) and the `BLUEPRINT.md` committed there, as your role describes. Change
-      only what the plan lists; a finding it leaves is not yours to fix.
-      On a later visit the previous step's note says why you are back: the critic's report,
-      or why the release was rejected or failed.
-      Report `done` or `blocked` as your role says ("Done"); `blocked` goes back to triage.
+      Change only what the plan (the note from triage) lists; a finding it leaves is not
+      yours to fix.
     outcomes: {done: evaluate, blocked: triage}
   evaluate:
     agent: critic
     max_visits: 3
     needs: [triage, evaluate]
     do: |
-      Evaluate the changed kit in the run's worktree against its `BLUEPRINT.md` and the
-      plan (the note from triage), as your role describes, and give a verdict as it says
-      ("5. Report"). The author's note (the previous step's) lists what it changed.
-      On the first visit the plan's findings to fix are your previous findings: mark each
-      RESOLVED or STILL OPEN as your role says ("Later visits"). On a later visit, start
-      from your own previous report.
+      Check the changed kit against the plan (the note from triage) and `BLUEPRINT.md`.
+      On the first visit, the plan's findings to fix stand for your previous report.
     outcomes: {approved: release_ok, changes: build}
   release_ok:
     gate: approval

@@ -53,7 +53,8 @@ kit, its version, the overall budget zone, the finding count and the report's pa
 note_body is the whole report, so the human gets it without opening the file. Outside a
 run, send the report to the supervisor with `send_message`.
 
-A step that checks a kit being built or changed asks for a verdict instead of `done`.
+A step that checks a kit being built or changed (in the run's worktree) asks for a verdict
+instead of `done`; the previous step's note is the author's, with what it changed.
 Report `approved` when `lado kits check` has no error, no budget measure is red, every
 yellow measure is justified in the blueprint and no high finding is open; otherwise
 `changes`, with the findings to fix first. Medium and low findings do not block: the
@@ -67,7 +68,8 @@ verdict and the finding count; note_body is your report.
 
 When a step comes back to you after changes (its `needs` include your own state), your
 previous report is the note from your state. First mark each of its findings RESOLVED or
-STILL OPEN, each with the quote or command output that shows it, then evaluate the kit
+STILL OPEN, each with the quote or command output that shows it (check the author's fixed /
+not fixed list against the files), then evaluate the kit
 again for new findings. The new report has a section "Previous findings" with those marks.
 Rewrite the same report file when its name is unchanged; git keeps the earlier version.
 
