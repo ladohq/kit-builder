@@ -87,7 +87,8 @@ Results:
   about behaviour", the visit-limit rule). The 0.2.0 critic missed them in its first
   assessment of 0.9.1, and one cycle did not reach them.
 
-What to fix in kit-builder:
+What to fix in kit-builder (all done in 0.3.0, each marked below; still to see on a real
+run whether recall evens out):
 
 - **Critic recall varies more than the kits differ.** The same 0.2.0 critic found 11
   findings on 0.9.4 and 20 on 0.10.0, and most of the 20 apply to 0.9.4 as well. It found
@@ -99,21 +100,30 @@ What to fix in kit-builder:
   environment; read-only work outside a flow and merges without a gate; a path to a file
   outside the run's worktree; a reviewer verdict with no severity threshold; a dependency
   skill that writes files or asks the user while its role must not.
+  *Done in 0.3.0:* `kit-rubric`, "Dependency skills" and "Known holes"; the report has a
+  "Known holes" table.
 - **`approved` while the stop rule fails.** The `improve/evaluate` check of 0.10.0 reported
   `approved` with "stop rule not met: 1 medium" in the same report. Wanted: one rule in
   `kit-rubric` and the critic for when the verdict is `approved`, the same as the stop rule,
   or say explicitly that a medium is only advice at release.
+  *Done in 0.3.0:* one rule, `kit-rubric` "Verdict"; the stop rule is advice for the release
+  gate, and the card says so. The critic points to it.
 - **A re-evaluation's count cannot be compared with a full evaluation's.** The re-evaluation
   of 0.10.0 looked only at changed text and reported 9 findings; the full evaluation of the
   same commit reported 20. Wanted: the report card says how much of the kit the count
   covers, so the human does not compare 9 with 11.
+  *Done in 0.3.0:* the card's row "Covers" and a line that counts of different coverage are
+  not comparable.
 - **The first assessment sets the ceiling of an `improve` run.** What the critic misses
   there, no later step of the same run looks for, because re-evaluation reads only the diff.
   Wanted: either the first assessment of `improve` runs the full checklist above, or the
   critic at `release_ok` adds one full pass over the parts the diff touched.
+  *Done in 0.3.0, both:* `improve.assess` is always a full evaluation; `kit-rubric`
+  "Re-evaluation" 5 adds a full pass over every file the diff touches before `approved`.
 - **Small:** BLUEPRINT §2 of a restored blueprint cites `kit-archetypes`, a kit-builder
   skill the kit's own readers may not have; `kit-interview` could say to name the archetype
   without the skill's name.
+  *Done in 0.3.0:* the blueprint template's section 2.
 
 #### Skills kit-builder 0.2.0 uses (checked 2026-10-06, `lado kits show kit-builder`)
 
@@ -129,7 +139,10 @@ What to fix in kit-builder:
 | `grill-me`, `handoff`, `teach`, `to-questionnaire`, `wait-what` | mattpocock-skills v1.2.3 | none | nowhere |
 
 Every skill that a role or one of its steps names is registered on that role, so nothing
-is missing from `skills:`. What is left:
+is missing from `skills:`. All three points below are done in 0.3.0: `kit-rubric` is on the
+author and the supervisor (their text points to it), `folders` names only `grilling` and
+`writing-for-agents` (`lado kits check .` counts 7 skills, was 12), and `kit-rubric` says
+where to find a dependency's text.
 
 - `kit-rubric` is not on the author or the supervisor, although `kit-budget` (which both
   have) sends to "criterion 6 (`kit-rubric`)", and the description of `lado-kit-format` says

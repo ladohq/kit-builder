@@ -11,8 +11,9 @@ A LADO kit that builds and evaluates LADO kits.
   with the supervisor which findings to fix. A kit without a `BLUEPRINT.md` gets one
   restored from its roles and flows on the way.
 - **Evaluate** any kit, yours or someone else's, before you put it to work. The critic runs
-  `lado kits check` and the budget script and reviews the text against the rubric. It
-  writes a report with quoted findings and the few things to fix first.
+  `lado kits check` and the budget script and reviews the text against the rubric, with
+  the text of the skills each role depends on and a checklist of holes earlier reviews
+  missed. It writes a report with quoted findings and the few things to fix first.
 
 The rule behind all three is the simplest kit that solves your task. A role, step, gate or
 skill goes into the kit only when one of your requirements needs it.
@@ -50,7 +51,9 @@ against kit-reports/lado-dev-0.9.1-2026-10-06.md"). The critic then reviews only
 changed since that report: it marks the old findings resolved or still open, checks that
 no rule was lost in cut text, lists findings in untouched text apart as "Missed earlier",
 and says whether the stop rule holds (no high or medium finding in the changed text). When
-it holds, another round would mostly find what earlier rounds missed.
+it holds, another round would mostly find what earlier rounds missed; when it does not, it
+is advice for you, not a block. The report's card says what its count covers, the whole
+kit or only the change, so compare counts only between reports of the same coverage.
 
 ## Flows
 
@@ -68,7 +71,8 @@ design (supervisor) → design_ok (gate: approval)
 - `build`: the author writes the kit from the blueprint and, on later visits, fixes the
   critic's findings.
 - `evaluate`: `lado kits check`, the budget and the rubric. It reports `approved` or
-  `changes`, at most three times; `changes` while a high finding is open. If the loop hits
+  `changes`, at most three times; `changes` while a high finding is open (medium ones are
+  for you to weigh at the release gate). If the loop hits
   its limit, the supervisor shows you the open findings and you answer the loop gate:
   `continue` (the critic checks once more) or `cancel`; to release as it is, run
   `lado flow-set <session> <run> release_ok --reason "<why>"`.
@@ -87,13 +91,15 @@ assess (critic) → triage (supervisor) → plan_ok (gate: approval)
   → release_ok (gate: approval) → release (supervisor) → done
 ```
 
-- `assess`: a full evaluation of the current version, or the report you named for it.
+- `assess`: a full evaluation of the whole current version, or the full report you named
+  for it. Later checks review only the change, so this one sets what the run looks at.
 - `triage`: you and the supervisor go through the findings, the critic's questions and
   any change you want that no finding covers; it restores `BLUEPRINT.md` if the kit has
   none and writes the plan of changes. Rejecting the plan at `plan_ok` sends it back with
   your reason.
 - `build`, `evaluate`, `release`: as in `create`, by the plan; the plan names the version,
-  and `evaluate` reviews the change against the report.
+  and `evaluate` reviews the change against the report, then, before it approves, makes
+  one more pass over the whole of every file the change touched.
 
 **`evaluate`**: one step: the critic evaluates the kit the task names and writes the report.
 The supervisor merges the run's branch, which brings the report into your repository.

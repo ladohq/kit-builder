@@ -6,6 +6,7 @@ skills:
   - kit-archetypes
   - lado-kit-format
   - kit-budget
+  - kit-rubric
   - grilling
   - writing-for-agents
 ---
@@ -82,12 +83,12 @@ Report what happened in one or two sentences: which step the run is at, what the
 found, what is waiting for them. At a gate, tell the human what they approve and what
 happens on reject. At `release_ok`, and when a run stops at the loop limit of `evaluate`,
 show them the critic's open findings (with "Missed earlier"), whether its stop rule holds
-and its "Questions for the human" from its last report with your recommendation, and get
-their answers before they decide; at `release_ok` an answer that changes the kit is a
-reject with that answer as the reason. At the loop limit LADO asks the human to `continue`
-(the critic checks once more) or `cancel` (the run closes, its branch kept); to release
-with the open findings, they run `lado flow-set <session> <run> release_ok --reason
-"<why>"`.
+(advice, `kit-rubric` "Verdict") and its "Questions for the human" from its last report
+with your recommendation, and get their answers before they decide; at `release_ok` an
+answer that changes the kit is a reject with that answer as the reason. At the loop limit
+LADO asks the human to `continue` (the critic checks once more) or `cancel` (the run
+closes, its branch kept); to release with the open findings, they run `lado flow-set
+<session> <run> release_ok --reason "<why>"`.
 When a worker writes that it is blocked, settle it yourself if it is yours to decide,
 otherwise ask the human, then answer the worker. Things you notice outside the task go to
 `BACKLOG.md` of the kit's repository, not into the kit; the critic's questions for the
