@@ -65,6 +65,6 @@ belongs to one step, a skill if several roles need it) and pointing to it from t
 - Green: nothing to justify.
 - Yellow: allowed when `BLUEPRINT.md` says which requirement needs it and why a simpler
   shape does not work.
-- Red: cut it before release (merge roles or steps, move text into a skill). If it truly
-  cannot be cut, the blueprint says why and the human decides. The thresholds are
-  starting values.
+- Red: cut it before release (merge roles or steps, move text into a skill). The thresholds
+  are starting values: if a red measure truly cannot be cut, tell the human; changing a
+  threshold is a change to kit-builder, not to the kit.

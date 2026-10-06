@@ -20,8 +20,9 @@ states:
          path is in `flow_status` for the run) and commit only that file on the run's
          branch. Every element of the kit traces to a requirement in section 3; the planned
          budget is in section 4.
-      On a later visit your previous blueprint is the note from design: revise that text,
-      not one from memory. The previous step's note says why you are back: the human's
+      On a later visit revise `BLUEPRINT.md` as committed in the run's worktree, not your
+      earlier note or memory: the author may have updated its section 4 since. The
+      previous step's note says why you are back: the human's
       reason for rejecting it at the gate, or what the author could not build. Settle it
       with the human, then update `BLUEPRINT.md` and commit only that file.
       Done when the blueprint answers every open question and is committed. Report `ready`:
@@ -39,9 +40,12 @@ states:
     do: |
       Write the kit in the run's worktree from the blueprint (the note from design, as the
       human approved it), as your role describes.
-      On a later visit the previous step's note is the critic's report, or why the release
-      was rejected or failed: go through each finding and mark it fixed or not fixed, with
-      the reason (your role, "Fixing from the critic's report").
+      On a later visit the previous step's note says why you are back: the critic's report,
+      or why the release was rejected or failed: go through each finding and mark it fixed
+      or not fixed, with the reason (your role, "Fixing from the critic's report"). After
+      you reported `blocked`, it is the revised blueprint the human approved, committed as
+      `BLUEPRINT.md` in the worktree: change what the revision changed (its diff on the
+      run's branch).
       Done when `lado kits check .` shows no error, every warning and every measure of the
       budget script over green is fixed or justified in the blueprint, and the work is
       committed on the run's branch. Report `done` with your note as your role describes.
@@ -57,36 +61,39 @@ states:
       Evaluate the kit in the run's worktree against its blueprint (the note from design),
       as your role describes: `lado kits check .`, the `kit-budget` script and the rubric
       in `kit-rubric`. The author's note (the previous step's) lists what it changed.
-      On a later visit, your previous report is the note from evaluate: mark each of its
-      findings RESOLVED or STILL OPEN first, checking the author's fixed / not fixed list
-      against the files, then look for new findings.
+      On a later visit, start as your role says ("Later visits"), checking the author's
+      fixed / not fixed list against the files.
       Done when every criterion of the rubric has a verdict with its quote and file. Report
       `approved` when `lado kits check .` has no error, no measure is red, every yellow
-      measure is justified in the blueprint and no finding needs a change before release;
-      otherwise `changes`, with the findings to fix first. note_summary is the verdict and
-      the finding count; note_body is your report.
+      measure is justified in the blueprint and no high finding is open; otherwise
+      `changes`, with the findings to fix first. Medium and low findings do not block: the
+      human weighs them in your report at `release_ok`. note_summary is the verdict and the
+      finding count; note_body is your report.
     outcomes: {approved: release_ok, changes: build}
   release_ok:
     gate: approval
     needs: [design]
-    ask: Release the kit? The supervisor sets the version, checks it and tags it locally.
+    ask: >-
+      Release the kit? The supervisor sets the version, checks it, merges the run's branch
+      into the branch the run started from and tags it locally.
     outcomes: {approved: release, rejected: build}
   release:
     agent: supervisor
     do: |
       Release the kit as your role describes (section "Release").
-      1. Pick the version with the human: 0.1.0 for a first release unless they want
-         another, otherwise the next one by what changed. In the run's worktree set
-         `version` in `kit.yaml` to it and commit on the run's branch.
-      2. In the run's worktree run `lado kits check . --tag vX.Y.Z` with that version. If it
-         does not print OK, report `failed` with its output in the note; the author fixes
-         it.
-      3. In your repository, on the branch the run started from (checked out there; main,
-         or master after a plain `git init`), `git merge --ff-only <the run's branch>`. If
-         that branch moved and the merge cannot fast-forward, `git merge <the run's
-         branch>` and run `lado kits check . --tag vX.Y.Z` again on the result; on a
-         conflict or a failed check, report `failed`. Then `git tag vX.Y.Z` there. Never
-         move or delete a tag that exists.
+      1. Pick the version with the human: 0.1.0 when the repository has no `v*` tag yet,
+         unless they want another; otherwise the next one by what changed. On a later visit
+         keep the version already in `kit.yaml` unless the human changes it. In the run's
+         worktree set `version` in `kit.yaml` to it and commit on the run's branch.
+      2. In the run's worktree, merge the branch the run started from (checked out in your
+         repository; main, or master after a plain `git init`) into the run's branch. On a
+         conflict, `git merge --abort` and report `failed` with the conflicting files. Then
+         run `lado kits check . --tag vX.Y.Z` there; if it does not print OK, report
+         `failed` with its output. The author fixes either on the run's branch.
+      3. In your repository, on the branch the run started from, `git merge --ff-only <the
+         run's branch>`, so that branch only ever moves to a checked commit; if it cannot
+         fast-forward, the branch moved meanwhile: go back to step 2. Then `git tag vX.Y.Z`
+         there. Never move or delete a tag that exists.
       4. Ask the human whether to push the branch and the tag, and then whether to open a
          marketplace pull request, with the ready text your role lists. Do each only after
          their yes; the pull request only after the push.

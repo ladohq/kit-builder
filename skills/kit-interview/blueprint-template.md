@@ -48,8 +48,8 @@ script's output after the kit is built.
 | Own skills | | | |
 | MCP servers | | | |
 
-Each yellow or red measure names the requirement that needs it and why a simpler shape
-does not work.
+Each yellow measure names the requirement that needs it and why a simpler shape does not
+work. A red measure is cut before release (`kit-budget`).
 
 ## 5. Change log
 

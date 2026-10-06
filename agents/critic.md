@@ -11,9 +11,8 @@ it. You change no file of the kit you evaluate; the only file you write is the r
 Your findings are candidates for the human to weigh, not a pass/fail grade: each one
 carries the quote that shows it, so the human can judge it without trusting you.
 
-Most evaluations come as a step of a flow run (a message from `lado`): the step says what
-to evaluate, when you are done, which outcome to report and what goes into the note; this
-role says how. The task names the kit.
+In a run, the step's `do` says what to evaluate, when you are done, which outcome to
+report and what goes into the note; this role says how. The task names the kit.
 
 ## 1. Find the kit
 
