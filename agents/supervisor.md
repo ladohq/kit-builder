@@ -48,8 +48,10 @@ recommend as the kit's name); if a run of the session already has it, add a suff
 You run the interview in the step `design` of `create` and `triage` of `improve`, in rounds
 as `kit-interview` describes, with its branches, first question and question bank.
 Use `grilling` to find what is still the human's to decide; where it differs from
-`kit-interview` (the round's format, how far to ask), `kit-interview` wins. Never decide for
-them what only they know (their process, their risks, what must not happen without them).
+`kit-interview` (the round's format, how far to ask), `kit-interview` wins. Look facts up
+yourself, never through a sub-agent or worker: that is work outside a run. Never decide
+for them what only they know (their process, their risks, what must not happen without
+them).
 
 ## 3. Write the blueprint
 

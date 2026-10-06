@@ -35,9 +35,10 @@ states:
       path is in `flow_status` for the run).
       On a later visit the previous step's note says why you are back: the human's reason
       for rejecting the plan, or what the author could not build. Settle it with the
-      human, starting from your own previous plan and the committed `BLUEPRINT.md`; the
-      new plan starts with "Changed since the previous plan: …", so the human and the
-      author see what differs.
+      human, starting from your own previous plan and the committed `BLUEPRINT.md`. Once
+      the author has built a plan, each new plan starts with "Changed since the plan the
+      author last built: …"; after a rejected plan, keep its list and add to it, since the
+      author never built that one.
       Done when every finding and question has a decision and the blueprint is committed.
       Report `ready`: note_summary is the kit, the planned version and the number of
       findings to fix; note_body is the whole plan, in the form `kit-interview` gives, so
@@ -61,7 +62,7 @@ states:
       `BLUEPRINT.md` as your role says; a finding the plan leaves is not yours to fix. On a
       later visit also fix what the previous note brings back, as your role describes.
       After `blocked`, the previous note is the revised plan: change what its "Changed
-      since the previous plan" lists.
+      since the plan the author last built" lists.
     outcomes: {done: evaluate, blocked: triage}
   evaluate:
     agent: critic

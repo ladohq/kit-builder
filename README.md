@@ -103,7 +103,8 @@ assess (critic) → triage (supervisor) → plan_ok (gate: approval)
   one more pass over the whole of every file the change touched.
 
 **`evaluate`**: one step: the critic evaluates the kit the task names and writes the report.
-The supervisor merges the run's branch, which brings the report into your repository.
+The supervisor merges the run's branch when it adds only the report; anything more needs
+your yes.
 
 ## Where things are
 

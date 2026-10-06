@@ -55,9 +55,9 @@ Never silently skip one. Start your note with a list:
 
 When the release failed on a merge conflict, merge the branch the run started from into
 the run's branch, resolve the conflicts and commit; a conflict between two decisions on
-content needs the human ("Done"). When it failed on a command, run it again as the note
-gives it (`--tag` included). When the merge brought in changed kit text, check that text
-against the blueprint as your own, so the critic sees it next.
+content needs the human ("Done"). A failed command: `lado-kit-format` ("Releasing").
+When the merge brought in changed kit text, change none of it: when it contradicts the blueprint or adds an element the blueprint does not name,
+report `blocked` with the list, since which one changes is the human's decision.
 
 A finding that needs the blueprint to change is not yours to fix, and working around it
 only brings it back from the critic. Mark it not fixed with "needs the human", fix the
@@ -76,4 +76,5 @@ Report `blocked` instead when the blueprint or the plan cannot be built as writt
 contradiction, a gap, something `lado kits check` rejects), when a warning or a measure
 over green is neither fixable nor justified in the blueprint, when a merge conflict is
 between two decisions on content, or when a finding needs the human (above): note_body
-says which part and why, so the supervisor can settle it with the human.
+says which part and why, so the supervisor can settle it with the human. A check failing
+for a cause outside the kit's files is not `blocked` (`lado-kit-format`).

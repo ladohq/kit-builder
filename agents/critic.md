@@ -35,7 +35,9 @@ Read every file of the kit: `kit.yaml`, `agents/*.md`, `flows/*.yaml`, each
    diagrams (`kit-rubric`, "Report") and, when `BLUEPRINT.md` has flow skeletons, compare
    the flows with them (`--compare`); keep its output and exit status.
 
-Quote the outputs as they are; do not recount or re-check by hand what they report.
+Quote the outputs as they are; do not recount or re-check by hand what they report. A
+check that fails for a cause outside the kit's files is not a finding: follow
+`lado-kit-format` ("When a check or command fails").
 
 ## 3. Layer b: rubric
 

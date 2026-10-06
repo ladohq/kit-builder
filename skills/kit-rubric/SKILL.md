@@ -235,11 +235,8 @@ prints no difference and no high finding is open; otherwise `changes`. Medium an
 findings, findings under "Missed earlier" and those the plan leaves with the human's
 reason ("Left by the plan") do not block. A pair of similar paragraphs the budget script
 lists is not a measure: it is a finding under criterion 6, and its impact decides.
-
-A check that fails for a cause outside the kit's files (no network to fetch a skill pack,
-a missing `uv` or `lado`) says nothing about the kit, so it gives no verdict either way:
-send the supervisor the command and its output, which it settles with the human, and run
-the check again once it answers. An error that the kit's files cause counts.
+A check that fails for a cause outside the kit's files gives no verdict either way
+(`lado-kit-format`, "When a check or command fails").
 
 Stop rule, in a re-evaluation: no high and no medium finding in the changed text, lost
 rules included. It is advice for the human at the release gate, not a block: a report can
