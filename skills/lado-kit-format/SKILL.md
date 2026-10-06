@@ -40,23 +40,20 @@ skill's text into a prompt.
 own files through `${SKILL_DIR}` (only inside a skill). The command scans only SKILL.md of a
 skill, so keep scripts and other files of a skill free of absolute and home paths too.
 
-**One lead.** Only a kit that leads a whole session has `supervisor:` in kit.yaml, and the
-name `supervisor` belongs to that agent alone. A kit that adds roles or skills to another kit
-has no supervisor, so adding it never changes who leads. A supervisor's step in a flow goes
-to whoever leads the session.
+**One lead.** Only a kit that leads a whole session has `supervisor:` in kit.yaml. A kit
+that adds roles or skills to another kit has no supervisor, so adding it never changes who
+leads. A supervisor's step in a flow goes to whoever leads the session.
 
 **Notes and `needs`.** A step gets the note of the step before it, nothing else, unless
 `needs` names earlier states; then it also gets their latest notes. So a note that a later
 step needs (a design, a blueprint) is written whole, never "as above". A reviewing state on
 a loop needs itself, to mark its previous findings RESOLVED or STILL OPEN.
 
-**Gates.** A gate is the human's decision: `approval` (exactly `approved`, `rejected`) or
-`choice` (its outcome names). Put one before anything that is hard to undo or leaves the
-machine (merge, tag, push, publish) and where only the human can decide; not after every
-step. A gate with `needs` shows the human those notes.
+**Gates.** A gate is the human's decision. Put one before anything that is hard to undo or
+leaves the machine (merge, tag, push, publish) and where only the human can decide; not
+after every step. A gate with `needs` shows the human those notes.
 
-**`max_visits`.** Every loop back (`changes` → an earlier step) needs a state with
-`max_visits` on it, usually the reviewing state, with a small number such as 3. Its `do`
-says what changes on a later visit.
+**`max_visits`.** On a reviewing state that can send work back, use a small number such as
+3, and say in its `do` what changes on a later visit.
 
 **Each `do`** says when the step is done and when to report each outcome.

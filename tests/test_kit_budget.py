@@ -150,6 +150,12 @@ class PromptWords(unittest.TestCase):
         )
 
 
+    def test_crlf_and_bom_frontmatter_not_counted(self):
+        text = "\ufeff" + agent("a", words(10)).replace("\n", "\r\n")
+        kit = Kit(self, agents={"a": text})
+        self.assertEqual(kit.measure("prompt_words"), {"agents/a.md": (10, "green")})
+
+
 class OwnSkills(unittest.TestCase):
     def test_zones(self):
         cases = {5: "green", 6: "yellow", 10: "yellow", 11: "red"}
@@ -237,6 +243,31 @@ class Run(unittest.TestCase):
         result = self.run_script(Kit(self, flows={"f": flow("f", gates=4)}))
         self.assertEqual(result.returncode, 1)
         self.assertIn("Overall: red", result.stdout)
+
+    def test_broken_frontmatter_exits_2(self):
+        kit = Kit(self, agents={"a": "---\nname: [a\n---\nYou work.\n"})
+        result = self.run_script(kit)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("agents/a.md", result.stderr)
+
+    def test_flow_that_is_a_list_exits_2(self):
+        kit = Kit(self, flows={"f": "- one\n- two\n"})
+        result = self.run_script(kit)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("f.yaml", result.stderr)
+
+    def test_flow_states_that_are_a_list_exits_2(self):
+        kit = Kit(self, flows={"f": "name: f\nstates: [a, b]\n"})
+        self.assertEqual(self.run_script(kit).returncode, 2)
+
+    def test_empty_kit_yaml_exits_2(self):
+        kit = Kit(self)
+        (kit.path / "kit.yaml").write_text("")
+        self.assertEqual(self.run_script(kit).returncode, 2)
+
+    def test_frontmatter_that_is_a_list_exits_2(self):
+        kit = Kit(self, agents={"a": "---\n- one\n---\nYou work.\n"})
+        self.assertEqual(self.run_script(kit).returncode, 2)
 
     def test_not_a_kit_exits_2(self):
         with tempfile.TemporaryDirectory() as empty:

@@ -75,21 +75,22 @@ class Report:
 
 
 def measure(kit: Path) -> Report:
-    meta = _yaml(kit / "kit.yaml") if (kit / "kit.yaml").is_file() else None
-    if not isinstance(meta, dict):
-        raise NotAKit(f"{kit}: no kit.yaml with a mapping in it")
+    if not (kit / "kit.yaml").is_file():
+        raise NotAKit(f"{kit}: no kit.yaml")
+    meta = _mapping(_read(kit / "kit.yaml"), kit / "kit.yaml")
+    if not meta:
+        raise NotAKit(f"{kit / 'kit.yaml'}: empty")
     report = Report(str(meta.get("name", "?")), str(meta.get("version", "?")))
     lead = meta.get("supervisor") or LEAD
     agents = {p: _frontmatter(p) for p in sorted((kit / "agents").glob("*.md"))}
-    flows = {p: _yaml(p) or {} for p in sorted((kit / "flows").glob("*.yaml"))}
+    flows = {p: _states(p) for p in sorted((kit / "flows").glob("*.yaml"))}
     rel = lambda p: p.relative_to(kit).as_posix()  # noqa: E731
 
     workers = [p for p, (m, _) in agents.items() if m.get("name", p.stem) not in (lead, LEAD)]
     report.rows.append(Row("worker_roles", "kit", len(workers)))
     for kind, key in (("work_steps", "agent"), ("gates", "gate")):
-        for path, data in flows.items():
-            states = (data.get("states") or {}).values()
-            count = sum(1 for s in states if isinstance(s, dict) and key in s)
+        for path, states in flows.items():
+            count = sum(1 for s in states.values() if isinstance(s, dict) and key in s)
             report.rows.append(Row(kind, rel(path), count))
         if not flows:
             report.rows.append(Row(kind, "no flows", 0))
@@ -103,8 +104,8 @@ def measure(kit: Path) -> Report:
     report.rows.append(Row("mcp_servers", "kit", len(servers)))
 
     texts = [(rel(p), body) for p, (_, body) in agents.items()]
-    for path, data in flows.items():
-        for state, s in (data.get("states") or {}).items():
+    for path, states in flows.items():
+        for state, s in states.items():
             if isinstance(s, dict) and isinstance(s.get("do"), str):
                 texts.append((f'{rel(path)}: state "{state}"', s["do"]))
     report.duplicates = _duplicates(texts)
@@ -126,21 +127,40 @@ def _duplicates(texts: list[tuple[str, str]]) -> list[Duplicate]:
     return [d for d in seen.values() if len(d.places) > 1]
 
 
-def _yaml(path: Path):
+def _read(path: Path) -> str:
+    """A file's text without a byte order mark and with \n line ends."""
+    text = path.read_text(encoding="utf-8-sig")
+    return text.replace("\r\n", "\n").replace("\r", "\n")
+
+
+def _mapping(text: str, path: Path) -> dict:
+    """YAML text that must be a mapping (or empty); anything else is NotAKit."""
     try:
-        return yaml.safe_load(path.read_text(encoding="utf-8"))
+        data = yaml.safe_load(text)
     except yaml.YAMLError as exc:
         raise NotAKit(f"{path}: not valid YAML: {exc}") from exc
+    if data is None:
+        return {}
+    if not isinstance(data, dict):
+        raise NotAKit(f"{path}: expected a YAML mapping")
+    return data
+
+
+def _states(path: Path) -> dict:
+    """The states of a flow file."""
+    states = _mapping(_read(path), path).get("states") or {}
+    if not isinstance(states, dict):
+        raise NotAKit(f"{path}: states must be a mapping")
+    return states
 
 
 def _frontmatter(path: Path) -> tuple[dict, str]:
     """An agent file's frontmatter and its body (the role prompt)."""
-    text = path.read_text(encoding="utf-8")
+    text = _read(path)
     match = re.match(r"---\n(.*?)\n---[ \t]*(?:\n|$)", text, re.S)
     if not match:
         return {}, text
-    meta = yaml.safe_load(match.group(1))
-    return (meta if isinstance(meta, dict) else {}), text[match.end():]
+    return _mapping(match.group(1), path), text[match.end():]
 
 
 def render(report: Report) -> str:

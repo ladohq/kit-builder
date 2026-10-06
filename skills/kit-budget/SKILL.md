@@ -18,7 +18,8 @@ For an installed kit, `lado kits show <name>` prints its folder. The script need
 (it declares PyYAML itself). Quote its output as it is; do not recount by hand.
 
 Exit status: `0` green or yellow, `1` at least one measure is red, `2` the folder is not a
-kit (no `kit.yaml`) or a file is not valid YAML.
+kit (no or empty `kit.yaml`), or a kit.yaml, flow or role frontmatter is not valid YAML or
+not a mapping.
 
 ## Measures and zones
 
