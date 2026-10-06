@@ -109,7 +109,7 @@ root (exit status 0), after the changes for 0.1.1 (batched interview rounds, the
 after the kit, F6.4 and F6.5 of `kit-reports/kit-builder-0.1.0-2026-10-06.md` folded):
 
 ```
-# Complexity budget: kit-builder 0.1.0
+# Complexity budget: kit-builder 0.1.1
 
 | Measure | Where | Value | Green / yellow up to | Zone |
 |---|---|---|---|---|
