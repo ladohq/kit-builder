@@ -65,15 +65,17 @@ version are given; the human decides what changes, and the blueprint records why
    cut).
 3. Go through the report in rounds: each finding with your recommendation (fix, or leave
    with a reason), each of its "Questions for the human", each measure over green that
-   keeps its place (the human's reason goes into section 4). A finding that changes a
-   requirement or adds or drops an element changes sections 1 and 3 too.
+   keeps its place (the human's reason goes into section 4), then each change the human
+   asks for that no finding covers. A finding that changes a requirement or adds or drops
+   an element changes sections 1 and 3 too.
 4. Add a row to section 5 per change: the planned version, the change, and the report and
    finding it comes from. Commit the blueprint.
 5. Write the plan, the note the author and the critic work from:
 
 ```
-Kit <name> <version now> → <planned version>; report <path>; blueprint <commit>
+Kit <name> <version now> → <planned version>; report <path> (commit <the commit it evaluated>); blueprint <commit>
 Fix: - <finding id and title>: <what to change, in which file>
+Change: - <the human's request no finding covers>: <what to change, in which file>
 Leave: - <finding id>: <the human's reason>
 Answers: - <question>: <answer>
 Blueprint: <what changed in sections 1–4, or "unchanged">

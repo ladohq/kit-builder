@@ -30,6 +30,9 @@ lado start . --kit kit-builder
 Then talk to the supervisor in LADO's UI or terminal. Its first question is whether you
 already have a process you want to bring over.
 
+In a fresh repository the agent CLI may first ask whether you trust the folder. If
+`lado ls` shows the supervisor in `starting` for long, run `lado attach` and confirm.
+
 ### Evaluate someone else's kit
 
 Start a session in any repository and name the kit, either its installed name or the
@@ -41,6 +44,13 @@ lado start . --kit kit-builder
 ```
 
 The report lands in `kit-reports/<kit>-<version>-<date>.md` of that repository.
+
+To check a kit again after changes, name its previous report ("evaluate lado-dev again
+against kit-reports/lado-dev-0.9.1-2026-10-06.md"). The critic then reviews only what
+changed since that report: it marks the old findings resolved or still open, checks that
+no rule was lost in cut text, lists findings in untouched text apart as "Missed earlier",
+and says whether the stop rule holds (no high or medium finding in the changed text). When
+it holds, another round would mostly find what earlier rounds missed.
 
 ## Flows
 
@@ -58,14 +68,18 @@ design (supervisor) → design_ok (gate: approval)
 - `build`: the author writes the kit from the blueprint and, on later visits, fixes the
   critic's findings.
 - `evaluate`: `lado kits check`, the budget and the rubric. It reports `approved` or
-  `changes`, at most three times.
+  `changes`, at most three times; `changes` while a high finding is open. If the loop hits
+  its limit, the supervisor shows you the open findings and you answer the loop gate:
+  `continue` (the critic checks once more) or `cancel`; to release as it is, run
+  `lado flow-set <session> <run> release_ok --reason "<why>"`.
 - `release`: sets the version, checks `lado kits check . --tag vX.Y.Z`, merges the run's
   branch and tags locally. Pushing and a marketplace pull request happen only after you say
   yes, and the supervisor gives you the pull request text.
 
 **`improve`**: change a kit in the session's repository and release it. Take it when you
 want an existing kit better, or when an `evaluate` report has findings you want fixed (name
-the report, so it is not evaluated again).
+the report, so the same kit is not evaluated again). Every change to a kit goes through a
+run, so the critic's check and your gates come before the tag.
 
 ```
 assess (critic) → triage (supervisor) → plan_ok (gate: approval)
@@ -74,10 +88,12 @@ assess (critic) → triage (supervisor) → plan_ok (gate: approval)
 ```
 
 - `assess`: a full evaluation of the current version, or the report you named for it.
-- `triage`: you and the supervisor go through the findings and the critic's questions; it
-  restores `BLUEPRINT.md` if the kit has none and writes the plan of changes. Rejecting the
-  plan at `plan_ok` sends it back with your reason.
-- `build`, `evaluate`, `release`: as in `create`, by the plan; the plan names the version.
+- `triage`: you and the supervisor go through the findings, the critic's questions and
+  any change you want that no finding covers; it restores `BLUEPRINT.md` if the kit has
+  none and writes the plan of changes. Rejecting the plan at `plan_ok` sends it back with
+  your reason.
+- `build`, `evaluate`, `release`: as in `create`, by the plan; the plan names the version,
+  and `evaluate` reviews the change against the report.
 
 **`evaluate`**: one step: the critic evaluates the kit the task names and writes the report.
 The supervisor merges the run's branch, which brings the report into your repository.
@@ -85,7 +101,8 @@ The supervisor merges the run's branch, which brings the report into your reposi
 ## Where things are
 
 - `BLUEPRINT.md`: kit-builder's own blueprint, with its requirements, the trace of every
-  role, step, gate and skill to them, and its complexity budget. A kit built with
+  role, step, gate and skill to them, and its complexity budget (green limits: 800 words
+  for a worker role, 1000 for the lead, five work steps and two gates per flow). A kit built with
   kit-builder gets its own `BLUEPRINT.md` in the same shape.
 - `kit-reports/`: evaluation reports, including kit-builder's evaluation of itself.
 - `agents/`, `flows/`, `skills/`: the roles, the three flows and the kit's own skills

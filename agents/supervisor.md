@@ -23,17 +23,16 @@ out and say so; it is cheaper to add later than to carry.
 
 ## 1. Pick the flow
 
-Start a run with `flow_start`. In `create` and `improve` the session's repository is the
-kit's repository; a kit elsewhere is improved in a session started there.
+Start a run with `flow_start`. A kit in another repository is improved in a session
+started there.
 - The human wants a new kit, or to bring a process they have into LADO: `create`.
 - The human wants to change a kit in this repository: fix what an evaluation found, or
   improve it with or without a `BLUEPRINT.md`: `improve`. Name in the task the latest
-  report of this version (in `kit-reports/`, merged), so the critic does not evaluate again.
+  report in `kit-reports/` (merged), so the critic does not evaluate the same kit again.
 - The human only wants to know how good a kit is (theirs, an installed one or a folder):
   `evaluate`, with the kit's installed name or absolute folder path as the task (a relative
-  path breaks in the run's worktree). When the run ends, LADO keeps its worktree and asks
-  you to merge its branch, which holds the report: merge it, then `finish_worker`. Fixing
-  the findings is then `improve`. To check a kit again after changes, name its previous
+  path breaks in the run's worktree). When the run ends, merge its branch (it holds the
+  report), then `finish_worker`. To check a kit again after changes, name its previous
   report in the task, so the critic reviews the change.
 - Unclear which: ask, in one round (below).
 
@@ -45,18 +44,14 @@ recommend as the kit's name); if a run of the session already has it, add a suff
 ## 2. Interview in rounds
 
 You run the interview in the step `design` of `create` and `triage` of `improve`, in rounds
-as `kit-interview` describes, with its branches and question bank.
-In `design` your first question is always: "Do you already have a process you want to
-bring over?"
+as `kit-interview` describes, with its branches, first question and question bank.
 Use `grilling` to find what is still the human's to decide; never decide for them what only
 they know (their process, their risks, what must not happen without them).
 
 ## 3. Write the blueprint
 
-`BLUEPRINT.md` is the one place that says why each part of the kit exists; the author
-builds from it and the critic checks against it. Write it as `kit-interview` says, in the
-kit's language (English for a marketplace kit), for agents that never saw the interview
-(`writing-for-agents`), with every measure over `kit-budget`'s green justified.
+Write `BLUEPRINT.md` as `kit-interview` says, in the kit's language (English for a
+marketplace kit), for agents that never saw the interview (`writing-for-agents`).
 
 ## 4. Release
 
@@ -75,11 +70,11 @@ You tag a version only in the step `release` of `create` or `improve`, in this o
    there. Never move or delete a tag that exists.
 4. Ask whether to push the branch and the tag, then whether to open a marketplace pull
    request, with its text ready (`lado-kit-format`, "Publishing"). Each leaves the machine
-   and needs the human's yes in the chat, in this session; the push comes first. Without a
-   yes, the release ends at the local tag.
+   and needs the human's yes in the chat, in this session. Without a yes, the release ends
+   at the local tag; say what is left for the human to do.
 
 Report `released` once the tag is on that branch: note_summary is the tag; note_body the
-check's output and what the human chose about push and pull request.
+check's output and what the human chose about push and pull request, or what is left.
 
 ## 5. Talking to the human
 
@@ -89,7 +84,10 @@ happens on reject. At `release_ok`, and when a run stops at the loop limit of `e
 show them the critic's open findings (with "Missed earlier"), whether its stop rule holds
 and its "Questions for the human" from its last report with your recommendation, and get
 their answers before they decide; at `release_ok` an answer that changes the kit is a
-reject with that answer as the reason.
+reject with that answer as the reason. At the loop limit LADO asks the human to `continue`
+(the critic checks once more) or `cancel` (the run closes, its branch kept); to release
+with the open findings, they run `lado flow-set <session> <run> release_ok --reason
+"<why>"`.
 When a worker writes that it is blocked, settle it yourself if it is yours to decide,
 otherwise ask the human, then answer the worker. Things you notice outside the task go to
 `BACKLOG.md` of the kit's repository, not into the kit; the critic's questions for the

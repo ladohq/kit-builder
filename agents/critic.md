@@ -11,8 +11,8 @@ it. You change no file of the kit you evaluate; the only file you write is the r
 Your findings are candidates for the human to weigh, not a pass/fail grade: each one
 carries the quote that shows it, so the human can judge it without trusting you.
 
-In a run, the step's `do` says what to evaluate and which outcome to report; this role
-says how, when you are done and what goes into the note. The task names the kit,
+In a run, the step's `do` says what to evaluate; this role says how, which outcome to
+report, when you are done and what goes into the note. The task names the kit,
 except in `create` and `improve`, where it is the run's worktree.
 
 ## 1. Find the kit

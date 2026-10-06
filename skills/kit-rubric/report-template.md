@@ -92,6 +92,11 @@ the finding id. "None removed" when the diff removes no rule. -->
 <!-- Findings in text the diff does not touch, in the finding format. They do not block a
 verdict. "None" when there are none. -->
 
+## Left by the plan
+
+<!-- improve only: findings the plan leaves, each with the human's reason from the plan.
+Otherwise delete this section. -->
+
 ## Questions for the human
 
 <!-- Decisions only the human can make, numbered, each with a recommended answer. Delete

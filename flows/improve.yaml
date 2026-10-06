@@ -14,10 +14,11 @@ states:
       Evaluate the kit in the run's worktree as it is now, read-only, as your role
       describes, against its `BLUEPRINT.md` if it has one, and commit the report on the
       run's branch.
-      When the task names a report already written for this kit at this version (the
-      `name` and `version` in `kit.yaml`), use it instead of evaluating again: copy it into
-      the worktree's `kit-reports/` and commit it if it is not there. A report of another
-      version is only background: evaluate anew.
+      When the task names a report of this kit and the kit's text (`kit-rubric`,
+      "Re-evaluation" 1) has not changed since the commit it evaluated, other than the
+      `version:` line of `kit.yaml`, use it instead of evaluating again: copy it into the
+      worktree's `kit-reports/` and commit it if it is not there. A report of
+      an older state is only background: evaluate anew.
       Report `done` with the note your role describes ("5. Report").
     outcomes: {done: triage}
   triage:
@@ -37,7 +38,8 @@ states:
       findings to fix; note_body is the whole plan, in the form `kit-interview` gives, so
       it stands alone for the human, the author and the critic.
       Report `nothing` when the human decides to change nothing; when the run ends, merge
-      its branch (the report, a restored blueprint) as after `evaluate`.
+      its branch as after `evaluate`, with a restored blueprint only if the human, shown
+      it whole, says yes (otherwise only the report).
     outcomes: {ready: plan_ok, nothing: done}
   plan_ok:
     gate: approval
@@ -47,8 +49,11 @@ states:
     agent: author
     needs: [triage]
     do: |
-      Change only what the plan (the note from triage) lists; a finding it leaves is not
-      yours to fix.
+      Change only what the plan (the note from triage) lists, and section 4 of
+      `BLUEPRINT.md` as your role says; a finding the plan leaves is not yours to fix. On a
+      later visit also fix what the previous note brings back, as your role describes.
+      After `blocked`, the previous note is the revised plan: change what differs from the
+      plan you built.
     outcomes: {done: evaluate, blocked: triage}
   evaluate:
     agent: critic

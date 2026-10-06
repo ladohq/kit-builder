@@ -75,3 +75,6 @@ pull request needs:
   `` | `<name>` | [<owner>/<repo>](<https url>) | <one sentence: what it is for> | ``;
 - a title and a short body: what the kit does, its flows, the output of
   `lado kits check . --tag vX.Y.Z`.
+
+Name the kit's repository `lado-kit-<name>` and give it the GitHub topic `lado-kit`, so
+people find it.
