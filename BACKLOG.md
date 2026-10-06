@@ -114,3 +114,34 @@ What to fix in kit-builder:
 - **Small:** BLUEPRINT §2 of a restored blueprint cites `kit-archetypes`, a kit-builder
   skill the kit's own readers may not have; `kit-interview` could say to name the archetype
   without the skill's name.
+
+#### Skills kit-builder 0.2.0 uses (checked 2026-10-06, `lado kits show kit-builder`)
+
+| Skill | Source | Registered on (`skills:`) | Named in the text of |
+|---|---|---|---|
+| `kit-interview` | own | supervisor | supervisor; `create.design`, `improve.triage`; `kit-archetypes` |
+| `kit-archetypes` | own | supervisor | supervisor; `create.design`; `kit-interview` and its blueprint template |
+| `lado-kit-format` | own | supervisor, author, critic | all three roles; `kit-interview`, `kit-archetypes`, `kit-rubric` |
+| `kit-budget` | own | supervisor, author, critic | all three roles; `kit-archetypes`, `kit-rubric`, blueprint template |
+| `kit-rubric` | own | critic | critic; `improve.assess`; the descriptions of `kit-budget` and `lado-kit-format` |
+| `grilling` | mattpocock-skills v1.2.3 | supervisor | supervisor |
+| `writing-for-agents` | mattpocock-skills v1.2.3 | supervisor, author | supervisor, author |
+| `grill-me`, `handoff`, `teach`, `to-questionnaire`, `wait-what` | mattpocock-skills v1.2.3 | none | nowhere |
+
+Every skill that a role or one of its steps names is registered on that role, so nothing
+is missing from `skills:`. What is left:
+
+- `kit-rubric` is not on the author or the supervisor, although `kit-budget` (which both
+  have) sends to "criterion 6 (`kit-rubric`)", and the description of `lado-kit-format` says
+  "for judging a kit's text against review criteria use kit-rubric". The author fixes
+  findings named by rubric criterion. The supervisor goes through them with the human in
+  `triage` and checks the stop rule at `release_ok`. Neither can open the criterion's text.
+  Decide: register `kit-rubric` on both, or make the report quote what each criterion
+  means, so the reader does not need the skill.
+- `dependencies.skills` pulls the whole `skills/productivity` folder, which installs 5
+  skills no role uses. Narrow `folders` to `skills/productivity/grilling` and
+  `skills/productivity/writing-for-agents`, if LADO takes skill-level folders.
+- The critic reads the dependency skills of the kit it evaluates from `~/.lado/cache`
+  (seen in the lado-dev reports). No skill or role says so. That is the gap behind the
+  recall finding above: `kit-rubric` should say where to find a dependency's text
+  (`lado kits show <kit>` prints each one's folder).
