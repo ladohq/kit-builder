@@ -66,7 +66,8 @@ design (supervisor) → design_ok (gate: approval)
   → release_ok (gate: approval) → release (supervisor) → done
 ```
 
-- `design`: the interview in rounds (question, context, recommendation) and `BLUEPRINT.md`.
+- `design`: the interview in rounds (question, context, recommendation) and `BLUEPRINT.md`,
+  with a diagram of each flow you will get.
   Rejecting it at `design_ok` sends it back with your reason.
 - `build`: the author writes the kit from the blueprint and, on later visits, fixes the
   critic's findings.
@@ -110,6 +111,9 @@ The supervisor merges the run's branch, which brings the report into your reposi
   role, step, gate and skill to them, and its complexity budget (green limits: 800 words
   for a worker role, 1000 for the lead, five work steps and two gates per flow). A kit built with
   kit-builder gets its own `BLUEPRINT.md` in the same shape.
+- `blueprint-flows/`: the flow skeletons of `BLUEPRINT.md` drawn as SVG graphs. The human
+  sees them at the blueprint or plan gate; the critic draws the flows the author built into
+  its report and lists every difference from the skeletons.
 - `kit-reports/`: evaluation reports, including kit-builder's evaluation of itself.
 - `agents/`, `flows/`, `skills/`: the roles, the three flows and the kit's own skills
   (`kit-interview`, `kit-archetypes`, `lado-kit-format`, `kit-budget`, `kit-rubric`).
@@ -118,8 +122,9 @@ The supervisor merges the run's branch, which brings the report into your reposi
 
 ## Tests
 
-The complexity budget script (`skills/kit-budget/scripts/kit_budget.py`) has tests on small
-fixture kits. Run them from the repository root with `uv`:
+The complexity budget script (`skills/kit-budget/scripts/kit_budget.py`) and the flow
+diagram script (`skills/kit-budget/scripts/flow_diagram.py`) have tests on small fixture
+kits and flows. Run them from the repository root with `uv`:
 
 ```bash
 uv run --with pyyaml python -m unittest discover -s tests -v
@@ -129,4 +134,6 @@ Run the script itself on any kit folder:
 
 ```bash
 uv run --script skills/kit-budget/scripts/kit_budget.py <kit folder>
+uv run --script skills/kit-budget/scripts/flow_diagram.py <kit folder> --out <folder>
+uv run --script skills/kit-budget/scripts/flow_diagram.py <kit folder> --compare <kit folder>/BLUEPRINT.md
 ```

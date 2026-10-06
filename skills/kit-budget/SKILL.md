@@ -1,6 +1,6 @@
 ---
 name: kit-budget
-description: Complexity budget of a LADO kit — a script that counts roles, flow steps, gates, prompt words, skills, MCP servers and similar paragraphs and gives each a green, yellow or red zone. Use when evaluating a kit, when a blueprint needs its budget section, or before adding a role, step, gate or skill.
+description: Complexity budget of a LADO kit — a script that counts roles, flow steps, gates, prompt words, skills, MCP servers and similar paragraphs and gives each a green, yellow or red zone — and a script that draws each flow as an SVG graph and compares the built flows with the blueprint's flow skeletons. Use when evaluating a kit, when a blueprint needs its budget section or its flow diagrams, or before adding a role, step, gate or skill.
 ---
 
 # Kit budget
@@ -96,3 +96,30 @@ Rewording a repeat until it scores under 55% does not fix it.
 - Red: cut it before release (merge roles or steps, move text into a skill). The thresholds
   are starting values: if a red measure truly cannot be cut, tell the human; changing a
   threshold is a change to kit-builder, not to the kit.
+
+## Flow diagram
+
+The budget counts the shape; the diagram shows it. `scripts/flow_diagram.py` in this
+skill's folder draws each flow as a graph: work steps (with their agent), gates and ends in
+their own colours, an edge per outcome labelled with its name, `max_visits` on the state.
+Run from the same folder as the budget:
+
+```bash
+uv run --script ${SKILL_DIR}/scripts/flow_diagram.py <input> --out <folder>
+uv run --script ${SKILL_DIR}/scripts/flow_diagram.py <kit folder> --compare <kit folder>/BLUEPRINT.md
+```
+
+`<input>` is a flow file, a kit folder (its `flows/*.yaml`) or a Markdown file: in
+`BLUEPRINT.md` every fenced `yaml` block with `states:` is a flow skeleton (the template in
+`kit-interview` shows one). `--out` writes `<flow name>.svg` per flow, the same bytes for
+the same flow, so a committed diagram changes only when its flow does. `--compare` prints
+each difference between the built flows and the skeletons: a flow, state, agent, gate,
+outcome or planned `max_visits` that one has and the other does not. The built flows and
+the blueprint must agree: when they differ, one of them is wrong.
+
+Exit status: `0` done, or no difference; `1` the flows differ from the skeletons; `2` an
+input is missing or a flow is not valid (an outcome to an unknown state, a state not
+reachable from `start`, no `end: true` state, a skeleton state with keys other than
+`agent`, `gate`, `end`, `outcomes` and `max_visits`). The error names the file and state.
+
+The drawing is ported from the Tessera kit-builder's `render_workflow_diagram.py`.

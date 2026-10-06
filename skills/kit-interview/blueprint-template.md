@@ -17,6 +17,27 @@ the skill it comes from, which the kit's readers may not have), and what was cha
 why; or the transferred process: its steps, owners and sign-offs as the human described
 them, with the source of each.
 
+Then each flow's skeleton: the flow as LADO will run it, without `do`, `ask`, `needs` or
+`description`. Each state has `agent:`, `gate:` (approval or choice) or `end: true`, and
+`outcomes` (outcome: next state); `max_visits` where a loop needs one. Below it, its
+diagram, drawn from this block by the `kit-budget` flow script:
+
+```yaml
+name: <flow>
+start: <first state>
+states:
+  <state>:
+    agent: <role>
+    outcomes: {<outcome>: <gate>}
+  <gate>:
+    gate: approval
+    outcomes: {approved: <next state>, rejected: <state>}
+  done:
+    end: true
+```
+
+![<flow>](blueprint-flows/<flow>.svg)
+
 ## 3. Traceability
 
 Every part of the kit, and the requirements it covers. A part without a requirement is a

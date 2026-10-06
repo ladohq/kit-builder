@@ -17,14 +17,15 @@ states:
       2. Choose the shape with the human: the transferred process mapped to roles, steps and
          gates, or an archetype from `kit-archetypes`.
       3. Write `BLUEPRINT.md` with all five sections at the root of the run's worktree (its
-         path is in `flow_status` for the run) and commit only that file on the run's
-         branch. Every element of the kit traces to a requirement in section 3; the planned
-         budget is in section 4.
+         path is in `flow_status` for the run), draw its flow skeletons into
+         `blueprint-flows/` (`kit-interview`) and commit only these on the run's branch.
+         Every element of the kit traces to a requirement in section 3; the planned budget
+         is in section 4.
       On a later visit revise `BLUEPRINT.md` as committed in the run's worktree, not your
       earlier note or memory: the author may have updated its section 4 since. The
       previous step's note says why you are back: the human's
       reason for rejecting it at the gate, or what the author could not build. Settle it
-      with the human, then update `BLUEPRINT.md` and commit only that file.
+      with the human, then update `BLUEPRINT.md` and its diagrams and commit only these.
       Done when the blueprint answers every open question and is committed. Report `ready`:
       note_summary is the kit's name and its shape in one line; note_body is the whole
       blueprint, as committed. LADO hands it to the human at the gate, to the author and to
@@ -32,7 +33,9 @@ states:
     outcomes: {ready: design_ok}
   design_ok:
     gate: approval
-    ask: Approve the blueprint? The author builds the kit from it.
+    ask: >-
+      Approve the blueprint and its flow diagrams (`blueprint-flows/`)? The author builds
+      the kit from them.
     outcomes: {approved: build, rejected: design}
   build:
     agent: author

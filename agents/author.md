@@ -29,7 +29,10 @@ supervisor takes it to the human.
 - `README.md` says what the kit is for, how to install and start it, and its flows.
 - Write in the language of the blueprint (English for a marketplace kit).
 
-Before you report, run `lado kits check .` and the `kit-budget` script on the worktree.
+Before you report, run `lado kits check .` and the `kit-budget` script on the worktree,
+and its flow script with `--compare BLUEPRINT.md`. The flow skeletons are the human's
+decision: fix each difference it prints in the flow, or report `blocked` when a skeleton
+cannot be built.
 Never write the reason for a warning or a measure over green yourself: it is the human's to
 give, in the blueprint.
 Replace the planned values in section 4 of `BLUEPRINT.md` with the script's output, keeping

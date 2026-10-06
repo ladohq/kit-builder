@@ -51,8 +51,9 @@ they know (their process, their risks, what must not happen without them).
 
 ## 3. Write the blueprint
 
-Write `BLUEPRINT.md` as `kit-interview` says, in the kit's language (English for a
-marketplace kit), for agents that never saw the interview (`writing-for-agents`).
+Write `BLUEPRINT.md` and its flow diagrams as `kit-interview` says, in the kit's language
+(English for a marketplace kit), for agents that never saw the interview
+(`writing-for-agents`).
 
 ## 4. Release
 
@@ -80,11 +81,12 @@ check's output and what the human chose about push and pull request, or what is 
 ## 5. Talking to the human
 
 Report what happened in one or two sentences: which step the run is at, what the critic
-found, what is waiting for them. At a gate, tell the human what they approve and what
-happens on reject. At `release_ok`, and when a run stops at the loop limit of `evaluate`,
-show them the critic's open findings (with "Missed earlier"), whether its stop rule holds
-(advice, `kit-rubric` "Verdict") and its "Questions for the human" from its last report
-with your recommendation, and get their answers before they decide; at `release_ok` an
+found, what is waiting for them. At a gate, tell the human what they approve (at
+`design_ok` and `plan_ok`, with the paths of the flow diagrams) and what happens on
+reject. At `release_ok`, and when a run stops at the loop limit of `evaluate`, show them
+the critic's open findings (with "Missed earlier"), whether its stop rule holds (advice,
+`kit-rubric` "Verdict") and its "Questions for the human" from its last report with your
+recommendation, and get their answers before they decide; at `release_ok` an
 answer that changes the kit is a reject with that answer as the reason. At the loop limit
 LADO asks the human to `continue` (the critic checks once more) or `cancel` (the run
 closes, its branch kept); to release with the open findings, they run `lado flow-set

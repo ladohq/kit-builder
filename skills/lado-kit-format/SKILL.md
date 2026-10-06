@@ -27,6 +27,8 @@ kit.yaml              name, version, description, supervisor, dependencies (lado
 agents/<role>.md      frontmatter name, description, skills, mcp; the body is the role prompt
 flows/<name>.yaml     states: work (agent, do, outcomes), gate, end
 skills/<name>/        SKILL.md and its files, always moved as a whole
+BLUEPRINT.md          not LADO's: why each part exists, with flow skeletons (kit-interview)
+blueprint-flows/      the skeletons drawn as SVG by the kit-budget flow script
 ```
 
 ## Rules the command does not prove
