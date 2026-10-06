@@ -29,7 +29,7 @@ then write the risk into the blueprint.
 
 - **Team**: worker, reviewer (read-only).
 - **Flow**: `implement` (needs itself) → `review` (`max_visits: 3`, changes → implement) →
-  gate `approve` → end.
+  gate `approve` (needs implement) → end.
 - **Take it when**: mistakes are costly and a fresh look catches them (code, contracts,
   anything merged or shipped).
 - **Not when**: the result is checked by a test or a command anyway; then Solo with that
@@ -39,7 +39,7 @@ then write the risk into the blueprint.
 
 - **Team**: designer (or the supervisor designs), implementer, reviewer.
 - **Flow**: `design` → gate `design_ok` → `implement` (needs itself) → `review`
-  (loop, `max_visits: 3`) → gate `merge_ok` → end.
+  (loop, `max_visits: 3`) → gate `merge_ok` (needs implement) → end.
 - **Take it when**: the human wants to agree on the approach before work starts (larger
   changes, architecture, public interfaces).
 - **Not when**: tasks are small and their acceptance criteria are known up front; use 1.
@@ -74,7 +74,7 @@ then write the risk into the blueprint.
 
 - **Team**: writer, editor.
 - **Flow**: `outline` → gate `outline_ok` → `draft` (needs itself) → `edit`
-  (`max_visits: 2`, changes → draft) → gate `publish_ok` → end.
+  (`max_visits: 2`, changes → draft) → gate `publish_ok` (needs draft) → end.
 - **Take it when**: text is published under the human's name, and its structure must be
   agreed first.
 - **Not when**: internal notes or drafts; use Solo.
@@ -91,7 +91,7 @@ then write the risk into the blueprint.
 
 - **Team**: debugger (reproduces and fixes), reviewer.
 - **Flow**: `reproduce` → `fix` (needs itself) → `review` (loop, `max_visits: 3`) → gate
-  `merge_ok` → end.
+  `merge_ok` (needs fix) → end.
 - **Take it when**: the bug must be reproduced by a failing test before it is fixed.
 - **Not when**: the cause is already known; use 1.
 
@@ -102,6 +102,6 @@ Whatever the shape, before it goes into the blueprint:
 - every step says when it is done and when each outcome applies;
 - an independent check comes before the end when the result is used by others;
 - loops and gates follow `lado-kit-format` ("Notes and `needs`", "Gates",
-  "`max_visits`"): a work step on a loop whose note the final gate shows the human needs
-  itself; two gates or fewer per flow unless the blueprint justifies a third;
+  "`max_visits`"): a work step on a loop needs itself when a gate or a later step needs its
+  note; two gates or fewer per flow unless the blueprint justifies a third;
 - the measures are inside `kit-budget`'s green zone, or the blueprint says why not.

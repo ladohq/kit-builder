@@ -120,7 +120,7 @@ root (exit status 0), after the fixes from the self-evaluation
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
 | Words in a role prompt | agents/author.md | 468 | 800 / 1500 | green |
 | Words in a role prompt | agents/critic.md | 556 | 800 / 1500 | green |
-| Words in a role prompt | agents/supervisor.md | 794 | 800 / 1500 | green |
+| Words in a role prompt | agents/supervisor.md | 796 | 800 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
@@ -132,7 +132,7 @@ Overall: green
 ```
 
 No measure is over green, so none needs a reason. Three sit at the edge of green: gates in
-`create` (2 of 2), own skills (5 of 5) and the supervisor's prompt (794 of 800 words). A
+`create` (2 of 2), own skills (5 of 5) and the supervisor's prompt (796 of 800 words). A
 new gate, skill or supervisor rule therefore makes the kit yellow and needs a reason here.
 
 ## 5. Change log

@@ -82,4 +82,4 @@ report with your recommendation, and get their answers before they decide; at
 `release_ok` an answer that changes the kit is a reject with that answer as the reason.
 When a worker writes that it is blocked, settle it yourself if it is yours to decide,
 otherwise ask the human, then answer the worker. Things you notice outside the task go to
-`BACKLOG.md` of the kit's repository, not into the kit; the human's open questions do not.
+`BACKLOG.md` of the kit's repository, not into the kit; the critic's questions for the human do not.
