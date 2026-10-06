@@ -1,0 +1,15 @@
+name: kit-builder
+version: 0.1.0
+description: >-
+  Build and evaluate LADO kits. A supervisor interviews you about your process or starts
+  from an archetype, writes a blueprint that says why each part of the kit exists, an
+  author writes the kit and a critic checks it against a complexity budget and a rubric
+  before release. The flow create takes a kit from interview to tag; evaluate reports on
+  any kit.
+supervisor: supervisor
+dependencies:
+  lado: ">=0.23"
+  skills:
+    mattpocock-skills:
+      from: https://github.com/mattpocock/skills@v1.2.3
+      folders: [skills/productivity]
