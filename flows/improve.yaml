@@ -1,0 +1,82 @@
+name: improve
+description: >-
+  Improve a LADO kit that already exists, from an evaluation to a release tag: the critic
+  evaluates its current version (or takes the task's report of it), the supervisor goes
+  through the report with the human, restores BLUEPRINT.md if the kit has none and writes
+  the plan of changes, the human approves it, the author changes the kit, the critic checks
+  it, the human approves the release, the supervisor tags it. The kit's repository is the
+  session's repository.
+start: assess
+states:
+  assess:
+    agent: critic
+    do: |
+      Evaluate the kit in the run's worktree as it is now, read-only, as your role
+      describes, against its `BLUEPRINT.md` if it has one, and commit the report on the
+      run's branch.
+      When the task names a report already written for this kit at this version (the
+      `name` and `version` in `kit.yaml`), use it instead of evaluating again: copy it into
+      the worktree's `kit-reports/` and commit it if it is not there. A report of another
+      version is only background: evaluate anew.
+      Report `done` with the note your role describes ("5. Report").
+    outcomes: {done: triage}
+  triage:
+    agent: supervisor
+    needs: [assess, triage]
+    do: |
+      Decide with the human what to change, from the critic's report (the note from
+      assess), as `kit-interview` describes (branch "Existing kit"): restore
+      `BLUEPRINT.md` first when the kit has none, then go through the findings, the
+      critic's "Questions for the human" and every measure over green. Commit only
+      `BLUEPRINT.md` in the run's worktree (its path is in `flow_status` for the run).
+      On a later visit the previous step's note says why you are back: the human's reason
+      for rejecting the plan, or what the author could not build. Settle it with the
+      human, starting from your own previous plan and the committed `BLUEPRINT.md`.
+      Done when every finding and question has a decision and the blueprint is committed.
+      Report `ready`: note_summary is the kit, the planned version and the number of
+      findings to fix; note_body is the whole plan, in the form `kit-interview` gives, so
+      it stands alone for the human, the author and the critic.
+    outcomes: {ready: plan_ok}
+  plan_ok:
+    gate: approval
+    ask: Approve the plan? The author changes the kit by it.
+    outcomes: {approved: build, rejected: triage}
+  build:
+    agent: author
+    needs: [triage]
+    do: |
+      Change the kit in the run's worktree by the plan (the note from triage, as the human
+      approved it) and the `BLUEPRINT.md` committed there, as your role describes. Change
+      only what the plan lists; a finding it leaves is not yours to fix.
+      On a later visit the previous step's note says why you are back: the critic's report,
+      or why the release was rejected or failed.
+      Report `done` or `blocked` as your role says ("Done"); `blocked` goes back to triage.
+    outcomes: {done: evaluate, blocked: triage}
+  evaluate:
+    agent: critic
+    max_visits: 3
+    needs: [triage, evaluate]
+    do: |
+      Evaluate the changed kit in the run's worktree against its `BLUEPRINT.md` and the
+      plan (the note from triage), as your role describes, and give a verdict as it says
+      ("5. Report"). The author's note (the previous step's) lists what it changed.
+      On the first visit the plan's findings to fix are your previous findings: mark each
+      RESOLVED or STILL OPEN as your role says ("Later visits"). On a later visit, start
+      from your own previous report.
+    outcomes: {approved: release_ok, changes: build}
+  release_ok:
+    gate: approval
+    needs: [triage]
+    ask: >-
+      Release the kit? The supervisor sets the version from the plan, checks it, merges the
+      run's branch into the branch the run started from and tags it locally.
+    outcomes: {approved: release, rejected: build}
+  release:
+    agent: supervisor
+    needs: [triage]
+    do: |
+      Release the kit as your role describes (section "Release"), with the version the plan
+      (the note from triage) names unless the human changes it.
+    outcomes: {released: done, failed: build}
+  done:
+    end: true

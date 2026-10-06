@@ -7,11 +7,14 @@ A LADO kit that builds and evaluates LADO kits.
   `BLUEPRINT.md` that says why each part of the kit exists. An author writes the kit, and a
   critic checks it against a complexity budget and a 12-criterion rubric. You approve the
   blueprint and the release, and the supervisor tags it.
+- **Improve** a kit you already have, from the critic's report to a new tag. You decide
+  with the supervisor which findings to fix; a kit without a `BLUEPRINT.md` gets one
+  restored from its roles and flows on the way.
 - **Evaluate** any kit, yours or someone else's, before you put it to work. The critic runs
   `lado kits check` and the budget script and reviews the text against the rubric. It
   writes a report with quoted findings and the few things to fix first.
 
-The rule behind both is the simplest kit that solves your task. A role, step, gate or skill
+The rule behind all three is the simplest kit that solves your task. A role, step, gate or skill
 goes into the kit only when one of your requirements needs it.
 
 Requires LADO 0.23 or newer (`lado kits check` checks flow graphs from 0.23 on).
@@ -60,6 +63,22 @@ design (supervisor) → design_ok (gate: approval)
   branch and tags locally. Pushing and a marketplace pull request happen only after you say
   yes, and the supervisor gives you the pull request text.
 
+**`improve`**: change a kit in the session's repository and release it. Take it when you
+want an existing kit better, or when an `evaluate` report has findings you want fixed (name
+the report, so it is not evaluated again).
+
+```
+assess (critic) → triage (supervisor) → plan_ok (gate: approval)
+  → build (author) → evaluate (critic, max_visits 3; changes → build)
+  → release_ok (gate: approval) → release (supervisor) → done
+```
+
+- `assess`: a full evaluation of the current version, or the report you named for it.
+- `triage`: you and the supervisor go through the findings and the critic's questions; it
+  restores `BLUEPRINT.md` if the kit has none and writes the plan of changes. Rejecting the
+  plan at `plan_ok` sends it back with your reason.
+- `build`, `evaluate`, `release`: as in `create`, by the plan; the plan names the version.
+
 **`evaluate`**: one step: the critic evaluates the kit the task names and writes the report.
 The supervisor merges the run's branch, which brings the report into your repository.
 
@@ -69,7 +88,7 @@ The supervisor merges the run's branch, which brings the report into your reposi
   role, step, gate and skill to them, and its complexity budget. A kit built with
   kit-builder gets its own `BLUEPRINT.md` in the same shape.
 - `kit-reports/`: evaluation reports, including kit-builder's evaluation of itself.
-- `agents/`, `flows/`, `skills/`: the roles, the two flows and the kit's own skills
+- `agents/`, `flows/`, `skills/`: the roles, the three flows and the kit's own skills
   (`kit-interview`, `kit-archetypes`, `lado-kit-format`, `kit-budget`, `kit-rubric`).
   `grilling` and `writing-for-agents` come from
   [mattpocock/skills](https://github.com/mattpocock/skills) as a dependency.

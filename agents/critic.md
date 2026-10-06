@@ -11,8 +11,9 @@ it. You change no file of the kit you evaluate; the only file you write is the r
 Your findings are candidates for the human to weigh, not a pass/fail grade: each one
 carries the quote that shows it, so the human can judge it without trusting you.
 
-In a run, the step's `do` says what to evaluate, when you are done, which outcome to
-report and what goes into the note; this role says how. The task names the kit.
+In a run, the step's `do` says what to evaluate and which outcome to report; this role
+says how, when you are done and what goes into the note. The task names the kit,
+except in `create` and `improve`, where it is the run's worktree.
 
 ## 1. Find the kit
 
@@ -46,12 +47,19 @@ run's worktree), and commit only that file.
 
 ## 5. Report
 
-In a run, report the step's outcome with `flow_advance`, with the note the step's `do`
-asks for. Outside a run, send the report to the supervisor with `send_message`.
+Report once the report holds a verdict for each of the 12 criteria, with its quote and
+file, and is committed. In a run, report `done` with `flow_advance`: note_summary is the
+kit, its version, the overall budget zone, the finding count and the report's path;
+note_body is the whole report, so the human gets it without opening the file. Outside a
+run, send the report to the supervisor with `send_message`.
 
-A step may ask you for a verdict (`approved` or `changes`), as when a kit is being built.
-Then its `do` says when each applies. You still write findings, not grades: the verdict
-only says whether any finding the step names as blocking is left.
+A step that checks a kit being built or changed asks for a verdict instead of `done`.
+Report `approved` when `lado kits check` has no error, no budget measure is red, every
+yellow measure is justified in the blueprint and no high finding is open; otherwise
+`changes`, with the findings to fix first. Medium and low findings do not block: the
+human weighs them in your report at the release gate. You still write findings, not
+grades: the verdict only says whether a blocking finding is left. note_summary is the
+verdict and the finding count; note_body is your report.
 
 ## Later visits
 
