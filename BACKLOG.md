@@ -15,9 +15,33 @@ friction in LADO itself, to move to the LADO repository.
   In a `ru` run of `evaluate` over lado-dev the first report came in English, following the
   English template. `kit-rubric` now says the report takes the notes' language; LADO could
   say it for every file the step writes for the human.
-- Re-evaluation (`kit-rubric`) is untested on a real kit: run `improve` or `evaluate` with a
-  previous report over lado-dev and check that the stop rule holds after one or two rounds,
-  that "Missed earlier" stays small, and that the cut-rule table catches a lost rule.
+- Re-evaluation (`kit-rubric`) ran once, by hand, on kit-builder 0.2.0 against the 0.1.0
+  report (`kit-reports/kit-builder-0.2.0-2026-10-06.md`): the cut-rule check found two lost
+  rules, but the diff covered the whole kit, so "Missed earlier" was empty by construction
+  and the stop rule was not tested over rounds. Still to do: a second round after the fixes,
+  and a run of `improve` over lado-dev, to see the stop rule hold after one or two rounds
+  with a small "Missed earlier".
+- Rubric criterion 6 is the only check for a rule restated inside a longer paragraph
+  (`kit-budget` misses them, 38–45% similar). If such repeats keep coming back in reports,
+  try comparing sentences, not only paragraphs.
+- `[lado]` A run stopped at `max_visits` moves on only by the human's `lado flow-set`; the
+  supervisor can just name the options. A choice gate LADO adds at the loop limit would
+  keep it in the run.
+
+### The human's notes on the lado-dev session (2026-10-06), what is left
+
+Closed in 0.2.0: 1 (flow `improve`), 2 (re-evaluation, stop rule), 3 (lead limit, cut table,
+cut-rule check, a restored blueprint to justify yellow), 5 ("Existing kit"), 6 (one-pass
+findings confirmed), 7 in the kit (the report in the notes' language; the `[lado]` part is
+above). Reports in `kit-reports/` (item 8) stay published with the kit, as decided in 0.2.0.
+Open:
+
+- Item 2: convergence is unproven on a real run (above).
+- Item 4: similar paragraphs are found now, but a rule restated inside a longer paragraph
+  still is not (above).
+- Item 8: `${SKILL_DIR}` is not set for every agent; `kit-budget` now tells the agent to put
+  the skill's folder there itself. `[lado]` A `lado kits budget <folder>` (or an exported
+  path to the kit's skills) would remove the guess.
 
 ### End-to-end run of `create` (AC4.4, 2026-10-06)
 

@@ -28,7 +28,8 @@ version.
   *Source:* spec 5.
 - **R5** Measure complexity: a script counts the measures of the budget table (worker roles,
   work steps and gates per flow, words per role prompt, own skills, MCP servers) with a
-  green, yellow or red zone each, plus paragraphs repeated across roles and steps; red fails.
+  green, yellow or red zone each (the lead's prompt with a higher limit), plus similar
+  paragraphs across roles and steps; red fails.
   *Source:* spec 6a.
 - **R6** Evaluate any kit, own or installed, given as a folder or an installed name:
   layer a (`lado kits check` and the budget) and layer b (a 12-criterion rubric, three
@@ -135,8 +136,10 @@ Reverse check:
 ## 4. Complexity budget
 
 Output of `uv run --script skills/kit-budget/scripts/kit_budget.py .` at the repository
-root (exit status 0), after the changes for 0.1.1 (batched interview rounds, the run named
-after the kit, F6.4 and F6.5 of `kit-reports/kit-builder-0.1.0-2026-10-06.md` folded):
+root (exit status 0), after the changes for 0.2.0 (flow `improve`, the lead's limit and
+similar paragraphs in `kit-budget`, re-evaluation in `kit-rubric`, the fixes of
+`kit-reports/kit-builder-0.2.0-2026-10-06.md`); the header shows the version in `kit.yaml`
+before the release sets it:
 
 ```
 # Complexity budget: kit-builder 0.1.1
@@ -146,24 +149,40 @@ after the kit, F6.4 and F6.5 of `kit-reports/kit-builder-0.1.0-2026-10-06.md` fo
 | Worker roles (not supervisor) | kit | 2 | 3 / 5 | green |
 | Work steps in a flow | flows/create.yaml | 4 | 5 / 8 | green |
 | Work steps in a flow | flows/evaluate.yaml | 1 | 5 / 8 | green |
+| Work steps in a flow | flows/improve.yaml | 5 | 5 / 8 | green |
 | Gates in a flow | flows/create.yaml | 2 | 2 / 3 | green |
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
-| Words in a role prompt | agents/author.md | 451 | 800 / 1500 | green |
-| Words in a role prompt | agents/critic.md | 556 | 800 / 1500 | green |
-| Words in a role prompt | agents/supervisor.md | 753 | 800 / 1500 | green |
+| Gates in a flow | flows/improve.yaml | 2 | 2 / 3 | green |
+| Words in a role prompt | agents/author.md | 670 | 800 / 1500 | green |
+| Words in a role prompt | agents/critic.md | 713 | 800 / 1500 | green |
+| Words in the lead's prompt | agents/supervisor.md | 986 | 1000 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
-## Duplicate paragraphs (one rule, one place)
+## Similar paragraphs (one rule, one place; 55% similar or more)
 
 none
 
 Overall: green
 ```
 
-No measure is over green, so none needs a reason. Two sit at the edge of green: gates in
-`create` (2 of 2) and own skills (5 of 5); a new gate or skill therefore makes the kit
-yellow and needs a reason here. The supervisor's prompt is near it (753 of 800 words).
+No measure is over green, so none needs a reason. Five sit at the edge of green, each kept
+because a requirement needs it and nothing simpler covers it:
+
+- Work steps in `improve` (5 of 5): `assess` and `triage` are what `improve` adds to the
+  shape of `create` (R11). `assess` is the critic's (the plan must start from an
+  independent report, R6) and `triage` the supervisor's (only the lead talks to the human),
+  so they cannot be one step; `build`, `evaluate` and `release` are those of `create`.
+  Another step makes the kit yellow and needs a reason here.
+- Gates in `create` and in `improve` (2 of 2 each): the human approves what gets built (the
+  blueprint, the plan) and what gets tagged (R1, R8, R11); neither can be folded into the
+  other, since the critic's check sits between them.
+- Own skills (5 of 5): each holds what more than one role needs or what would bloat a
+  prompt (section 3); a sixth makes the kit yellow.
+- Words in the lead's prompt (986 of 1000): the supervisor runs three flows, the interview,
+  the release and the gates' conversation. Rules it alone needs stay in it; shared ones are
+  in skills. The next rule added to it should push another one into a skill rather than
+  make it yellow.
 
 ## 5. Change log
 
@@ -171,5 +190,7 @@ Filled by `improve`, newest first.
 
 | Date | Version | Change | ← Fact (session, run, metric or report) |
 |---|---|---|---|
+| 2026-10-06 | 0.2.0 | Fixes of the self-evaluation (R6, R8, R11): `improve.build` takes later visits, section 4 and a revised plan; the author resolves a release conflict; the re-evaluation base is in the plan; `improve` starts from the last report of the kit's content; the human's own changes have a place in the plan; the options at the loop limit; the publishing convention and "what is left" back | `kit-reports/kit-builder-0.2.0-2026-10-06.md` (re-evaluation against 0.1.0): F5.1 high, F2.1, F2.2, F2.3, F7.1, F7.2, F8.1 medium, the cut-rule check |
+| 2026-10-06 | 0.2.0 | `kit-budget` (R5): the lead's prompt gets its own limit (1000 words), similar paragraphs by content-word Jaccard (55%) instead of exact repeats; the author's "cut → where the rule is now" table | The human's notes on lado-dev 0.9.1–0.9.4: roles squeezed to 799 words broke text, the duplicate detector dodged by rewording |
 | 2026-10-06 | 0.2.0 | Re-evaluation in `kit-rubric` (R6): review of the diff against the previous report, cut-rule check, "Missed earlier", stop rule; one-pass findings confirmed by the critic kept; the report in the run's human language | The human's notes on lado-dev 0.9.1–0.9.3: 13 → 7 → 7 findings with no end in sight, "with the log outside the tree" and fix F5.3 lost in cuts, two confirmed findings dropped by "2 of 3", the first report in English in a `ru` run |
 | 2026-10-06 | 0.2.0 | Flow `improve` (R11), the branch "Existing kit" of `kit-interview`; the shared rules of build, evaluate and release moved into the roles | The human's notes on the session over the kit lado-dev 0.9.1–0.9.4: fixes assembled outside a run, tags outside `release`, "nothing justifies the yellow measures" in every report |
