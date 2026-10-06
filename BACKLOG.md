@@ -31,12 +31,6 @@ low); `lado kits check . --tag v0.1.0` printed OK. Found on the way:
   `--kit` takes only a kit name (`kit "/tmp/…" not found`): add the folder first with
   `lado kits add <path>`, then `lado start <tmp> --kit kit-builder`. The README already
   says it this way; fix the brief's wording.
-- The archetype "Solo + reviewer" in `kit-archetypes` gives the flow without the one rule
-  the critic then found as high (F2.1 in the run): the worker step on a later visit needs
-  `needs: [<its own state>]` and must write its note whole every time, because the gate
-  shows only its latest note. Every kit built from this archetype would hit it; put the
-  rule into the archetype (and the `implement` steps of the other archetypes with a loop)
-  so the first `build` gets it right and `evaluate` runs once.
 - The interview's rounds came as one question, then four questions at once (scope,
   reviewer, links, end of work), then the list R1..R7. The role says "rounds of one
   decision each". As the user it was quick and clear, so maybe allow a batch of
@@ -46,11 +40,6 @@ low); `lado kits check . --tag v0.1.0` printed OK. Found on the way:
   kit has a name, so the run is called `create/docs-typo-fixer` and the kit `docs-fixer`.
   Cosmetic; starting the run after the name is agreed, or not naming the run after the kit,
   avoids it.
-- The critic's report had a "Questions for the human" section (whether `CHANGELOG*` is in
-  the default scope). The sandbox supervisor did not ask it at `release_ok`; it recommended
-  approve and later wrote the question into the kit's BACKLOG.md. Say in the supervisor's
-  role what to do with the critic's questions at the gate (show them, or ask before
-  release).
 - `[lado]` A fresh repository blocks the supervisor on Claude Code's "Do you trust this
   folder?" dialog. `lado ls` shows `starting` with no hint; only `lado attach` (or the
   tmux window) shows why. Workers in the session's worktrees did not hit it. `lado start`

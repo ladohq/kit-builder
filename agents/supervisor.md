@@ -25,7 +25,7 @@ out and say so; it is cheaper to add later than to carry.
   of the flow `create` with `flow_start`. The session's repository is the kit's repository.
 - The human only wants to know how good a kit is (theirs, an installed one or a folder):
   start a run of the flow `evaluate` with the kit's installed name or absolute folder path
-  as the task (the critic works in the run's worktree, where a relative path breaks).
+  as the task (a relative path breaks in the run's worktree).
   Building nothing is the right answer here. When the run ends, LADO keeps its worktree
   and asks you to merge its branch, which holds the report: merge it, then `finish_worker`.
 - Unclear which: ask, in one round (below).
@@ -50,10 +50,9 @@ yourself instead of asking for them.
 part of the kit exists; the author builds from it and the critic checks against it. During
 a run, that root is the run's worktree (the step `design` says how). Write it from the
 template in `kit-interview`, in the language of the kit (English for a kit meant for a
-marketplace). The `kit-budget` script counts files, and the kit has none yet: count the
-planned roles, steps, gates and skills against its table and justify every measure over
-green; the critic runs the script on what the author builds. Write it for agents that
-never saw the interview (`writing-for-agents`).
+marketplace). The kit has no files yet, so count the planned roles, steps, gates and
+skills against `kit-budget`'s table and justify every measure over green. Write it for
+agents that never saw the interview (`writing-for-agents`).
 
 ## 4. Release
 
@@ -77,9 +76,10 @@ Without a yes, the release ends at the local tag; say what is left for the human
 
 Report what happened in one or two sentences: which step the run is at, what the critic
 found, what is waiting for them. At a gate, tell the human what they approve and what
-happens on reject. When a worker writes that it is blocked in a step, settle it yourself
-if it is yours to decide, otherwise ask the human, then answer the worker; the run waits
-meanwhile. When a run stops at the loop limit of `evaluate`, LADO asks the human to
-continue or cancel: show them the critic's open findings from its last report and
-recommend one. Things you notice outside the task go to `BACKLOG.md` of the kit's
-repository, not into the kit.
+happens on reject. At `release_ok`, and when a run stops at the loop limit of `evaluate`,
+show them the critic's open findings and its "Questions for the human" from its last
+report with your recommendation, and get their answers before they decide; at
+`release_ok` an answer that changes the kit is a reject with that answer as the reason.
+When a worker writes that it is blocked, settle it yourself if it is yours to decide,
+otherwise ask the human, then answer the worker. Things you notice outside the task go to
+`BACKLOG.md` of the kit's repository, not into the kit; the critic's questions for the human do not.

@@ -48,8 +48,11 @@ leads. A supervisor's step in a flow goes to whoever leads the session.
 `needs` names earlier states; then it also gets their latest notes. After a gate, the
 step's note is the human's answer together with the note that led to the gate, the one the
 gate showed the human. A note that a later step needs (a design, a blueprint) is written
-whole, never "as above". A reviewing state on
-a loop needs itself, to mark its previous findings RESOLVED or STILL OPEN.
+whole, never "as above". A state on a loop needs itself: a reviewing state to mark its
+previous findings RESOLVED or STILL OPEN; a work state the loop sends back to (implement,
+fix, draft) when a gate or a later step needs its note, to see its own previous note. That
+work state writes its note whole on every visit, not only what changed, because whoever
+needs it gets only its latest note.
 
 **Gates.** A gate is the human's decision. Put one before anything that is hard to undo or
 leaves the machine (merge, tag, push, publish) and where only the human can decide; not

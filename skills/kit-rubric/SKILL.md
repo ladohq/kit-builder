@@ -97,9 +97,12 @@ blocked or for a review loop that does not converge.
 
 **8. Loops on a later visit.** A state that a flow can enter again says what changes on
 the later visit; a reviewing state on a loop needs itself and marks its previous findings
-RESOLVED or STILL OPEN; the loop is bounded (`max_visits` or a gate).
+RESOLVED or STILL OPEN; a work state on a loop whose note a gate or a later step needs
+needs itself and writes that note whole on every visit (`lado-kit-format`, "Notes and
+`needs`"); the loop is bounded (`max_visits` or a gate).
 Violation: a looping `do` silent about later visits; a reviewer on a loop without its own
-state in `needs`; the fixing step not told where the findings to fix are.
+state in `needs`; a needed work state on a loop without itself in `needs`, or whose later
+note lists only the fixes; the fixing step not told where the findings to fix are.
 
 **9. Concision and why.** Every sentence changes what an agent does; a rule an agent
 might break carries its reason.
