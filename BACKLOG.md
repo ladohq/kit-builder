@@ -62,3 +62,55 @@ low); `lado kits check . --tag v0.1.0` printed OK. Found on the way:
   design" (the step `needs: [design]`) and again as "Note before the gate", because the
   gate's note is the same design note. For `build` that is ~7 KB of duplicate context.
   Skip "Note before the gate" when it is the same note a `needs` entry already gives.
+
+### Experiment: kit-builder 0.1.0 against 0.2.0 on lado-dev (2026-10-06)
+
+Same input for both: lado-dev 0.9.1 (`c8afb8f` in kit-lado-dev). With 0.1.0, three `improve`
+cycles gave 0.9.4. With 0.2.0, one `improve` cycle gave 0.10.0 (branch `exp/from-0.9.1` in
+kit-lado-dev, not released). Then the 0.2.0 critic evaluated both in full and independently.
+Reports are in kit-lado-dev's `kit-reports/` on that branch: `lado-dev-0.9.1`, `-0.10.0`,
+`-0.10.0-full` and `-0.9.4`.
+
+Results:
+
+| | 0.1.0, 3 cycles → 0.9.4 | 0.2.0, 1 cycle → 0.10.0 |
+|---|---|---|
+| First assessment of 0.9.1 | 13 findings, 0 high | 19 findings, 1 high |
+| Full evaluation by the 0.2.0 critic | 11 findings (0 high / 5 medium / 6 low) | 20 findings (0 high / 13 medium / 7 low) |
+| BLUEPRINT.md | none | restored, so yellow measures are justified |
+
+- Better in 0.2.0: one cycle closed all 19 findings, and the cut-rule check found no lost
+  rule. Four findings that 0.1.0 found only in cycles 2–3 came up in the first assessment.
+  The `brainstorming` high was found at all; it is still in 0.9.4.
+- Five findings of the 0.10.0 full report are already fixed in 0.9.4 (red check in `merge`
+  not classified, relative mockup path, code outside a flow merged without a gate, "every AC
+  about behaviour", the visit-limit rule). The 0.2.0 critic missed them in its first
+  assessment of 0.9.1, and one cycle did not reach them.
+
+What to fix in kit-builder:
+
+- **Critic recall varies more than the kits differ.** The same 0.2.0 critic found 11
+  findings on 0.9.4 and 20 on 0.10.0, and most of the 20 apply to 0.9.4 as well. It found
+  the `brainstorming` high on 0.9.1 but not on 0.9.4, where the same line still stands
+  (`supervisor.md:43`). The 0.10.0-full passes read the dependency skills' texts in
+  `~/.lado/cache` and the LADO repository; the 0.9.4 passes did not. Wanted: `kit-rubric`
+  makes every pass read the text of each dependency skill a role lists, and gives the passes
+  a checklist of known holes: a red check routed back as code although the cause is the
+  environment; read-only work outside a flow and merges without a gate; a path to a file
+  outside the run's worktree; a reviewer verdict with no severity threshold; a dependency
+  skill that writes files or asks the user while its role must not.
+- **`approved` while the stop rule fails.** The `improve/evaluate` check of 0.10.0 reported
+  `approved` with "stop rule not met: 1 medium" in the same report. Wanted: one rule in
+  `kit-rubric` and the critic for when the verdict is `approved`, the same as the stop rule,
+  or say explicitly that a medium is only advice at release.
+- **A re-evaluation's count cannot be compared with a full evaluation's.** The re-evaluation
+  of 0.10.0 looked only at changed text and reported 9 findings; the full evaluation of the
+  same commit reported 20. Wanted: the report card says how much of the kit the count
+  covers, so the human does not compare 9 with 11.
+- **The first assessment sets the ceiling of an `improve` run.** What the critic misses
+  there, no later step of the same run looks for, because re-evaluation reads only the diff.
+  Wanted: either the first assessment of `improve` runs the full checklist above, or the
+  critic at `release_ok` adds one full pass over the parts the diff touched.
+- **Small:** BLUEPRINT §2 of a restored blueprint cites `kit-archetypes`, a kit-builder
+  skill the kit's own readers may not have; `kit-interview` could say to name the archetype
+  without the skill's name.
