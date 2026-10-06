@@ -74,7 +74,7 @@ critic and no gate, since it changes nothing but a report file.
 | `create.design_ok` | gate | R1, R4 | The blueprint is the human's decision: nothing gets built that they did not approve. |
 | `create.build` | work step | R1 | The author writes the kit; on a later visit fixes the critic's findings. |
 | `create.evaluate` | work step | R6, R9 | Independent check before release, `max_visits: 3` so the loop with `build` ends. |
-| `create.release_ok` | gate | R8 | Tagging is the human's call; on reject the work goes back to the author. |
+| `create.release_ok` | gate | R1, R8 | Tagging is the human's call; on reject the work goes back to the author. |
 | `create.release` | work step | R8 | Version, `lado kits check --tag`, merge onto the start branch, local tag, then the push question. |
 | `evaluate` | flow | R6, R7 | Evaluation alone, for a kit the human did not build here. |
 | `evaluate.evaluate` | work step | R6, R7 | The one critic step; no gate, since it only adds a report file that the supervisor merges. |
@@ -89,7 +89,7 @@ critic and no gate, since it changes nothing but a report file.
 Reverse check:
 
 - R1: `supervisor`, `author`, `create`, `create.design_ok`, `create.build`,
-  `lado-kit-format`, `writing-for-agents`.
+  `create.release_ok`, `lado-kit-format`, `writing-for-agents`.
 - R2: `supervisor`, `create.design`, `kit-interview`, `grilling`.
 - R3: `supervisor`, `create.design`, `kit-archetypes`.
 - R4: `supervisor`, `create`, `create.design`, `create.design_ok`, `kit-interview`.
@@ -105,7 +105,8 @@ Reverse check:
 ## 4. Complexity budget
 
 Output of `uv run --script skills/kit-budget/scripts/kit_budget.py .` at the repository
-root (exit status 0):
+root (exit status 0), after the fixes from the self-evaluation
+(`kit-reports/kit-builder-0.1.0-2026-10-06.md`):
 
 ```
 # Complexity budget: kit-builder 0.1.0
@@ -117,9 +118,9 @@ root (exit status 0):
 | Work steps in a flow | flows/evaluate.yaml | 1 | 5 / 8 | green |
 | Gates in a flow | flows/create.yaml | 2 | 2 / 3 | green |
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
-| Words in a role prompt | agents/author.md | 474 | 800 / 1500 | green |
-| Words in a role prompt | agents/critic.md | 566 | 800 / 1500 | green |
-| Words in a role prompt | agents/supervisor.md | 784 | 800 / 1500 | green |
+| Words in a role prompt | agents/author.md | 459 | 800 / 1500 | green |
+| Words in a role prompt | agents/critic.md | 556 | 800 / 1500 | green |
+| Words in a role prompt | agents/supervisor.md | 788 | 800 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
@@ -131,7 +132,7 @@ Overall: green
 ```
 
 No measure is over green, so none needs a reason. Three sit at the edge of green: gates in
-`create` (2 of 2), own skills (5 of 5) and the supervisor's prompt (784 of 800 words). A
+`create` (2 of 2), own skills (5 of 5) and the supervisor's prompt (788 of 800 words). A
 new gate, skill or supervisor rule therefore makes the kit yellow and needs a reason here.
 
 ## 5. Change log

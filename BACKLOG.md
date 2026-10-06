@@ -13,3 +13,12 @@ friction in LADO itself, to move to the LADO repository.
   and the docstring of `lado/flows.py` say only that a step gets the previous step's note.
   All three rubric passes on lado-dev read that as "the note is lost at a gate" (3 false
   findings). `lado-kit-format` now states it; LADO's docs should too.
+- Self-evaluation 0.1.0 (`kit-reports/kit-builder-0.1.0-2026-10-06.md`), low findings left
+  open: F6.4 (the author's check rule and the done condition of `build` say the same thing)
+  and F6.5 (the `blocked` rule is in `build`'s `do` and twice in `agents/author.md`). They
+  are wording only, and each copy now agrees with the others. Fold them into one place on
+  the next change to `build`.
+- Self-evaluation, one-pass finding worth a look: `kit-budget` says a red measure that
+  "truly cannot be cut" may stay with a reason and the human's decision, but
+  `create.evaluate` approves only when "no measure is red". A kit whose human kept a
+  justified red loops to the visit limit. Decide which rule holds.
