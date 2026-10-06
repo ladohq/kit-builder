@@ -69,9 +69,9 @@ verdict and the finding count; note_body is your report.
 
 When there is a previous report of this kit, evaluate as `kit-rubric` describes
 ("Re-evaluation"). It is your own on a later visit (the note from your state), the report
-of `assess` in the worktree's `kit-reports/` in `improve` on the first visit, and one the
-task names in `evaluate`. The author's note, when there is one, holds its fixed / not
-fixed list and the table of cut text. Rewrite the same report file when its name is
+the plan names in `improve` on the first visit, and one the task names in `evaluate`. The
+author's note, when there is one, holds its fixed / not fixed list and the table of cut
+text. Rewrite the same report file when its name is
 unchanged; git keeps the earlier version.
 
 ## Working rules

@@ -25,8 +25,9 @@ An LLM review varies from run to run; a finding that shows up once may be noise.
 3. The report keeps findings seen in at least two of the three passes, with their count
    ("Passes: 2/3"). A finding seen in one pass stays only when you confirm it in the files
    yourself: its quote is there, and the files or `git` show the harm it names, not just
-   reasoning about it. Mark it "Passes: 1/3, confirmed": it rests on one pass and your
-   check, so the human gives it less weight. Drop the other one-pass findings; a real one
+   reasoning about it. Mark it "Passes: 1/3, confirmed" and put that evidence (a second
+   quote or the command output) into the finding: it rests on one pass and your check, so
+   the human weighs it with less confidence and sees what confirmed it. Drop the other one-pass findings; a real one
    lost to the vote costs the human more than one marked as less certain.
    Say in the report how the passes ran, how many one-pass findings were dropped and how
    many were kept as confirmed.
@@ -37,7 +38,7 @@ An LLM review varies from run to run; a finding that shows up once may be noise.
 - **F<criterion>.<n>** [high | medium | low] `<file>:<line>` (state `<state>` for a flow)
   > <exact quote>
   <What is wrong and what it makes an agent do, in one or two sentences.>
-  Fix: <the smallest change that removes it.> Passes: <2/3 | 3/3 | 1/3, confirmed>
+  Fix: <the smallest change that removes it.> Passes: <2/3 | 3/3 | 1/3, confirmed | cut-rule check>
 ```
 
 - `<file>` is relative to the kit folder.
@@ -145,25 +146,34 @@ Use it when there is a previous report of this kit (the critic's role says when)
 passes over the whole kit find new small things on every round, many of them there from
 the start, and the human cannot tell when to stop; so review the change, not the kit again.
 
-1. The base is the commit in the previous report's header. The change is
-   `git diff <base> -- . ':!kit-reports'` in the kit folder. When the report names no
-   commit or the folder is not a git repository, evaluate in full and say why under
-   "Passes".
-2. Mark each finding of the previous report RESOLVED or STILL OPEN, with the quote or
-   command output that shows it; check the author's fixed / not fixed list against the
-   files.
+1. The base is the commit the change starts from, so that text the run itself wrote is
+   never "Missed earlier". In `create` the whole kit is new: all its text counts as
+   changed, and the check of cut rules (3) uses the diff from the previous report's
+   commit. In `improve` the base is the commit the plan's report evaluated, on every
+   visit. Otherwise it is the commit in the previous report's header ("Commit:", or
+   "(commit …)" in its "Kit:" line); without one, the parent of the commit that added the
+   report (`git log --diff-filter=A -1 --format=%H -- <report>`, then `<that>^`). The
+   change is `git diff <base> -- . ':!kit-reports'` in the kit folder. When the folder is
+   not a git repository, evaluate in full and say why under "Passes".
+2. Mark each finding of the previous report, and each finding the plan lists, RESOLVED or
+   STILL OPEN, with the quote or command output that shows it; check the author's fixed /
+   not fixed list against the files. A finding keeps its section: a STILL OPEN one from
+   "Missed earlier" stays there, the others stay findings.
 3. Check every rule in a removed line of the diff: find where it is now, starting from the
    author's table "cut → where the rule is now", and check that this place holds the rule
-   itself, not only its topic. A rule found nowhere is lost: a finding under the criterion
-   it served, with its impact by what agents may do without it. Shortening text is where
-   rules go missing, and the author's own check is the one that missed them.
+   itself, not only its topic. Compare by paragraph (`git diff --word-diff`): rewrapping
+   moves lines that lose nothing. A rule found nowhere is lost: a finding under the
+   criterion it served, "Passes: cut-rule check", with its impact by what agents may do
+   without it. Shortening text is where rules go missing, and the author's own check is
+   the one that missed them.
 4. Make the three passes over the changed text and its surroundings only: the section of a
    role or skill, or the flow state, that holds a change, and the places the changed text
    points to or that point to it. Each pass still covers all 12 criteria; a sub-agent
    for a pass also gets the diff.
-5. A finding in text the diff does not touch was missed by an earlier round, not caused by
-   this change: list it under "Missed earlier", in the same format. It does not block a
-   verdict and does not count for stopping.
+5. A new finding (in neither the previous report nor the plan) in text the diff does not
+   touch was missed by an earlier round, not caused by this change: list it under "Missed
+   earlier", in the same format. It does not block a verdict and does not count for
+   stopping.
 6. Stop rule: no high and no medium finding in the changed text, lost rules included. The
    card says whether it holds; when it does, another round would mostly find what earlier
    rounds missed, and what is left is the human's to weigh.
