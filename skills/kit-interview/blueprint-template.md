@@ -12,9 +12,10 @@ Each one is checkable: someone can say whether the kit meets it.
 
 ## 2. Starting point
 
-Either the archetype (name from `kit-archetypes`, and what was changed and why), or the
-transferred process: its steps, owners and sign-offs as the human described them, with
-the source of each.
+Either the archetype by its own name, such as "Feature with design gate" (not the name of
+the skill it comes from, which the kit's readers may not have), and what was changed and
+why; or the transferred process: its steps, owners and sign-offs as the human described
+them, with the source of each.
 
 ## 3. Traceability
 

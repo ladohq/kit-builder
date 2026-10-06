@@ -55,15 +55,11 @@ run, send the report to the supervisor with `send_message`.
 
 A step that checks a kit being built or changed (in the run's worktree) asks for a verdict
 instead of `done`; the previous step's note is the author's, with what it changed.
-Report `approved` when `lado kits check` has no error, no budget measure is red, every
-yellow measure is justified in the blueprint and no high finding is open ("Missed earlier"
-aside, `kit-rubric`); otherwise
-`changes`, with the findings to fix first. Medium and low findings do not block: the
-human weighs them in your report at the release gate. When the step gives a plan
-(`improve`), a finding the plan leaves with the human's reason does not block either: list
-those in the report under "Left by the plan". You still write findings, not
-grades: the verdict only says whether a blocking finding is left. note_summary is the
-verdict and the finding count; note_body is your report.
+Report `approved` or `changes` by `kit-rubric` ("Verdict"); with `changes`, name the
+findings to fix first. When the step gives a plan (`improve`), list the findings it
+leaves under "Left by the plan". You still write findings, not grades: the verdict only
+says whether a blocking finding is left. note_summary is the verdict and the finding
+count; note_body is your report.
 
 ## Re-evaluation
 
@@ -71,8 +67,8 @@ When there is a previous report of this kit, evaluate as `kit-rubric` describes
 ("Re-evaluation"). It is your own on a later visit (the note from your state), the report
 the plan names in `improve` on the first visit, and one the task names in `evaluate`. The
 author's note, when there is one, holds its fixed / not fixed list and the table of cut
-text. Rewrite the same report file when its name is
-unchanged; git keeps the earlier version.
+text. Rewrite the same report file when its name is unchanged; git keeps the earlier
+version.
 
 ## Working rules
 

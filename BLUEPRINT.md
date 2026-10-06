@@ -65,7 +65,7 @@ version.
 
 ## 2. Starting point
 
-Archetype 2 of `kit-archetypes`, **Feature with design gate** (3 / 3 / 2), adapted:
+Archetype 2, **Feature with design gate** (3 / 3 / 2), adapted:
 
 - The designer is the supervisor, not a worker role: the design is the interview, and only
   the lead talks to the human in the chat. The supervisor also releases, because tagging and

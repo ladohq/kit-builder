@@ -1,6 +1,6 @@
 ---
 name: kit-rubric
-description: Rubric for reviewing the text of a LADO kit — 12 criteria with what counts as a violation, the finding format with a quote, the three-pass rule, re-evaluation against a previous report and the report template. Use when evaluating a kit's roles, flows and skills after `lado kits check` and the budget script, or when writing or re-checking a kit report.
+description: Rubric for reviewing the text of a LADO kit — 12 criteria with what counts as a violation, known holes checked by name, reading dependency skills, the finding format with a quote, the three-pass rule, re-evaluation against a previous report, the verdict and stop rule, and the report template. Use when evaluating a kit's roles, flows and skills after `lado kits check` and the budget script, when writing or re-checking a kit report, or when fixing or weighing findings named by criterion.
 ---
 
 # Kit rubric
@@ -14,12 +14,13 @@ pass/fail grade.
 
 An LLM review varies from run to run; a finding that shows up once may be noise. So:
 
-1. Make three passes over the whole kit, each covering all 12 criteria. Start each pass
-   from a different place (pass 1: kit.yaml and the roles; pass 2: the flows, step by
-   step; pass 3: the skills, then back to the roles), and write down each pass's findings
-   before the next pass begins, without copying from the earlier lists. If you can start
-   independent sub-agents, give each pass to a fresh one with this skill and the kit
-   folder only.
+1. Make three passes over the whole kit, each covering all 12 criteria and every known
+   hole (below), and each reading the dependency skills (below) as well as the kit's own
+   text. Start each pass from a different place (pass 1: kit.yaml and the roles; pass 2:
+   the flows, step by step; pass 3: the skills, then back to the roles), and write down
+   each pass's findings before the next pass begins, without copying from the earlier
+   lists. If you can start independent sub-agents, give each pass to a fresh one with this
+   skill, the kit folder and the dependency skills' folders only.
 2. Two findings are the same when they name the same place (file and line, or state) for
    the same reason. When passes give one finding different impacts or criteria, take the
    higher impact and the criterion closest to the fix, and say so in the finding.
@@ -34,13 +35,44 @@ An LLM review varies from run to run; a finding that shows up once may be noise.
    Say in the report how the passes ran, how many one-pass findings were dropped and how
    many were kept as confirmed.
 
+## Dependency skills
+
+A role does what the skills it lists tell it, so a skill from `dependencies.skills` is
+part of the role's text: a pass that skips it misses what it makes the role do. Read the
+`SKILL.md` of each one a role lists, and the files it points to. For an installed kit,
+`lado kits show <kit>` prints each skill's folder under "Skills:", after the last ": ".
+For a kit given as a folder, the pack's clone is in LADO's git cache once the kit was
+checked or installed: the folder `cache` of LADO's home (`$LADO_HOME`, by default `.lado`
+in your home folder), as `<repository name>-<hash>`, then the `<ref>` after the `@` of the
+pack's `from`. The skill is in one of the `folders` its `dependencies.skills` entry
+names. A dependency skill you cannot find: say so under "Passes" and in criterion 10.
+
+## Known holes
+
+Holes that earlier reviews missed on some runs and found on others. Every pass checks each
+one by name; the report's "Known holes" table gives, for each, the finding id or the quote
+that shows the kit handles it.
+
+1. A red check (tests, build, `lado kits check`, a merge) sent back to the author as a bug
+   in the work, with no step telling a fault of the work from one of the environment
+   (a missing tool, the network, a dirty worktree). Criterion 3.
+2. Work outside a flow: a role told to make or merge changes, or run read-only work, with
+   no run around it; a merge with no gate or human yes before it. Criteria 4, 12.
+3. A path to a file outside the run's worktree: the main checkout, a home folder, a
+   relative path that means something else in the worktree. Criteria 11, 12.
+4. A reviewer's verdict with no severity threshold: nothing says which level of finding
+   blocks and which does not. Criterion 3.
+5. A dependency skill that writes files, commits or asks the user, listed on a role that
+   must not (a read-only role, a worker when only the lead talks to the human).
+   Criteria 1, 5.
+
 ## Finding format
 
 ```markdown
 - **F<criterion>.<n>** [high | medium | low] `<file>:<line>` (state `<state>` for a flow)
   > <exact quote>
   <What is wrong and what it makes an agent do, in one or two sentences.>
-  Fix: <the smallest change that removes it.> Passes: <2/3 | 3/3 | 1/3, confirmed | cut-rule check>
+  Fix: <the smallest change that removes it.> Passes: <2/3 | 3/3 | 1/3, confirmed | full pass, confirmed | cut-rule check>
 ```
 
 - `<file>` is relative to the kit folder.
@@ -174,15 +206,33 @@ the start, and the human cannot tell when to stop; so review the change, not the
    gets `git diff --word-diff` and the author's table.
 4. Make the three passes over the changed text and its surroundings only: the section of a
    role or skill, or the flow state, that holds a change, and the places the changed text
-   points to or that point to it. Each pass still covers all 12 criteria; a sub-agent
-   for a pass also gets the diff.
-5. A new finding (in neither the previous report nor the plan) in text the diff does not
+   points to or that point to it. Each pass still covers all 12 criteria and the known
+   holes; a sub-agent for a pass also gets the diff.
+5. In a step that asks for a verdict, once the three passes leave no blocking finding
+   ("Verdict"), make one full pass before you report `approved`: all 12 criteria and the
+   known holes over the whole of every file the diff touches, not only its changed
+   sections. A re-evaluation reads only the change, so what the first assessment missed is
+   never looked for again without it. Confirm each of its findings in the files as a
+   one-pass finding is confirmed ("Passes: full pass, confirmed"). In `create` all the
+   text is changed, so the three passes already were full: skip it.
+6. A new finding (in neither the previous report nor the plan) in text the diff does not
    touch was missed by an earlier round, not caused by this change: list it under "Missed
-   earlier", in the same format. It does not block a verdict and does not count for
-   stopping.
-6. Stop rule: no high and no medium finding in the changed text, lost rules included. The
-   card says whether it holds; when it does, another round would mostly find what earlier
-   rounds missed, and what is left is the human's to weigh.
+   earlier", in the same format, the full pass's included. It does not block a verdict and
+   does not count for the stop rule.
+
+## Verdict
+
+This is the one rule for a step that asks for a verdict (the critic's `evaluate` in
+`create` and `improve`). `approved` when `lado kits check` has no error, no budget measure
+is red, every yellow measure is justified in the blueprint and no high finding is open;
+otherwise `changes`. Medium and low findings, findings under "Missed earlier" and those
+the plan leaves with the human's reason ("Left by the plan") do not block.
+
+Stop rule, in a re-evaluation: no high and no medium finding in the changed text, lost
+rules included. It is advice for the human at the release gate, not a block: a report can
+be `approved` with the stop rule not met, and the card's row "Stop rule" says so. When it
+holds, another round would mostly find what earlier rounds missed, and what is left is the
+human's to weigh.
 
 ## Report
 

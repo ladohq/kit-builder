@@ -1,5 +1,5 @@
 name: kit-builder
-version: 0.2.0
+version: 0.3.0
 description: >-
   Build and evaluate LADO kits. A supervisor interviews you about your process or starts
   from an archetype, writes a blueprint that says why each part of the kit exists, an
@@ -12,4 +12,4 @@ dependencies:
   skills:
     mattpocock-skills:
       from: https://github.com/mattpocock/skills@v1.2.3
-      folders: [skills/productivity]
+      folders: [skills/productivity/grilling, skills/productivity/writing-for-agents]

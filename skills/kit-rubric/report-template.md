@@ -16,7 +16,11 @@ Findings are candidates for the human to weigh, not a pass/fail grade.
 | a. `lado kits check` | <OK, or the number of errors>; <n> warnings |
 | a. Budget | <overall zone>; <each yellow or red measure with its value> |
 | b. Rubric | <n> findings (<h> high, <m> medium, <l> low); <k> of 12 criteria without findings |
-| Stop rule | <re-evaluation only: holds, or not: <h> high and <m> medium in the changed text; delete the row in a full evaluation> |
+| Covers | <full evaluation of the whole kit, <n> files; or re-evaluation of the changed text, with a full pass over <n> files the diff touches, or without one> |
+| Stop rule | <re-evaluation only: holds, or not met: <h> high, <m> medium — advice for the release gate, not a block; delete the row in a full evaluation> |
+
+The count covers only what the row "Covers" names: a count of a re-evaluation and one of a
+full evaluation are not comparable.
 
 ### `lado kits check <folder>`
 
@@ -68,6 +72,19 @@ only findings in the changed text, lost rules included. -->
 
 ### 12. Safety and scope
 
+## Known holes
+
+<!-- Each known hole of kit-rubric, checked by name: the finding id, or the quote that
+shows the kit handles it, or "not applicable" and why. -->
+
+| Known hole | Finding, or how the kit handles it |
+|---|---|
+| 1. Red check sent back with no environment cause considered | |
+| 2. Work outside a flow, merge without a gate | |
+| 3. Path outside the run's worktree | |
+| 4. Verdict without a severity threshold | |
+| 5. Dependency skill that writes or asks where its role must not | |
+
 ## Not traced
 
 <!-- Only when the kit has BLUEPRINT.md: elements no requirement names, and yellow or red
@@ -89,8 +106,8 @@ the finding id. "None removed" when the diff removes no rule. -->
 
 ## Missed earlier
 
-<!-- Findings in text the diff does not touch, in the finding format. They do not block a
-verdict. "None" when there are none. -->
+<!-- Findings in text the diff does not touch, the full pass's included, in the finding
+format. They do not block a verdict. "None" when there are none. -->
 
 ## Left by the plan
 
