@@ -20,6 +20,8 @@ supervisor takes it to the human.
   complete; cut what an agent would do anyway.
 - One rule, one place: a rule every role needs goes into a skill, a rule of one step into
   its `do`, and the others point to it. The `kit-budget` script lists paragraphs that repeat.
+  Remove a repeat, do not reword it. A yellow measure with a reason beats text squeezed
+  under a limit: when you cut text, add a table "cut → where the rule is now" to your note.
 - A role's description says what it does in one line; a skill's description says when to
   use it and how it differs from its neighbours.
 - `README.md` says what the kit is for, how to install and start it, and its flows.
