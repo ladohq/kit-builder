@@ -28,26 +28,30 @@ states:
     do: |
       Decide with the human what to change, from the critic's report (the note from
       assess), as `kit-interview` describes (branch "Existing kit"): restore
-      `BLUEPRINT.md` first when the kit has none, then go through the findings, the
+      `BLUEPRINT.md` first when the kit has none, give it flow skeletons when it has none
+      (`kit-interview`, "The blueprint"), then go through the findings, the
       critic's "Questions for the human" and every measure over green. Commit only
       `BLUEPRINT.md` and its diagrams in `blueprint-flows/` in the run's worktree (its
       path is in `flow_status` for the run).
       On a later visit the previous step's note says why you are back: the human's reason
       for rejecting the plan, or what the author could not build. Settle it with the
-      human, starting from your own previous plan and the committed `BLUEPRINT.md`.
+      human, starting from your own previous plan and the committed `BLUEPRINT.md`; the
+      new plan starts with "Changed since the previous plan: …", so the human and the
+      author see what differs.
       Done when every finding and question has a decision and the blueprint is committed.
       Report `ready`: note_summary is the kit, the planned version and the number of
       findings to fix; note_body is the whole plan, in the form `kit-interview` gives, so
-      it stands alone for the human, the author and the critic.
+      it stands alone for the human, the author and the critic. When you restored
+      `BLUEPRINT.md`, the note carries it whole after the plan: the human approves it at
+      the gate.
       Report `nothing` when the human decides to change nothing; when the run ends, merge
-      its branch as after `evaluate`, with a restored blueprint only if the human, shown
-      it whole, says yes (otherwise only the report).
+      its branch as `lado-kit-format` says ("A report-only run").
     outcomes: {ready: plan_ok, nothing: done}
   plan_ok:
     gate: approval
     ask: >-
-      Approve the plan and the flow diagrams it changes (`blueprint-flows/`)? The author
-      changes the kit by it.
+      Approve the plan, the blueprint when it was restored, and the flow diagrams it
+      changes (`blueprint-flows/`)? The author changes the kit by them.
     outcomes: {approved: build, rejected: triage}
   build:
     agent: author
@@ -56,8 +60,8 @@ states:
       Change only what the plan (the note from triage) lists, and section 4 of
       `BLUEPRINT.md` as your role says; a finding the plan leaves is not yours to fix. On a
       later visit also fix what the previous note brings back, as your role describes.
-      After `blocked`, the previous note is the revised plan: change what differs from the
-      plan you built.
+      After `blocked`, the previous note is the revised plan: change what its "Changed
+      since the previous plan" lists.
     outcomes: {done: evaluate, blocked: triage}
   evaluate:
     agent: critic
@@ -77,7 +81,7 @@ states:
     agent: supervisor
     needs: [triage]
     do: |
-      Release the kit as your role describes (section "Release"), with the version the plan
+      Release the kit as `lado-kit-format` describes ("Releasing"), with the version the plan
       (the note from triage) names unless the human changes it.
     outcomes: {released: done, failed: build}
   done:

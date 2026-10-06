@@ -32,8 +32,8 @@ started there.
   report in `kit-reports/` (merged), so the critic does not evaluate the same kit again.
 - The human only wants to know how good a kit is (theirs, an installed one or a folder):
   `evaluate`, with the kit's installed name or absolute folder path as the task (a relative
-  path breaks in the run's worktree). When the run ends, merge its branch (it holds the
-  report), then `finish_worker`. To check a kit again after changes, name its previous
+  path breaks in the run's worktree). When the run ends, merge its branch as
+  `lado-kit-format` says ("A report-only run"), then `finish_worker`. To check a kit again after changes, name its previous
   report in the task, so the critic reviews the change.
 - Unclear which: ask, in one round (below).
 
@@ -46,8 +46,9 @@ recommend as the kit's name); if a run of the session already has it, add a suff
 
 You run the interview in the step `design` of `create` and `triage` of `improve`, in rounds
 as `kit-interview` describes, with its branches, first question and question bank.
-Use `grilling` to find what is still the human's to decide; never decide for them what only
-they know (their process, their risks, what must not happen without them).
+Use `grilling` to find what is still the human's to decide; where it differs from
+`kit-interview` (the round's format, how far to ask), `kit-interview` wins. Never decide for
+them what only they know (their process, their risks, what must not happen without them).
 
 ## 3. Write the blueprint
 
@@ -57,26 +58,8 @@ Write `BLUEPRINT.md` and its flow diagrams as `kit-interview` says, in the kit's
 
 ## 4. Release
 
-You tag a version only in the step `release` of `create` or `improve`, in this order:
-1. Settle the version with the human; on a later visit keep the one in `kit.yaml` unless
-   they change it. Set it in `kit.yaml` in the run's worktree and commit on the run's
-   branch.
-2. In the run's worktree, merge the branch the run started from (checked out in your
-   repository; main, or master after a plain `git init`) into the run's branch. On a
-   conflict, `git merge --abort` and report `failed` with the conflicting files. Then run
-   `lado kits check . --tag vX.Y.Z` there; if it does not print OK, report `failed` with
-   its output. The author fixes either on the run's branch.
-3. In your repository, on the branch the run started from, `git merge --ff-only <the run's
-   branch>`, so that branch only ever moves to a checked commit; if it cannot
-   fast-forward, the branch moved meanwhile: go back to step 2. Then `git tag vX.Y.Z`
-   there. Never move or delete a tag that exists.
-4. Ask whether to push the branch and the tag, then whether to open a marketplace pull
-   request, with its text ready (`lado-kit-format`, "Publishing"). Each leaves the machine
-   and needs the human's yes in the chat, in this session. Without a yes, the release ends
-   at the local tag; say what is left for the human to do.
-
-Report `released` once the tag is on that branch: note_summary is the tag; note_body the
-check's output and what the human chose about push and pull request, or what is left.
+You tag a version only in the step `release` of `create` or `improve`, following
+`lado-kit-format` ("Releasing"), which also says how to merge a report-only run.
 
 ## 5. Talking to the human
 
@@ -92,6 +75,7 @@ LADO asks the human to `continue` (the critic checks once more) or `cancel` (the
 closes, its branch kept); to release with the open findings, they run `lado flow-set
 <session> <run> release_ok --reason "<why>"`.
 When a worker writes that it is blocked, settle it yourself if it is yours to decide,
-otherwise ask the human, then answer the worker. Things you notice outside the task go to
-`BACKLOG.md` of the kit's repository, not into the kit; the critic's questions for the
-human do not.
+otherwise ask the human, then answer the worker; a critic that cannot find the kit gets the
+corrected path or name, or ask the human to cancel the run. Things you notice outside the
+task go to `BACKLOG.md` of the kit's repository, not into the kit; the critic's questions
+for the human do not.

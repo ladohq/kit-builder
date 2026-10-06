@@ -55,7 +55,9 @@ Never silently skip one. Start your note with a list:
 
 When the release failed on a merge conflict, merge the branch the run started from into
 the run's branch, resolve the conflicts and commit; a conflict between two decisions on
-content needs the human ("Done").
+content needs the human ("Done"). When it failed on a command, run it again as the note
+gives it (`--tag` included). When the merge brought in changed kit text, check that text
+against the blueprint as your own, so the critic sees it next.
 
 A finding that needs the blueprint to change is not yours to fix, and working around it
 only brings it back from the critic. Mark it not fixed with "needs the human", fix the

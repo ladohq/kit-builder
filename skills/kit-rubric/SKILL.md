@@ -8,7 +8,8 @@ description: Rubric for reviewing the text of a LADO kit — 12 criteria with wh
 The static checks (`lado kits check`, the `kit-budget` script) count and prove what can be
 counted. This rubric covers what only reading shows: whether the roles, steps and skills
 will make agents do the right thing. Its findings are candidates for the human, never a
-pass/fail grade.
+pass/fail grade: each carries the quote that shows it, so the human can judge it without
+trusting the critic.
 
 ## Three passes
 
@@ -176,7 +177,8 @@ When the kit has a `BLUEPRINT.md`, also list under "Not traced" each role, step,
 skill or MCP server that no requirement R names, each yellow or red budget measure
 the blueprint does not justify, and each difference the flow script's `--compare` prints
 between the flows and the blueprint's skeletons: the kit drifted from what the human
-approved, or the blueprint was not updated. A blueprint without skeletons: say so there.
+approved, or the blueprint was not updated; a difference blocks `approved` ("Verdict"). A
+blueprint without skeletons: say so there.
 
 ## Re-evaluation
 
@@ -228,9 +230,16 @@ the start, and the human cannot tell when to stop; so review the change, not the
 
 This is the one rule for a step that asks for a verdict (the critic's `evaluate` in
 `create` and `improve`). `approved` when `lado kits check` has no error, no budget measure
-is red, every yellow measure is justified in the blueprint and no high finding is open;
-otherwise `changes`. Medium and low findings, findings under "Missed earlier" and those
-the plan leaves with the human's reason ("Left by the plan") do not block.
+is red, every yellow measure is justified in the blueprint, the flow script's `--compare`
+prints no difference and no high finding is open; otherwise `changes`. Medium and low
+findings, findings under "Missed earlier" and those the plan leaves with the human's
+reason ("Left by the plan") do not block. A pair of similar paragraphs the budget script
+lists is not a measure: it is a finding under criterion 6, and its impact decides.
+
+A check that fails for a cause outside the kit's files (no network to fetch a skill pack,
+a missing `uv` or `lado`) says nothing about the kit, so it gives no verdict either way:
+send the supervisor the command and its output, which it settles with the human, and run
+the check again once it answers. An error that the kit's files cause counts.
 
 Stop rule, in a re-evaluation: no high and no medium finding in the changed text, lost
 rules included. It is advice for the human at the release gate, not a block: a report can

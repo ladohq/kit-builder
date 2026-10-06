@@ -62,7 +62,7 @@ states:
   release:
     agent: supervisor
     do: |
-      Release the kit as your role describes (section "Release"): 0.1.0 when the
+      Release the kit as `lado-kit-format` describes ("Releasing"): 0.1.0 when the
       repository has no `v*` tag yet, unless the human wants another; otherwise the next
       version by what changed.
     outcomes: {released: done, failed: build}

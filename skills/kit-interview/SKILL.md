@@ -133,5 +133,6 @@ The flow skeletons in section 2 are what the human approves at the gate, so they
 whole graph: every state, every outcome and where it goes, as the author must build it.
 Each time you change one, draw it again with the `kit-budget` flow script,
 `--out blueprint-flows` at the same root, and commit the SVGs with `BLUEPRINT.md`; your
-note gives the human their paths. A restored blueprint gets skeletons of the kit's flows
-as they are; the plan's changes to a flow change its skeleton.
+note gives the human their paths. A blueprint without skeletons, restored or written
+before them, gets skeletons of the kit's flows as they are; the plan's changes to a flow
+change its skeleton.

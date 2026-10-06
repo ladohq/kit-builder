@@ -1,6 +1,6 @@
 ---
 name: lado-kit-format
-description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit, paths, one lead, needs, gates, max_visits. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format; for judging a kit's text against review criteria use kit-rubric.
+description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit, paths, one lead, needs, gates, max_visits — and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
 ---
 
 # LADO kit format
@@ -70,6 +70,51 @@ after every step. A gate with `needs` shows the human those notes.
 3, and say in its `do` what changes on a later visit.
 
 **Each `do`** says when the step is done and when to report each outcome.
+
+## Releasing
+
+The supervisor's step `release` of `create` and `improve`, in this order. "The start
+branch" is the branch the run started from, checked out in the supervisor's repository
+(main, or master after a plain `git init`).
+1. Settle the version with the human; on a later visit keep the one in `kit.yaml` unless
+   they change it. Set it in `kit.yaml` in the run's worktree and commit on the run's
+   branch.
+2. In the run's worktree, note `git rev-parse HEAD`, then merge the start branch into the
+   run's branch. On a conflict, `git merge --abort` and report `failed` with the
+   conflicting files. When the merge brought in changes to the kit's text
+   (`git diff --name-only <the noted commit> HEAD` lists any file outside `kit-reports/`
+   and `BACKLOG.md`), report `failed` with that list: neither the critic nor the human has
+   seen the merged kit, and a clean merge can still join two texts that contradict each
+   other. Then run `lado kits check . --tag vX.Y.Z` there; it must print OK.
+3. In the supervisor's repository, on the start branch, `git merge --ff-only <the run's
+   branch>`, so that branch only ever moves to a checked commit. If it cannot fast-forward
+   because the start branch gained commits, go back to step 2, at most twice; then ask the
+   human. Then `git tag vX.Y.Z` there. Never move or delete a tag that exists.
+4. Ask whether to push the branch and the tag, then whether to open a marketplace pull
+   request, with its text ready ("Publishing"). Each leaves the machine and needs the
+   human's yes in the chat, in this session. Without a yes, the release ends at the local
+   tag; say what is left for the human to do.
+
+When a command fails, find its cause before you report. Report `failed` only for a fault
+in the kit's files, with the command and its whole output; the author fixes it on the
+run's branch. A cause outside the kit's files (no network to fetch a skill pack, a missing
+`uv` or `lado`, a tag that already exists, uncommitted changes in the way, another branch
+checked out) is not the author's to fix: show the human the command and its output and
+wait for them; run it again once they say it is settled, and after a second failure from
+the same cause leave it to them. Never stash, reset or clean the human's checkout, and
+never change the kit to get past such a failure. A wrong version from step 1 is yours:
+correct it.
+
+Report `released` once the tag is on the start branch: note_summary is the tag; note_body
+the check's output and what the human chose about push and pull request, or what is left.
+
+**A report-only run.** A run of `evaluate`, or of `improve` that ended in `nothing`, adds
+only a report. When it ends, merge its branch into the start branch only if
+`git diff --name-only <start branch>...<the run's branch>` lists nothing outside
+`kit-reports/`. When it lists more (a blueprint `triage` restored),
+show the human the list and that text whole; with their yes merge the branch, otherwise
+take only the report: `git checkout <the run's branch> -- kit-reports/` on the start
+branch and commit it. A failed merge is read as above.
 
 ## Publishing
 
