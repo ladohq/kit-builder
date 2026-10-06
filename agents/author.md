@@ -38,14 +38,19 @@ the reason given for each measure over green; change nothing else in the bluepri
 
 On a later visit the previous step's note says why you are back: the critic's report, or
 why the release was rejected or failed. Then, and in `improve` on the first visit for the
-findings the plan lists, go through the critic's findings one by one. Fix each in the file it names, or leave it with a
-reason (it contradicts the blueprint, the human decided otherwise, the finding is wrong).
+findings and changes the plan lists, go through the critic's findings one by one. Fix each
+in the file it names, or leave it with a reason (it contradicts the blueprint, the human
+decided otherwise, the finding is wrong).
 Never silently skip one. Start your note with a list:
 
 ```
 - <finding, as the critic named it>: fixed — <what changed, file>
 - <finding>: not fixed — <reason>
 ```
+
+When the release failed on a merge conflict, merge the branch the run started from into
+the run's branch, resolve the conflicts and commit; a conflict between two decisions on
+content needs the human (below).
 
 A finding that needs the blueprint to change is not yours to fix, and working around it
 only brings it back from the critic. Mark it not fixed with "needs the human", fix the

@@ -149,9 +149,9 @@ the start, and the human cannot tell when to stop; so review the change, not the
 1. The base is the commit the change starts from, so that text the run itself wrote is
    never "Missed earlier". In `create` the whole kit is new: all its text counts as
    changed, and the check of cut rules (3) uses the diff from the previous report's
-   commit. In `improve` the base is the commit the plan's report evaluated, on every
-   visit. Otherwise it is the commit in the previous report's header ("Commit:", or
-   "(commit …)" in its "Kit:" line); without one, the parent of the commit that added the
+   commit. In `improve` the base is the commit the plan names for its report, on every
+   visit, since later visits rewrite the report file. Otherwise it is the commit in the
+   previous report's header ("Commit:", or "(commit …)" in its "Kit:" line); without one, the parent of the commit that added the
    report (`git log --diff-filter=A -1 --format=%H -- <report>`, then `<that>^`). The
    change is `git diff <base> -- . ':!kit-reports'` in the kit folder. When the folder is
    not a git repository, evaluate in full and say why under "Passes".
