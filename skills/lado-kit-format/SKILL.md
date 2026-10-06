@@ -62,3 +62,16 @@ after every step. A gate with `needs` shows the human those notes.
 3, and say in its `do` what changes on a later visit.
 
 **Each `do`** says when the step is done and when to report each outcome.
+
+## Publishing
+
+A kit reaches a marketplace by a pull request to the marketplace's repository, after the
+kit's branch and tag are pushed: the marketplace's CI checks the kit's latest tag. The
+pull request needs:
+
+- the line for `marketplace.yaml`: `<name>: <git url of the kit's repository>`, the name as
+  in `kit.yaml`;
+- the row for the marketplace README's table:
+  `` | `<name>` | [<owner>/<repo>](<https url>) | <one sentence: what it is for> | ``;
+- a title and a short body: what the kit does, its flows, the output of
+  `lado kits check . --tag vX.Y.Z`.

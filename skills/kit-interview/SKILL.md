@@ -1,6 +1,6 @@
 ---
 name: kit-interview
-description: How to interview a human about the LADO kit they need — the two branches (transfer an existing process, or start from scratch), a question bank, the round format, how to turn their material (CLAUDE.md, their skills, a process description, tracker statuses) into roles, steps and gates, and the BLUEPRINT.md template. Use when designing a new kit; for choosing among ready team shapes use kit-archetypes, for the kit file format use lado-kit-format.
+description: How to interview a human about the LADO kit they need — the branches (transfer an existing process, start from scratch, or improve an existing kit by the critic's report, restoring its BLUEPRINT.md), a question bank, the round format, how to turn their material (CLAUDE.md, their skills, a process description, tracker statuses) into roles, steps and gates, and the BLUEPRINT.md template. Use when designing a new kit or planning changes to one; for choosing among ready team shapes use kit-archetypes, for the kit file format use lado-kit-format.
 ---
 
 # Kit interview
@@ -28,7 +28,8 @@ and ask which holds.
 
 ## Branches
 
-The first question is always: "Do you already have a process you want to bring over?"
+For a new kit the first question is always: "Do you already have a process you want to
+bring over?" For a kit that exists, take the branch "Existing kit".
 
 **Transfer** (yes). The process exists; the kit should follow it, not improve it behind the
 human's back.
@@ -50,6 +51,36 @@ human's back.
 
 A narrow, specialised kit (a domain such as data pipelines or legal review) goes through
 either branch, then the domain questions below.
+
+**Existing kit** (the flow `improve`). The kit and the critic's report of its current
+version are given; the human decides what changes, and the blueprint records why.
+1. Read every file of the kit and the whole report before the first question.
+2. No `BLUEPRINT.md`: restore it from the template, so that the critic stops reporting
+   yellow measures nothing justifies. Requirements are what the README, the roles and the
+   flows make the kit do, each with the file it comes from; section 2 is the nearest
+   archetype or the process the roles describe; section 3 traces every element; section 4
+   is the budget script's output. Ask the human only about what the kit cannot tell you,
+   in one round: a requirement you inferred and are unsure of, an element no requirement
+   covers (cut it, or keep it with which reason), each measure over green (its reason, or
+   cut).
+3. Go through the report in rounds: each finding with your recommendation (fix, or leave
+   with a reason), each of its "Questions for the human", each measure over green that
+   keeps its place (the human's reason goes into section 4). A finding that changes a
+   requirement or adds or drops an element changes sections 1 and 3 too.
+4. Add a row to section 5 per change: the planned version, the change, and the report and
+   finding it comes from. Commit the blueprint.
+5. Write the plan, the note the author and the critic work from:
+
+```
+Kit <name> <version now> → <planned version>; report <path>; blueprint <commit>
+Fix: - <finding id and title>: <what to change, in which file>
+Leave: - <finding id>: <the human's reason>
+Answers: - <question>: <answer>
+Blueprint: <what changed in sections 1–4, or "unchanged">
+```
+
+The planned version is a patch when only text changes, a minor when a role, step, gate,
+skill or flow is added or dropped or the kit's behaviour changes for its user.
 
 ## Question bank
 
@@ -91,6 +122,7 @@ Rules of the mapping:
 
 Write `BLUEPRINT.md` at the kit repository's root from `${SKILL_DIR}/blueprint-template.md`;
 during a run that root is the run's worktree, because the author works there.
-All five sections are required; section 5 starts empty for a new kit. Every element of the
+All five sections are required; section 5 starts empty for a new kit and gets a row per
+change in `improve`. Every element of the
 kit appears in section 3 with the requirements it covers; an element with none is cut
 before the blueprint goes to the human, or kept with a written reason.

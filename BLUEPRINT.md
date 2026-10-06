@@ -7,8 +7,9 @@ human talks only to the supervisor.
 
 ## 1. Requirements
 
-What kit-builder must do, from its specification (`docs/spec.md`, stage 1 "MVP"). Later
-stages (trial runs, metrics and `improve`, `extend`) are not requirements of this version.
+What kit-builder must do, from its specification (`docs/spec.md`, stage 1 "MVP" and
+v0.2.0). Later stages (trial runs, session metrics, `extend`) are not requirements of this
+version.
 
 - **R1** Create a kit: take the human from an interview to a kit in their repository,
   released with a local tag `vX.Y.Z`, with the human approving the design and the release.
@@ -46,6 +47,15 @@ stages (trial runs, metrics and `improve`, `extend`) are not requirements of thi
   kit-builder -m official`, `lado start . --kit kit-builder`); the kit is in English and
   runs under any agent CLI LADO supports. *Source:* spec 3, 8 stage 1 "instructions";
   decisions in `docs/mvp-brief.md`.
+- **R11** Improve an existing kit in a run, never by hand: from the critic's report of its
+  current version (or a report of that version the human names), the human decides which
+  findings to fix, answers the critic's questions and keeps or cuts each measure over
+  green; a kit without `BLUEPRINT.md` gets one restored from its roles and flows, asking
+  the human only about what the kit cannot tell; the plan of changes passes a gate, the
+  critic checks the result and the release goes through the same gate and step as in R8.
+  *Source:* spec 4 flow `improve`, 8 v0.2.0; the human's notes on improving the kit
+  lado-dev 0.9.1–0.9.4 (fixes assembled outside a run, tags outside `release`, "nothing
+  justifies the yellow measures" in every report).
 
 ## 2. Starting point
 
@@ -62,13 +72,16 @@ Archetype 2 of `kit-archetypes`, **Feature with design gate** (3 / 3 / 2), adapt
 Evaluating a kit alone is the **Solo** archetype (1 / 1 / 0): the flow `evaluate` with the
 critic and no gate, since it changes nothing but a report file.
 
+Improving a kit, the flow `improve`, is the same shape as `create` with five work steps and
+two gates: `assess` (critic) and `triage` (supervisor) take the place of `design`.
+
 ## 3. Traceability
 
 | Element | Kind | Covers | Why it exists / why nothing simpler |
 |---|---|---|---|
-| `supervisor` | role (lead) | R1, R2, R3, R4, R6, R8 | Holds the conversation with the human: starts the run named after the kit, interview, blueprint, gates explained (with the critic's open findings and questions answered before the human decides), release and the push question. LADO gives the chat to the lead only. |
-| `author` | role | R1 | Writes the kit's files. A separate role so the critic's check is independent of the writer, and the supervisor stays the human's partner rather than a coder. |
-| `critic` | role | R5, R6, R7 | Read-only evaluation with its own rights (writes only the report) and a fresh look; the same role serves `create` and `evaluate`. |
+| `supervisor` | role (lead) | R1, R2, R3, R4, R6, R8, R11 | Holds the conversation with the human: starts the run named after the kit, interview, blueprint, gates explained (with the critic's open findings and questions answered before the human decides), release and the push question. LADO gives the chat to the lead only. |
+| `author` | role | R1, R11 | Writes the kit's files and changes them by an approved plan. A separate role so the critic's check is independent of the writer, and the supervisor stays the human's partner rather than a coder. |
+| `critic` | role | R5, R6, R7, R11 | Read-only evaluation with its own rights (writes only the report) and a fresh look; the same role serves all three flows and holds the verdict rule the flows' critic steps point to. |
 | `create` | flow | R1, R4, R8 | The path interview → approved blueprint → kit → check → approved release → tag. |
 | `create.design` | work step | R2, R3, R4 | Interview and blueprint; its note is the whole blueprint, passed on with `needs`. |
 | `create.design_ok` | gate | R1, R4 | The blueprint is the human's decision: nothing gets built that they did not approve. |
@@ -76,11 +89,19 @@ critic and no gate, since it changes nothing but a report file.
 | `create.evaluate` | work step | R6, R9 | Independent check before release, `max_visits: 3` so the loop with `build` ends. |
 | `create.release_ok` | gate | R1, R8 | Tagging is the human's call; on reject the work goes back to the author. |
 | `create.release` | work step | R8 | Version, `lado kits check --tag`, merge onto the start branch, local tag, then the push question. |
+| `improve` | flow | R4, R8, R11 | The path report → approved plan (and blueprint) → changed kit → check → approved release → tag. A separate flow rather than a branch of `create`: each step has one job and the interview is not carried into every fix. |
+| `improve.assess` | work step | R6, R11 | The fact the plan starts from: a full evaluation of the current version, or the human's report of it, so it is not evaluated twice. |
+| `improve.triage` | work step | R4, R11 | The human's decisions on the report and the restored or updated blueprint; its note is the plan, passed on with `needs`. |
+| `improve.plan_ok` | gate | R11 | The plan is the human's decision, as the blueprint is in `create`. |
+| `improve.build` | work step | R11 | The author changes the kit by the plan; on a later visit fixes the critic's findings. |
+| `improve.evaluate` | work step | R6, R9, R11 | Independent check of the change, starting from the plan's findings; `max_visits: 3`. |
+| `improve.release_ok` | gate | R8, R11 | Tagging is the human's call, as in `create`. |
+| `improve.release` | work step | R8, R11 | The release of `create` with the plan's version; the procedure lives in the supervisor's role, so both release steps point to it. |
 | `evaluate` | flow | R6, R7 | Evaluation alone, for a kit the human did not build here. |
 | `evaluate.evaluate` | work step | R6, R7 | The one critic step; no gate, since it only adds a report file that the supervisor merges. |
-| `kit-interview` | skill | R2, R4 | Round format (independent questions batched in one round, dependent ones one by one), branches, question bank, mapping the human's material, the blueprint template. |
+| `kit-interview` | skill | R2, R4, R11 | Round format (independent questions batched in one round, dependent ones one by one), branches (with "Existing kit": restoring a blueprint, going through a report, the plan's form), question bank, mapping the human's material, the blueprint template. |
 | `kit-archetypes` | skill | R3, R9 | The nine shapes, Solo first, and the checks every shape passes. |
-| `lado-kit-format` | skill | R1, R6, R10 | The format and the rules `lado kits check` does not prove (provider neutrality, paths, one lead, notes and `needs`, gates, `max_visits`); every role writes or reads kits. |
+| `lado-kit-format` | skill | R1, R6, R8, R10 | The format, the rules `lado kits check` does not prove (provider neutrality, paths, one lead, notes and `needs`, gates, `max_visits`) and what a marketplace pull request needs; every role writes or reads kits. |
 | `kit-budget` | skill | R5, R9 | The budget table and the script `scripts/kit_budget.py`; used by the author before reporting, the critic in layer a and the supervisor for the planned budget. |
 | `kit-rubric` | skill | R6, R7 | The 12 criteria, the finding format, the three-pass rule and the report template. |
 | `mattpocock-skills` (`grilling`, `writing-for-agents`) | skill dependency | R1, R2 | `grilling` finds what is still the human's to decide in the interview; `writing-for-agents` makes the blueprint and the kit's prompts readable by agents that never saw the interview. Shared, so not copied (decision in `docs/mvp-brief.md`). |
@@ -92,15 +113,19 @@ Reverse check:
   `create.release_ok`, `lado-kit-format`, `writing-for-agents`.
 - R2: `supervisor`, `create.design`, `kit-interview`, `grilling`.
 - R3: `supervisor`, `create.design`, `kit-archetypes`.
-- R4: `supervisor`, `create`, `create.design`, `create.design_ok`, `kit-interview`.
+- R4: `supervisor`, `create`, `create.design`, `create.design_ok`, `improve`,
+  `improve.triage`, `kit-interview`.
 - R5: `critic`, `kit-budget`.
-- R6: `supervisor`, `critic`, `create.evaluate`, `evaluate`, `evaluate.evaluate`,
-  `lado-kit-format`, `kit-rubric`.
+- R6: `supervisor`, `critic`, `create.evaluate`, `improve.assess`, `improve.evaluate`,
+  `evaluate`, `evaluate.evaluate`, `lado-kit-format`, `kit-rubric`.
 - R7: `critic`, `evaluate`, `evaluate.evaluate`, `kit-rubric`.
-- R8: `supervisor`, `create`, `create.release_ok`, `create.release`.
-- R9: `create.evaluate`, `kit-archetypes`, `kit-budget`, and this blueprint's budget below.
+- R8: `supervisor`, `create`, `create.release_ok`, `create.release`, `improve`,
+  `improve.release_ok`, `improve.release`, `lado-kit-format`.
+- R9: `create.evaluate`, `improve.evaluate`, `kit-archetypes`, `kit-budget`, and this
+  blueprint's budget below.
 - R10: `lado-kit-format` (provider neutrality); the README and `dependencies.lado: ">=0.23"`
   in `kit.yaml` (not kit elements in the sense of section 3).
+- R11: `supervisor`, `author`, `critic`, `improve` and its seven states, `kit-interview`.
 
 ## 4. Complexity budget
 
@@ -137,7 +162,8 @@ yellow and needs a reason here. The supervisor's prompt is near it (753 of 800 w
 
 ## 5. Change log
 
-Filled by `improve` (stage 3); empty for this first version.
+Filled by `improve`, newest first.
 
 | Date | Version | Change | ← Fact (session, run, metric or report) |
 |---|---|---|---|
+| 2026-10-06 | 0.2.0 | Flow `improve` (R11), the branch "Existing kit" of `kit-interview`; the shared rules of build, evaluate and release moved into the roles | The human's notes on the session over the kit lado-dev 0.9.1–0.9.4: fixes assembled outside a run, tags outside `release`, "nothing justifies the yellow measures" in every report |

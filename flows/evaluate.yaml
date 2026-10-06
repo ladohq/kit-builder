@@ -10,11 +10,8 @@ states:
     agent: critic
     do: |
       Evaluate the kit the task names (a folder path or the name of an installed kit),
-      read-only, as your role describes, and commit the report on the run's branch.
-      Done when each of the 12 criteria of `kit-rubric` has a verdict and the report is
-      committed. Report `done`: note_summary is the kit, its version, the overall budget
-      zone, the finding count and the report's path; note_body is the whole report, so the
-      human gets it without opening the file.
+      read-only, as your role describes, commit the report on the run's branch and report
+      `done` with the note your role describes ("5. Report").
     outcomes: {done: done}
   done:
     end: true
