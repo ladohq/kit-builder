@@ -83,7 +83,7 @@ critic and no gate, since it changes nothing but a report file.
 | `lado-kit-format` | skill | R1, R6, R10 | The format and the rules `lado kits check` does not prove (provider neutrality, paths, one lead, notes and `needs`, gates, `max_visits`); every role writes or reads kits. |
 | `kit-budget` | skill | R5, R9 | The budget table and the script `scripts/kit_budget.py`; used by the author before reporting, the critic in layer a and the supervisor for the planned budget. |
 | `kit-rubric` | skill | R6, R7 | The 12 criteria, the finding format, the three-pass rule and the report template. |
-| `mattpocock-skills` (`grilling`, `writing-for-agents`) | skill dependency | R2, R1 | `grilling` finds what is still the human's to decide in the interview; `writing-for-agents` makes the blueprint and the kit's prompts readable by agents that never saw the interview. Shared, so not copied (decision in `docs/mvp-brief.md`). |
+| `mattpocock-skills` (`grilling`, `writing-for-agents`) | skill dependency | R1, R2 | `grilling` finds what is still the human's to decide in the interview; `writing-for-agents` makes the blueprint and the kit's prompts readable by agents that never saw the interview. Shared, so not copied (decision in `docs/mvp-brief.md`). |
 | — | MCP server | — | None: the work is files and the `lado` and `git` commands. |
 
 Reverse check:
@@ -118,7 +118,7 @@ root (exit status 0), after the fixes from the self-evaluation
 | Work steps in a flow | flows/evaluate.yaml | 1 | 5 / 8 | green |
 | Gates in a flow | flows/create.yaml | 2 | 2 / 3 | green |
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
-| Words in a role prompt | agents/author.md | 459 | 800 / 1500 | green |
+| Words in a role prompt | agents/author.md | 468 | 800 / 1500 | green |
 | Words in a role prompt | agents/critic.md | 556 | 800 / 1500 | green |
 | Words in a role prompt | agents/supervisor.md | 788 | 800 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |

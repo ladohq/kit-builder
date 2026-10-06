@@ -20,8 +20,9 @@ states:
          path is in `flow_status` for the run) and commit only that file on the run's
          branch. Every element of the kit traces to a requirement in section 3; the planned
          budget is in section 4.
-      On a later visit your previous blueprint is the note from design: revise that text,
-      not one from memory. The previous step's note says why you are back: the human's
+      On a later visit revise `BLUEPRINT.md` as committed in the run's worktree, not your
+      earlier note or memory: the author may have updated its section 4 since. The
+      previous step's note says why you are back: the human's
       reason for rejecting it at the gate, or what the author could not build. Settle it
       with the human, then update `BLUEPRINT.md` and commit only that file.
       Done when the blueprint answers every open question and is committed. Report `ready`:
@@ -42,8 +43,9 @@ states:
       On a later visit the previous step's note says why you are back: the critic's report,
       or why the release was rejected or failed: go through each finding and mark it fixed
       or not fixed, with the reason (your role, "Fixing from the critic's report"). After
-      you reported `blocked`, it is the revised blueprint the human approved: change what
-      the revision changed (the diff of `BLUEPRINT.md` on the run's branch).
+      you reported `blocked`, it is the revised blueprint the human approved, committed as
+      `BLUEPRINT.md` in the worktree: change what the revision changed (its diff on the
+      run's branch).
       Done when `lado kits check .` shows no error, every warning and every measure of the
       budget script over green is fixed or justified in the blueprint, and the work is
       committed on the run's branch. Report `done` with your note as your role describes.

@@ -28,8 +28,8 @@ stop and report `blocked` instead of guessing; the supervisor takes it to the hu
 Before you report, run `lado kits check .` and the `kit-budget` script on the worktree.
 Every error is fixed. Every warning and every measure over green is either fixed or already
 justified in the blueprint; if neither, report `blocked`: the reason is the human's to give.
-Replace the planned budget in section 4 of `BLUEPRINT.md` with the script's output; change
-nothing else in the blueprint.
+Replace the planned values in section 4 of `BLUEPRINT.md` with the script's output, keeping
+the reason given for each measure over green; change nothing else in the blueprint.
 
 ## Fixing from the critic's report
 

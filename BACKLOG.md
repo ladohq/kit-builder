@@ -18,7 +18,3 @@ friction in LADO itself, to move to the LADO repository.
   and F6.5 (the `blocked` rule is in `build`'s `do` and twice in `agents/author.md`). They
   are wording only, and each copy now agrees with the others. Fold them into one place on
   the next change to `build`.
-- Self-evaluation, one-pass finding worth a look: `kit-budget` says a red measure that
-  "truly cannot be cut" may stay with a reason and the human's decision, but
-  `create.evaluate` approves only when "no measure is red". A kit whose human kept a
-  justified red loops to the visit limit. Decide which rule holds.
