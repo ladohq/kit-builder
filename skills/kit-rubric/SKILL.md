@@ -20,15 +20,17 @@ An LLM review varies from run to run; a finding that shows up once may be noise.
    before the next pass begins, without copying from the earlier lists. If you can start
    independent sub-agents, give each pass to a fresh one with this skill and the kit
    folder only.
-2. Two findings are the same when they name the same criterion and the same place (file
-   and line, or state) for the same reason.
+2. Two findings are the same when they name the same place (file and line, or state) for
+   the same reason. When passes give one finding different impacts or criteria, take the
+   higher impact and the criterion closest to the fix, and say so in the finding.
 3. The report keeps findings seen in at least two of the three passes, with their count
    ("Passes: 2/3"). A finding seen in one pass stays only when you confirm it in the files
    yourself: its quote is there, and the files or `git` show the harm it names, not just
    reasoning about it. Mark it "Passes: 1/3, confirmed" and put that evidence (a second
    quote or the command output) into the finding: it rests on one pass and your check, so
-   the human weighs it with less confidence and sees what confirmed it. Drop the other one-pass findings; a real one
-   lost to the vote costs the human more than one marked as less certain.
+   the human weighs it with less confidence and sees what confirmed it. Drop the other
+   one-pass findings; a real one lost to the vote costs the human more than one marked as
+   less certain.
    Say in the report how the passes ran, how many one-pass findings were dropped and how
    many were kept as confirmed.
 
@@ -146,26 +148,30 @@ Use it when there is a previous report of this kit (the critic's role says when)
 passes over the whole kit find new small things on every round, many of them there from
 the start, and the human cannot tell when to stop; so review the change, not the kit again.
 
-1. The base is the commit the change starts from, so that text the run itself wrote is
-   never "Missed earlier". In `create` the whole kit is new: all its text counts as
-   changed, and the check of cut rules (3) uses the diff from the previous report's
-   commit. In `improve` the base is the commit the plan names for its report, on every
-   visit, since later visits rewrite the report file. Otherwise it is the commit in the
-   previous report's header ("Commit:", or "(commit …)" in its "Kit:" line); without one, the parent of the commit that added the
-   report (`git log --diff-filter=A -1 --format=%H -- <report>`, then `<that>^`). The
-   change is `git diff <base> -- . ':!kit-reports'` in the kit folder. When the folder is
-   not a git repository, evaluate in full and say why under "Passes".
-2. Mark each finding of the previous report, and each finding the plan lists, RESOLVED or
-   STILL OPEN, with the quote or command output that shows it; check the author's fixed /
-   not fixed list against the files. A finding keeps its section: a STILL OPEN one from
-   "Missed earlier" stays there, the others stay findings.
+1. The kit's text is `kit.yaml`, `README.md`, `BLUEPRINT.md`, `agents/`, `flows/` and
+   `skills/`; other files of the repository (`kit-reports/`, `BACKLOG.md`, `docs/`,
+   `tests/`) are not part of the change. The base is the commit the change starts from, so
+   that text the run itself wrote is never "Missed earlier". In `create` the whole kit is
+   new: all its text counts as changed, and the check of cut rules (3) uses the diff from
+   the previous report's commit. In `improve` the base is the commit the plan names for
+   its report, on every visit. Otherwise it is the commit in the previous report's header
+   ("Commit:", or "(commit …)" in its "Kit:" line); without one, the parent of the commit
+   that added the report (`git log --diff-filter=A -1 --format=%H -- <report>`, then
+   `<that>^`). The change is `git diff <base> -- kit.yaml README.md BLUEPRINT.md agents
+   flows skills` in the kit folder. When the folder is not a git repository, evaluate in
+   full and say why under "Passes".
+2. Mark each finding of the previous report, and each finding and change the plan lists,
+   RESOLVED or STILL OPEN, with the quote or command output that shows it; check the
+   author's fixed / not fixed list against the files. A finding keeps its section: a STILL
+   OPEN one from "Missed earlier" stays there, the others stay findings.
 3. Check every rule in a removed line of the diff: find where it is now, starting from the
    author's table "cut → where the rule is now", and check that this place holds the rule
    itself, not only its topic. Compare by paragraph (`git diff --word-diff`): rewrapping
    moves lines that lose nothing. A rule found nowhere is lost: a finding under the
    criterion it served, "Passes: cut-rule check", with its impact by what agents may do
    without it. Shortening text is where rules go missing, and the author's own check is
-   the one that missed them.
+   the one that missed them. You do it after the passes; with sub-agents, a fourth one
+   gets `git diff --word-diff` and the author's table.
 4. Make the three passes over the changed text and its surroundings only: the section of a
    role or skill, or the flow state, that holds a change, and the places the changed text
    points to or that point to it. Each pass still covers all 12 criteria; a sub-agent
@@ -181,7 +187,9 @@ the start, and the human cannot tell when to stop; so review the change, not the
 ## Report
 
 The report is one file, `kit-reports/<kit>-<version>-<YYYY-MM-DD>.md` at the root of the
-repository you work in, with the kit's `name` and `version` from its `kit.yaml`. Copy the
+repository you work in, with the kit's `name` and `version` from its `kit.yaml`; in
+`improve`, after `assess`, the planned version the plan names, so the report before the
+change and the one after it are different files. Copy the
 template `${SKILL_DIR}/report-template.md` and fill every section; delete only the lines
 its comments say may go. "Fix first" holds at most 5 items: the highest-impact
 findings, a red budget measure, an error of `lado kits check`, each pointing to its

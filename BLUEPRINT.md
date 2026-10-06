@@ -153,9 +153,9 @@ before the release sets it:
 | Gates in a flow | flows/create.yaml | 2 | 2 / 3 | green |
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
 | Gates in a flow | flows/improve.yaml | 2 | 2 / 3 | green |
-| Words in a role prompt | agents/author.md | 670 | 800 / 1500 | green |
+| Words in a role prompt | agents/author.md | 687 | 800 / 1500 | green |
 | Words in a role prompt | agents/critic.md | 713 | 800 / 1500 | green |
-| Words in the lead's prompt | agents/supervisor.md | 986 | 1000 / 1500 | green |
+| Words in the lead's prompt | agents/supervisor.md | 934 | 1000 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
@@ -166,8 +166,8 @@ none
 Overall: green
 ```
 
-No measure is over green, so none needs a reason. Five sit at the edge of green, each kept
-because a requirement needs it and nothing simpler covers it:
+No measure is over green, so none needs a reason. Five sit at or near the edge of green,
+each kept because a requirement needs it and nothing simpler covers it:
 
 - Work steps in `improve` (5 of 5): `assess` and `triage` are what `improve` adds to the
   shape of `create` (R11). `assess` is the critic's (the plan must start from an
@@ -179,10 +179,10 @@ because a requirement needs it and nothing simpler covers it:
   other, since the critic's check sits between them.
 - Own skills (5 of 5): each holds what more than one role needs or what would bloat a
   prompt (section 3); a sixth makes the kit yellow.
-- Words in the lead's prompt (986 of 1000): the supervisor runs three flows, the interview,
+- Words in the lead's prompt (934 of 1000): the supervisor runs three flows, the interview,
   the release and the gates' conversation. Rules it alone needs stay in it; shared ones are
-  in skills. The next rule added to it should push another one into a skill rather than
-  make it yellow.
+  in skills, and its restatements of them were cut for 0.2.0. A rule added to it should
+  push another one into a skill rather than make it yellow.
 
 ## 5. Change log
 

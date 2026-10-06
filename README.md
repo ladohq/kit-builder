@@ -69,8 +69,9 @@ design (supervisor) → design_ok (gate: approval)
   critic's findings.
 - `evaluate`: `lado kits check`, the budget and the rubric. It reports `approved` or
   `changes`, at most three times; `changes` while a high finding is open. If the loop hits
-  its limit, the supervisor shows you the open findings and you choose: another round,
-  the release as it is, or leaving the run (`lado flow-set`).
+  its limit, the supervisor shows you the open findings and you answer the loop gate:
+  `continue` (the critic checks once more) or `cancel`; to release as it is, run
+  `lado flow-set <session> <run> release_ok --reason "<why>"`.
 - `release`: sets the version, checks `lado kits check . --tag vX.Y.Z`, merges the run's
   branch and tags locally. Pushing and a marketplace pull request happen only after you say
   yes, and the supervisor gives you the pull request text.

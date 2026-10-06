@@ -24,9 +24,6 @@ friction in LADO itself, to move to the LADO repository.
 - Rubric criterion 6 is the only check for a rule restated inside a longer paragraph
   (`kit-budget` misses them, 38–45% similar). If such repeats keep coming back in reports,
   try comparing sentences, not only paragraphs.
-- `[lado]` A run stopped at `max_visits` moves on only by the human's `lado flow-set`; the
-  supervisor can just name the options. A choice gate LADO adds at the loop limit would
-  keep it in the run.
 
 ### The human's notes on the lado-dev session (2026-10-06), what is left
 

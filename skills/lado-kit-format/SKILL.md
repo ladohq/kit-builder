@@ -73,7 +73,8 @@ pull request needs:
   in `kit.yaml`;
 - the row for the marketplace README's table:
   `` | `<name>` | [<owner>/<repo>](<https url>) | <one sentence: what it is for> | ``;
-- the kit's repository named `lado-kit-<name>`, with the GitHub topic `lado-kit`, so people
-  find it;
 - a title and a short body: what the kit does, its flows, the output of
   `lado kits check . --tag vX.Y.Z`.
+
+Name the kit's repository `lado-kit-<name>` and give it the GitHub topic `lado-kit`, so
+people find it.
