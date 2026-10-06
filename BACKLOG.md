@@ -13,11 +13,6 @@ friction in LADO itself, to move to the LADO repository.
   and the docstring of `lado/flows.py` say only that a step gets the previous step's note.
   All three rubric passes on lado-dev read that as "the note is lost at a gate" (3 false
   findings). `lado-kit-format` now states it; LADO's docs should too.
-- Self-evaluation 0.1.0 (`kit-reports/kit-builder-0.1.0-2026-10-06.md`), low findings left
-  open: F6.4 (the author's check rule and the done condition of `build` say the same thing)
-  and F6.5 (the `blocked` rule is in `build`'s `do` and twice in `agents/author.md`). They
-  are wording only, and each copy now agrees with the others. Fold them into one place on
-  the next change to `build`.
 
 ### End-to-end run of `create` (AC4.4, 2026-10-06)
 
@@ -27,19 +22,6 @@ for typos and broken links in docs) went from interview to `done` in 35 minutes,
 them waiting at the two gates; `evaluate` ran twice (8 findings, then approved with one
 low); `lado kits check . --tag v0.1.0` printed OK. Found on the way:
 
-- `docs/mvp-brief.md` (AC4.4) says `lado start <tmp> --kit <path to kit-builder>`, but
-  `--kit` takes only a kit name (`kit "/tmp/…" not found`): add the folder first with
-  `lado kits add <path>`, then `lado start <tmp> --kit kit-builder`. The README already
-  says it this way; fix the brief's wording.
-- The interview's rounds came as one question, then four questions at once (scope,
-  reviewer, links, end of work), then the list R1..R7. The role says "rounds of one
-  decision each". As the user it was quick and clear, so maybe allow a batch of
-  independent questions in `kit-interview` explicitly instead of the supervisor breaking
-  the rule.
-- The supervisor starts the run (`flow_start`) right after the first question, before the
-  kit has a name, so the run is called `create/docs-typo-fixer` and the kit `docs-fixer`.
-  Cosmetic; starting the run after the name is agreed, or not naming the run after the kit,
-  avoids it.
 - `[lado]` A fresh repository blocks the supervisor on Claude Code's "Do you trust this
   folder?" dialog. `lado ls` shows `starting` with no hint; only `lado attach` (or the
   tmux window) shows why. Workers in the session's worktrees did not hit it. `lado start`

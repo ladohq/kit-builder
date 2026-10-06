@@ -66,7 +66,7 @@ critic and no gate, since it changes nothing but a report file.
 
 | Element | Kind | Covers | Why it exists / why nothing simpler |
 |---|---|---|---|
-| `supervisor` | role (lead) | R1, R2, R3, R4, R6, R8 | Holds the conversation with the human: interview, blueprint, gates explained (with the critic's open findings and questions answered before the human decides), release and the push question. LADO gives the chat to the lead only. |
+| `supervisor` | role (lead) | R1, R2, R3, R4, R6, R8 | Holds the conversation with the human: starts the run named after the kit, interview, blueprint, gates explained (with the critic's open findings and questions answered before the human decides), release and the push question. LADO gives the chat to the lead only. |
 | `author` | role | R1 | Writes the kit's files. A separate role so the critic's check is independent of the writer, and the supervisor stays the human's partner rather than a coder. |
 | `critic` | role | R5, R6, R7 | Read-only evaluation with its own rights (writes only the report) and a fresh look; the same role serves `create` and `evaluate`. |
 | `create` | flow | R1, R4, R8 | The path interview → approved blueprint → kit → check → approved release → tag. |
@@ -78,7 +78,7 @@ critic and no gate, since it changes nothing but a report file.
 | `create.release` | work step | R8 | Version, `lado kits check --tag`, merge onto the start branch, local tag, then the push question. |
 | `evaluate` | flow | R6, R7 | Evaluation alone, for a kit the human did not build here. |
 | `evaluate.evaluate` | work step | R6, R7 | The one critic step; no gate, since it only adds a report file that the supervisor merges. |
-| `kit-interview` | skill | R2, R4 | Round format, branches, question bank, mapping the human's material, the blueprint template. |
+| `kit-interview` | skill | R2, R4 | Round format (independent questions batched in one round, dependent ones one by one), branches, question bank, mapping the human's material, the blueprint template. |
 | `kit-archetypes` | skill | R3, R9 | The nine shapes, Solo first, and the checks every shape passes. |
 | `lado-kit-format` | skill | R1, R6, R10 | The format and the rules `lado kits check` does not prove (provider neutrality, paths, one lead, notes and `needs`, gates, `max_visits`); every role writes or reads kits. |
 | `kit-budget` | skill | R5, R9 | The budget table and the script `scripts/kit_budget.py`; used by the author before reporting, the critic in layer a and the supervisor for the planned budget. |
@@ -105,8 +105,8 @@ Reverse check:
 ## 4. Complexity budget
 
 Output of `uv run --script skills/kit-budget/scripts/kit_budget.py .` at the repository
-root (exit status 0), after the fixes from the self-evaluation
-(`kit-reports/kit-builder-0.1.0-2026-10-06.md`):
+root (exit status 0), after the changes for 0.1.1 (batched interview rounds, the run named
+after the kit, F6.4 and F6.5 of `kit-reports/kit-builder-0.1.0-2026-10-06.md` folded):
 
 ```
 # Complexity budget: kit-builder 0.1.0
@@ -118,9 +118,9 @@ root (exit status 0), after the fixes from the self-evaluation
 | Work steps in a flow | flows/evaluate.yaml | 1 | 5 / 8 | green |
 | Gates in a flow | flows/create.yaml | 2 | 2 / 3 | green |
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
-| Words in a role prompt | agents/author.md | 468 | 800 / 1500 | green |
+| Words in a role prompt | agents/author.md | 451 | 800 / 1500 | green |
 | Words in a role prompt | agents/critic.md | 556 | 800 / 1500 | green |
-| Words in a role prompt | agents/supervisor.md | 796 | 800 / 1500 | green |
+| Words in a role prompt | agents/supervisor.md | 756 | 800 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
 
@@ -131,9 +131,9 @@ none
 Overall: green
 ```
 
-No measure is over green, so none needs a reason. Three sit at the edge of green: gates in
-`create` (2 of 2), own skills (5 of 5) and the supervisor's prompt (796 of 800 words). A
-new gate, skill or supervisor rule therefore makes the kit yellow and needs a reason here.
+No measure is over green, so none needs a reason. Two sit at the edge of green: gates in
+`create` (2 of 2) and own skills (5 of 5); a new gate or skill therefore makes the kit
+yellow and needs a reason here. The supervisor's prompt is near it (756 of 800 words).
 
 ## 5. Change log
 
