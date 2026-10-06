@@ -1,5 +1,5 @@
 name: kit-builder
-version: 0.1.1
+version: 0.2.0
 description: >-
   Build and evaluate LADO kits. A supervisor interviews you about your process or starts
   from an archetype, writes a blueprint that says why each part of the kit exists, an

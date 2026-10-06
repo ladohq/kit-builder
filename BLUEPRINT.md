@@ -142,7 +142,7 @@ similar paragraphs in `kit-budget`, re-evaluation in `kit-rubric`, the fixes of
 before the release sets it:
 
 ```
-# Complexity budget: kit-builder 0.1.1
+# Complexity budget: kit-builder 0.2.0
 
 | Measure | Where | Value | Green / yellow up to | Zone |
 |---|---|---|---|---|
