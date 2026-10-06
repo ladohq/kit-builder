@@ -10,6 +10,17 @@ friction in LADO itself, to move to the LADO repository.
   and the docstring of `lado/flows.py` say only that a step gets the previous step's note.
   All three rubric passes on lado-dev read that as "the note is lost at a gate" (3 false
   findings). `lado-kit-format` now states it; LADO's docs should too.
+- `[lado]` A run's `human_language` reaches only the notes ("Write note_summary and
+  note_body in …", `runs.py`); files written for the human, such as a report, get no hint.
+  In a `ru` run of `evaluate` over lado-dev the first report came in English, following the
+  English template. `kit-rubric` now says the report takes the notes' language; LADO could
+  say it for every file the step writes for the human.
+- Reports of `evaluate` live in the kit's `kit-reports/`, get merged into its main and are
+  pushed with it. Decide whether a marketplace kit publishes them, keeps them out of the
+  kit (another folder, `.gitignore`) or keeps only the latest. (Notes on lado-dev, item 8.)
+- Re-evaluation (`kit-rubric`) is untested on a real kit: run `improve` or `evaluate` with a
+  previous report over lado-dev and check that the stop rule holds after one or two rounds,
+  that "Missed earlier" stays small, and that the cut-rule table catches a lost rule.
 
 ### End-to-end run of `create` (AC4.4, 2026-10-06)
 

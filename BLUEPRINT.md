@@ -32,8 +32,13 @@ version.
   *Source:* spec 6a.
 - **R6** Evaluate any kit, own or installed, given as a folder or an installed name:
   layer a (`lado kits check` and the budget) and layer b (a 12-criterion rubric, three
-  passes, only repeated findings, each with a quote). Findings are candidates for the human,
-  not pass/fail. *Source:* spec 2 S5, 4 flow `evaluate`, 6a, 6b.
+  passes, only repeated findings or one-pass findings the critic confirmed in the files,
+  each with a quote). Findings are candidates for the human, not pass/fail. Given a
+  previous report, the critic re-evaluates only the change: marks the previous findings,
+  checks that no cut rule is lost, keeps findings in unchanged text apart and says whether
+  the stop rule (no high or medium finding in the change) holds. *Source:* spec 2 S5, 4
+  flow `evaluate`, 6a, 6b; the human's notes on re-evaluating lado-dev 0.9.1–0.9.3 (13 →
+  7 → 7 findings, rules lost in cuts, confirmed findings dropped by the vote).
 - **R7** Report an evaluation as one file `kit-reports/<kit>-<version>-<date>.md`: a card
   (budget, result per layer), findings with quotes and files, "Fix first" with at most 5
   items. *Source:* spec 6 "Report".
@@ -103,7 +108,7 @@ two gates: `assess` (critic) and `triage` (supervisor) take the place of `design
 | `kit-archetypes` | skill | R3, R9 | The nine shapes, Solo first, and the checks every shape passes. |
 | `lado-kit-format` | skill | R1, R6, R8, R10 | The format, the rules `lado kits check` does not prove (provider neutrality, paths, one lead, notes and `needs`, gates, `max_visits`) and what a marketplace pull request needs; every role writes or reads kits. |
 | `kit-budget` | skill | R5, R9 | The budget table and the script `scripts/kit_budget.py`; used by the author before reporting, the critic in layer a and the supervisor for the planned budget. |
-| `kit-rubric` | skill | R6, R7 | The 12 criteria, the finding format, the three-pass rule and the report template. |
+| `kit-rubric` | skill | R6, R7 | The 12 criteria, the finding format, the three-pass rule, re-evaluation against a previous report and the report template (in the run's human language). |
 | `mattpocock-skills` (`grilling`, `writing-for-agents`) | skill dependency | R1, R2 | `grilling` finds what is still the human's to decide in the interview; `writing-for-agents` makes the blueprint and the kit's prompts readable by agents that never saw the interview. Shared, so not copied (decision in `docs/mvp-brief.md`). |
 | — | MCP server | — | None: the work is files and the `lado` and `git` commands. |
 
@@ -166,4 +171,5 @@ Filled by `improve`, newest first.
 
 | Date | Version | Change | ← Fact (session, run, metric or report) |
 |---|---|---|---|
+| 2026-10-06 | 0.2.0 | Re-evaluation in `kit-rubric` (R6): review of the diff against the previous report, cut-rule check, "Missed earlier", stop rule; one-pass findings confirmed by the critic kept; the report in the run's human language | The human's notes on lado-dev 0.9.1–0.9.3: 13 → 7 → 7 findings with no end in sight, "with the log outside the tree" and fix F5.3 lost in cuts, two confirmed findings dropped by "2 of 3", the first report in English in a `ru` run |
 | 2026-10-06 | 0.2.0 | Flow `improve` (R11), the branch "Existing kit" of `kit-interview`; the shared rules of build, evaluate and release moved into the roles | The human's notes on the session over the kit lado-dev 0.9.1–0.9.4: fixes assembled outside a run, tags outside `release`, "nothing justifies the yellow measures" in every report |

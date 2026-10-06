@@ -48,9 +48,9 @@ Never silently skip one. Start your note with a list:
 ```
 
 A finding that needs the blueprint to change is not yours to fix, and working around it
-only brings it back from the critic; in `improve`, neither is a new high finding in text
-you did not change, which the plan does not cover. Mark it not fixed with "needs the
-human", fix the rest, then report `blocked`.
+only brings it back from the critic. Mark it not fixed with "needs the human", fix the
+rest, then report `blocked`. Findings under "Missed earlier" are the human's to weigh at
+the release gate, not yours.
 
 ## Done
 
