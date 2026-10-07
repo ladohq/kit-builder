@@ -17,8 +17,8 @@ the skill it comes from, which the kit's readers may not have), and what was cha
 why; or the transferred process: its steps, owners and sign-offs as the human described
 them, with the source of each.
 
-Then each flow's skeleton: the flow as LADO will run it, without `do`, `ask`, `needs` or
-`description`. Each state has `agent:`, `gate:` (approval or choice) or `end: true`, and
+Then each flow's skeleton: the flow as LADO will run it, without `do`, `ask`, `reads`,
+`produces` or `description` (section 3 names what each step produces and reads). Each state has `agent:`, `gate:` (approval or choice) or `end: true`, and
 `outcomes` (outcome: next state); `max_visits` where a loop needs one. Below it, its
 diagram, drawn from this block by the `kit-budget` flow script:
 
@@ -48,8 +48,8 @@ candidate for removal; keep it only with a reason in the last column.
 | `supervisor` | role (lead) | R1 | <...> |
 | `<role>` | role | R2, R3 | <...> |
 | `<flow>` | flow | R1 | <...> |
-| `<flow>.<state>` | work step | R2 | <...> |
-| `<flow>.<gate>` | gate | R4 | <what is irreversible or only the human's call> |
+| `<flow>.<state>` | work step | R2 | <...>; produces `<artifact>`, reads `<artifact>` |
+| `<flow>.<gate>` | gate | R4 | <what is irreversible or only the human's call>; reads `<artifact>` |
 | `<skill>` | skill | R3 | <...> |
 | `<server>` | MCP server | R5 | <...> |
 

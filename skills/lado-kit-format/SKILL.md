@@ -1,6 +1,6 @@
 ---
 name: lado-kit-format
-description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit, paths, one lead, needs, gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
+description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit, paths, one lead, artifacts (produces, reads, artifact or note), gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
 ---
 
 # LADO kit format
@@ -14,7 +14,8 @@ lado kits check <kit folder> --tag vX.Y.Z    # before a release tag: what `lado 
 
 It checks the format of every file, the skill packs, hardcoded paths in roles, MCP commands
 and SKILL.md files, and the graph of each flow (unreachable states, traps, cycles without
-`max_visits` or a gate, `needs` that can never have a note, roles that act in no step). An
+`max_visits` or a gate, `reads` of a name no state before it produces, roles that act in
+no step). An
 error there is a bug in the kit; read each `warning:` line and fix it or say in the
 blueprint why it stays. Do not re-check by hand what the command checks; when this skill and
 the command disagree, the command is right. The format itself is in the "Kits" section of
@@ -25,7 +26,7 @@ A kit, in short:
 ```
 kit.yaml              name, version, description, supervisor, dependencies (lado, skills)
 agents/<role>.md      frontmatter name, description, skills, mcp; the body is the role prompt
-flows/<name>.yaml     states: work (agent, do, outcomes), gate, end
+flows/<name>.yaml     states: work (agent, do, outcomes, reads, produces), gate (reads), end
 skills/<name>/        SKILL.md and its files, always moved as a whole
 BLUEPRINT.md          not LADO's: why each part exists, with flow skeletons (kit-interview)
 blueprint-flows/      the skeletons drawn as SVG by the kit-budget flow script
@@ -52,19 +53,45 @@ skill, so keep scripts and other files of a skill free of absolute and home path
 that adds roles or skills to another kit has no supervisor, so adding it never changes who
 leads. A supervisor's step in a flow goes to whoever leads the session.
 
-**Notes and `needs`.** A step gets the note of the step before it, nothing else, unless
-`needs` names earlier states; then it also gets their latest notes. After a gate, the
-step's note is the human's answer together with the note that led to the gate, the one the
-gate showed the human. A note that a later step needs (a design, a blueprint) is written
-whole, never "as above". A state on a loop needs itself: a reviewing state to mark its
-previous findings RESOLVED or STILL OPEN; a work state the loop sends back to (implement,
-fix, draft) when a gate or a later step needs its note, to see its own previous note. That
-work state writes its note whole on every visit, not only what changed, because whoever
-needs it gets only its latest note.
+**Artifacts: `produces`, `reads`, artifact or note.** LADO 0.27 has no `needs`; a step's
+result reaches later steps and the human as an artifact.
+- Artifact or note. An artifact is a step's result that someone reads later: a later step,
+  or the human at a gate, also from afar in LADO's UI (a design, a plan, a review, a
+  report). A note is the short message about the step to whoever acts next: the verdict,
+  the questions for the human, what changed. A result never goes into the note's body, and
+  nobody is handed a local path: the human may not reach this machine.
+- A work state's `produces` names the artifacts its step must write. LADO refuses every
+  outcome until each is written in the current visit, so it holds whatever the outcome:
+  the `do` says what the artifact holds when there is no result (nothing to change,
+  blocked). Name only what is always there; what a step writes only sometimes (a diagram,
+  a log) it attaches to its note with `flow_advance`'s `artifacts` when it exists. Gates
+  and ends produce nothing.
+- A work state's or a gate's `reads` names artifacts of the run that the step or the gate
+  shows: only names a state before it produces, never its own; a step on a loop sees its
+  own `produces` on a later visit without them.
+- A name is 1-64 characters of a-z, 0-9, `.`, `_` and `-`, produced by one state of its
+  flow. Take the names from the user's words for their process, not from another kit.
+- An agent writes an artifact with `write_artifact` and reads one with `read_artifact`: a
+  worker of the run by the bare name, the lead by `<run>/<name>`.
+- When the result is also a file of the repository (it ships with the tag, a later run
+  reads it), the file is the source: commit it, then write the artifact from it (`file`),
+  last before reporting. Whoever commits a change to such a file writes its artifact again
+  at once, so no later step or gate sees an older text. A relative `file` is resolved from
+  where the agent started: a worker starts in the run's worktree, the lead in its own
+  repository, so the lead passes the absolute path in the run's worktree (`flow_status`).
+- A step gets the note of the step before it, with the artifacts attached to it. After a
+  gate, the note is the human's answer together with the note the gate showed them. A
+  human's comment at a gate reaches only the next step: what later steps need goes into an
+  artifact.
+- On a loop, a reviewing state produces its review and, on a later visit, marks its
+  previous findings RESOLVED or STILL OPEN; a work state the loop sends back to writes its
+  artifact whole on every visit, not only what changed, because readers get only its
+  latest record.
 
 **Gates.** A gate is the human's decision. Put one before anything that is hard to undo or
 leaves the machine (merge, tag, push, publish) and where only the human can decide; not
-after every step. A gate with `needs` shows the human those notes.
+after every step. A gate `reads` what the human approves: it shows them the note that led
+to it and those artifacts.
 
 **`max_visits`.** On a reviewing state that can send work back, use a small number such as
 3, and say in its `do` what changes on a later visit.
@@ -115,9 +142,14 @@ branch" is the branch the run started from, checked out in the supervisor's repo
    tag; say what is left for the human to do.
 
 Report `failed` only for a fault in the kit's files, with the command and its whole
-output; the author fixes it on the run's branch and runs the command again as the note
-gives it, `--tag` included, since its own check runs without `--tag`. A failure from outside the kit's files
-follows "When a check or command fails". When it is left to the human, or step 3 reaches
+output in note_body (the release produces no artifact); the author fixes it on the run's
+branch and runs the command again as the note gives it, `--tag` included, since its own
+check runs without `--tag`. On a merge conflict the author merges the start branch into
+the run's branch, resolves the conflicts and commits; a conflict between two decisions on
+content is the human's (`blocked`). Kit text the merge brought in the author leaves as it
+is: when it contradicts the blueprint or adds an element the blueprint does not name, it
+reports `blocked` with the list, since which one changes is the human's decision. A
+failure from outside the kit's files follows "When a check or command fails". When it is left to the human, or step 3 reaches
 its bound, the run stays in `release`, never `failed`: tell the human which of steps 2–4
 are left and how to go on: you retry once they say it is settled, or they finish by hand
 and run `lado flow-set <session> <run> done`, or they cancel the run.

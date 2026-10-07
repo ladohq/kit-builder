@@ -23,7 +23,7 @@ supervisor takes it to the human.
 - One rule, one place: a rule every role needs goes into a skill, a rule of one step into
   its `do`, and the others point to it. The `kit-budget` script lists paragraphs that repeat.
   Remove a repeat, do not reword it. A yellow measure with a reason beats text squeezed
-  under a limit: when you cut text, add a table "cut → where the rule is now" to your note.
+  under a limit: when you cut text, add a table "cut → where the rule is now" to your `build-report`.
 - A role's description says what it does in one line; a skill's description says when to
   use it and how it differs from its neighbours.
 - `README.md` says what the kit is for, how to install and start it, and its flows.
@@ -36,29 +36,27 @@ cannot be built.
 Never write the reason for a warning or a measure over green yourself: it is the human's to
 give, in the blueprint.
 Replace the planned values in section 4 of `BLUEPRINT.md` with the script's output, keeping
-the reason given for each measure over green; change nothing else in the blueprint.
+the reason given for each measure over green; change nothing else in the blueprint. Commit
+it, then write the artifact `blueprint` from it again and attach it to your note
+(`lado-kit-format`, "Artifacts").
 
 ## Fixing from the critic's report
 
-On a later visit the previous step's note says why you are back: the critic's report, or
-why the release was rejected or failed. Then, and in `improve` on the first visit for the
+On a later visit the previous step's note says why you are back: the critic's verdict
+with its report attached (`evaluation`), or why the release was rejected or failed. Then, and in `improve` on the first visit for the
 findings and changes the plan lists, go through the critic's findings one by one; each
 names its criterion of `kit-rubric`, which says what the criterion asks. Fix each in the
 file it names, or leave it with a reason (it contradicts the blueprint, the human decided
 otherwise, the finding is wrong).
-Never silently skip one. Start your note with a list:
+Never silently skip one. Start your `build-report` with a list:
 
 ```
 - <finding or change, as the critic or the plan named it>: fixed — <what changed, file>
 - <finding or change>: not fixed — <reason>
 ```
 
-When the release failed on a merge conflict, merge the branch the run started from into
-the run's branch, resolve the conflicts and commit; a conflict between two decisions on
-content needs the human ("Done"). A failed command: `lado-kit-format` ("Releasing").
-When the merge brought in changed kit text, change none of it: when it contradicts the
-blueprint or adds an element the blueprint does not name, report `blocked` with the list,
-since which one changes is the human's decision.
+When the release failed (a command or a merge conflict), fix it as `lado-kit-format` says
+("Releasing").
 
 A finding that needs the blueprint to change is not yours to fix, and working around it
 only brings it back from the critic. Mark it not fixed with "needs the human", fix the
@@ -69,13 +67,15 @@ the release gate, not yours.
 
 Done when `lado kits check .` shows no error, every warning and every measure of the
 budget script over green is fixed or justified in the blueprint, and the work is committed
-on the run's branch. Report `done`: note_summary is your status and a one-line result;
-note_body has the findings list, the files you wrote or changed, and the output of
-`lado kits check .` and of the budget script.
+on the run's branch. Write the artifact `build-report` whole on every visit: the findings
+list, the cut-text table, the files you changed, and the output of `lado kits check .`
+and the budget script. Report `done`: note_summary is your status and a one-line result;
+note_body says what changed since your last visit.
 
 Report `blocked` instead when the blueprint or the plan cannot be built as written (a
 contradiction, a gap, something `lado kits check` rejects), when a warning or a measure
 over green is neither fixable nor justified in the blueprint, when a merge conflict is
-between two decisions on content, or when a finding needs the human (above): note_body
-says which part and why, so the supervisor can settle it with the human. A check failing
+between two decisions on content, or when a finding needs the human (above): the
+`build-report` also says which part and why, and note_body names it, so the supervisor
+can settle it with the human. A check failing
 for a cause outside the kit's files is not `blocked` (`lado-kit-format`).

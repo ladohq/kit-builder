@@ -97,13 +97,17 @@ rights (read-only, writes where, commits, merges) are stated.
 Violation: two roles own the same action; a role does what another role owns; a
 read-only role is told to write or commit; a role's rights are not stated.
 
-**2. Handoffs between steps.** A step gets the previous step's note and the notes of the
-states in its `needs`, nothing else; after a gate, the previous note also carries the note
-that led to the gate (`lado-kit-format`). The step that produces a note says what goes
-into it.
+**2. Handoffs between steps.** A step works from the previous step's note, the artifacts
+attached to it and the artifacts its `reads` names, nothing else; after a gate, the note
+also carries the note that led to the gate (`lado-kit-format`, "Artifacts"). A result a
+later step or the human reads is an artifact in its state's `produces`, not the text of a
+note and not a path; the state that produces it says what it holds.
 Violation: a step works from something ("the design", "the plan") that is neither in the
-previous note nor in a `needs` state; a `do` does not say what its note holds; a note a
-later step needs is allowed to say "as above" or "see the chat".
+previous note nor in its `reads`; a result a later step or a gate needs handed on as note
+text, "as above", "see the chat" or a local path; a `do` silent on what its artifact
+holds, or on what it holds for an outcome without a result. A flow with `needs` does not
+load in LADO 0.27: a high finding, fix: replace `needs` with `reads` of the artifacts the
+step works from, and name them in `produces` of the states that write them.
 
 **3. Done and outcomes.** Each work state's `do` says when the step is done and the
 condition for each outcome.
@@ -114,7 +118,7 @@ two outcomes whose conditions overlap.
 someone other than the author checks the work: another role or a human gate that shows the
 evidence.
 Violation: the only check is the author's own; a review step can be skipped; a gate asks
-the human to approve without showing what to approve (`needs`).
+the human to approve what it does not show: an artifact missing from its `reads`.
 
 **5. Contradictions.** Instructions can all be followed at once: within a role, between a
 role and a step's `do`, between two roles, and with LADO's own instructions to agents
@@ -138,13 +142,13 @@ to ask the human directly when the lead holds that conversation; no rule for bei
 blocked or for a review loop that does not converge.
 
 **8. Loops on a later visit.** A state that a flow can enter again says what changes on
-the later visit; a reviewing state on a loop needs itself and marks its previous findings
-RESOLVED or STILL OPEN; a work state on a loop whose note a gate or a later step needs
-needs itself and writes that note whole on every visit (`lado-kit-format`, "Notes and
-`needs`"); the loop is bounded (`max_visits` or a gate).
+the later visit; a reviewing state on a loop has its review in `produces` and on a later
+visit marks its previous findings RESOLVED or STILL OPEN; a work state on a loop writes its
+artifact whole on every visit (`lado-kit-format`, "Artifacts"); the loop is bounded
+(`max_visits` or a gate).
 Violation: a looping `do` silent about later visits; a reviewer on a loop without its own
-state in `needs`; a needed work state on a loop without itself in `needs`, or whose later
-note lists only the fixes; the fixing step not told where the findings to fix are.
+artifact in `produces`; a work state on a loop whose later artifact lists only the fixes;
+the fixing step not told where the findings to fix are.
 
 **9. Concision and why.** Every sentence changes what an agent does; a rule an agent
 might break carries its reason.

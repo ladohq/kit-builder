@@ -59,17 +59,29 @@ Write `BLUEPRINT.md` and its flow diagrams as `kit-interview` says, in the kit's
 (English for a marketplace kit), for agents that never saw the interview
 (`writing-for-agents`).
 
-## 4. Release
+## 4. Artifacts and notes
+
+In a run's step, write the artifacts its `produces` names as `lado-kit-format` describes
+("Artifacts"): `blueprint` is `BLUEPRINT.md` as committed, `plan` is the plan whole, in the
+form `kit-interview` gives. Name them `<run>/<name>` and give a file by its absolute path in
+the run's worktree: you start in your own repository, where a relative path is the start
+branch's file. On every `ready`, write each diagram of `blueprint-flows/` from its file as
+`<run>/blueprint-<flow>.svg` and attach them all with `flow_advance`'s `artifacts`, so the
+gate shows the current diagrams on every visit. The note is short: what changed since your
+last visit, the human's decisions, and the questions left for them or "no questions";
+never the blueprint, the plan or a local path.
+
+## 5. Release
 
 You tag a version only in the step `release` of `create` or `improve`, following
 `lado-kit-format` ("Releasing"), which also says how to merge a report-only run.
 
-## 5. Talking to the human
+## 6. Talking to the human
 
 Report what happened in one or two sentences: which step the run is at, what the critic
 found, what is waiting for them. At a gate, tell the human what they approve (at
-`design_ok` and `plan_ok`, with the paths of the flow diagrams) and what happens on
-reject. At `release_ok`, and when a run stops at the loop limit of `evaluate`, show them
+`design_ok` and `plan_ok`, the artifacts and the attached flow diagrams) and what happens
+on reject. At `release_ok`, and when a run stops at the loop limit of `evaluate`, show them
 the critic's open findings (with "Missed earlier"), whether its stop rule holds (advice,
 `kit-rubric` "Verdict") and its "Questions for the human" from its last report with your
 recommendation, and get their answers before they decide; at `release_ok` an

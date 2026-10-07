@@ -14,7 +14,16 @@ friction in LADO itself, to move to the LADO repository.
   note_body in …", `runs.py`); files written for the human, such as a report, get no hint.
   In a `ru` run of `evaluate` over lado-dev the first report came in English, following the
   English template. `kit-rubric` now says the report takes the notes' language; LADO could
-  say it for every file the step writes for the human.
+  say it for every file the step writes for the human. With LADO 0.27 the report is also
+  the artifact the human reads (`evaluation`, `assessment`), so the hint belongs with the
+  artifacts a step must write ("This step must write: ...") as well.
+- `[lado]` A relative `file` of `write_artifact` is resolved from where the agent
+  started: for the lead that is its own repository, not the run's worktree, so in a run's
+  step a lead that writes `file=BLUEPRINT.md` publishes the start branch's copy, and
+  `produces` counts it. kit-builder's supervisor passes the absolute path in the run's
+  worktree (0.5.0); any kit whose lead writes a file of the run has the same trap. LADO
+  could resolve a lead's relative `file` from the run's worktree inside a run's step, or
+  say so in the step's text.
 - Re-evaluation (`kit-rubric`) ran once, by hand, on kit-builder 0.2.0 against the 0.1.0
   report (`kit-reports/kit-builder-0.2.0-2026-10-06.md`): the cut-rule check found two lost
   rules, but the diff covered the whole kit, so "Missed earlier" was empty by construction
@@ -58,10 +67,10 @@ low); `lado kits check . --tag v0.1.0` printed OK. Found on the way:
   from LADO's Python. A `lado say <session> [--to agent]` and `lado reply <session> <id>
   [choice] [-m text]` would make end-to-end runs scriptable. (`lado answer` refusing an
   agent is intended: gates are the human's.)
-- `[lado]` The first step after a gate gets the blueprint twice: once as "Note from
-  design" (the step `needs: [design]`) and again as "Note before the gate", because the
-  gate's note is the same design note. For `build` that is ~7 KB of duplicate context.
-  Skip "Note before the gate" when it is the same note a `needs` entry already gives.
+- Closed with kit-builder 0.5.0 (LADO 0.27): ~~`[lado]` The first step after a gate gets
+  the blueprint twice, as "Note from design" (`needs`) and as "Note before the gate".~~ The
+  blueprint is now the artifact `blueprint`; the note is short, and a step's text names a
+  record attached to the previous note only there, not again for its `reads`.
 
 ### Experiment: kit-builder 0.1.0 against 0.2.0 on lado-dev (2026-10-06)
 

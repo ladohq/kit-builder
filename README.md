@@ -18,7 +18,12 @@ A LADO kit that builds and evaluates LADO kits.
 The rule behind all three is the simplest kit that solves your task. A role, step, gate or
 skill goes into the kit only when one of your requirements needs it.
 
-Requires LADO 0.23 or newer (`lado kits check` checks flow graphs from 0.23 on).
+Each step's result (the blueprint, the plan, the author's report, the critic's report and
+the flow diagrams) is an artifact you read in LADO's UI, also from another machine; the
+blueprint and the reports are files of the repository as well.
+
+Requires LADO 0.27 or newer (flows name the artifacts a step writes and reads, `produces`
+and `reads`, from 0.27 on). A kit kit-builder writes or checks uses the same format.
 
 ## Install and start
 
@@ -44,7 +49,8 @@ lado start . --kit kit-builder
 # then tell the supervisor: "evaluate the kit lado-dev" (or "... the kit in ~/src/my-team")
 ```
 
-The report lands in `kit-reports/<kit>-<version>-<date>.md` of that repository.
+The report lands in `kit-reports/<kit>-<version>-<date>.md` of that repository and as an
+artifact in LADO's UI.
 
 To check a kit again after changes, name its previous report ("evaluate lado-dev again
 against kit-reports/lado-dev-0.9.1-2026-10-06.md"). The critic then reviews only what

@@ -1,9 +1,13 @@
 ---
 name: kit-archetypes
-description: A gallery of nine proven shapes of an agent team for a LADO kit — Solo, Solo + reviewer, feature with design gate, research and report, parallel fan-out, triage, docs and content, incident and ops, bug hunt — each with its roles, flow, when to take it and its complexity. Use when a human starts a kit from scratch, or to check a transferred process against a simpler known shape; for the interview itself use kit-interview.
+description: A gallery of nine proven shapes of an agent team for a LADO kit — Solo, Solo + reviewer, feature with design gate, research and report, parallel fan-out, triage, docs and content, incident and ops, bug hunt — each with its roles, flow, when to take it and its complexity; options to take, combine or depart from, not templates. Use when a human starts a kit from scratch, or to check a transferred process against a simpler known shape; for the interview itself use kit-interview.
 ---
 
 # Kit archetypes
+
+These shapes are practices that worked, not templates: the human may take one as it is,
+combine several, or build a shape of their own, and the blueprint records which. Names of
+steps and artifacts below are examples; the kit takes its names from the human's process.
 
 Start from the simplest shape that does the task, and add a part only when a requirement
 needs it. Offer **Solo** first, every time, and argue for it; then at most two more that fit
@@ -28,8 +32,8 @@ then write the risk into the blueprint.
 ## 1. Solo + reviewer — 2 / 2 / 1
 
 - **Team**: worker, reviewer (read-only).
-- **Flow**: `implement` (needs itself) → `review` (`max_visits: 3`, changes → implement) →
-  gate `approve` (needs implement) → end.
+- **Flow**: `implement` (produces what it built) → `review` (`max_visits: 3`, produces the
+  review, changes → implement) → gate `approve` (reads both) → end.
 - **Take it when**: mistakes are costly and a fresh look catches them (code, contracts,
   anything merged or shipped).
 - **Not when**: the result is checked by a test or a command anyway; then Solo with that
@@ -38,8 +42,9 @@ then write the risk into the blueprint.
 ## 2. Feature with design gate — 3 / 3 / 2
 
 - **Team**: designer (or the supervisor designs), implementer, reviewer.
-- **Flow**: `design` → gate `design_ok` → `implement` (needs itself) → `review`
-  (loop, `max_visits: 3`) → gate `merge_ok` (needs implement) → end.
+- **Flow**: `design` (produces the design) → gate `design_ok` (reads it) → `implement`
+  (reads the design, produces what it built) → `review` (loop, `max_visits: 3`, produces
+  the review) → gate `merge_ok` (reads what it merges) → end.
 - **Take it when**: the human wants to agree on the approach before work starts (larger
   changes, architecture, public interfaces).
 - **Not when**: tasks are small and their acceptance criteria are known up front; use 1.
@@ -73,8 +78,9 @@ then write the risk into the blueprint.
 ## 6. Docs and content — 2 / 3 / 2
 
 - **Team**: writer, editor.
-- **Flow**: `outline` → gate `outline_ok` → `draft` (needs itself) → `edit`
-  (`max_visits: 2`, changes → draft) → gate `publish_ok` (needs draft) → end.
+- **Flow**: `outline` (produces the outline) → gate `outline_ok` (reads it) → `draft`
+  (produces the draft, whole on every visit) → `edit` (`max_visits: 2`, produces the
+  edits, changes → draft) → gate `publish_ok` (reads the draft) → end.
 - **Take it when**: text is published under the human's name, and its structure must be
   agreed first.
 - **Not when**: internal notes or drafts; use Solo.
@@ -90,8 +96,9 @@ then write the risk into the blueprint.
 ## 8. Bug hunt — 2 / 3 / 1
 
 - **Team**: debugger (reproduces and fixes), reviewer.
-- **Flow**: `reproduce` → `fix` (needs itself) → `review` (loop, `max_visits: 3`) → gate
-  `merge_ok` (needs fix) → end.
+- **Flow**: `reproduce` (produces the reproduction) → `fix` (reads it, produces what it
+  changed) → `review` (loop, `max_visits: 3`, produces the review) → gate `merge_ok`
+  (reads the fix) → end.
 - **Take it when**: the bug must be reproduced by a failing test before it is fixed.
 - **Not when**: the cause is already known; use 1.
 
@@ -101,7 +108,7 @@ Whatever the shape, before it goes into the blueprint:
 - every role has a clear output and its own rights or context, and acts in at least one step;
 - every step says when it is done and when each outcome applies;
 - an independent check comes before the end when the result is used by others;
-- loops and gates follow `lado-kit-format` ("Notes and `needs`", "Gates",
-  "`max_visits`"): a work step on a loop needs itself when a gate or a later step needs its
-  note; two gates or fewer per flow unless the blueprint justifies a third;
+- results and loops follow `lado-kit-format` ("Artifacts", "Gates", "`max_visits`"): a
+  result someone reads later is an artifact its step produces, a gate reads what it
+  approves; two gates or fewer per flow unless the blueprint justifies a third;
 - the measures are inside `kit-budget`'s green zone, or the blueprint says why not.

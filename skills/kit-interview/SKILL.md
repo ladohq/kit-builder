@@ -35,10 +35,11 @@ bring over?" For a kit that exists, take the branch "Existing kit".
 human's back.
 1. Ask for the material: where it lives, which parts are binding. Read it all before the
    next question (section "Reading the human's material").
-2. Restate the process as a list of steps with who does each and what each hands on. Done
-   when the human agrees or corrects it.
-3. Ask only about gaps: a step with no clear "done", a hand-off with no artifact, a
-   decision nobody owns, a loop with no limit.
+2. Restate the process as a list of steps with who does each, what each hands on and who
+   reads it later. Done when the human agrees or corrects it.
+3. Ask only about gaps: a step with no clear "done", a result read later that no step
+   writes down as an artifact (`lado-kit-format`, "Artifacts"), a decision nobody owns, a
+   loop with no limit.
 4. Propose the mapping (steps to flow states, people to roles, sign-offs to gates). Where
    the process has more parts than its task needs, say so and recommend merging them, but
    the human decides.
@@ -47,7 +48,8 @@ human's back.
 1. Ask what one task they will give the kit looks like, start to finish, and what "done"
    means for it.
 2. Offer archetypes from `kit-archetypes`: Solo first, then at most two that fit the task.
-3. Adapt the chosen archetype only where an answer requires it.
+   The human may take one, combine several or describe a shape of their own.
+3. Adapt what they chose only where an answer requires it.
 
 A narrow, specialised kit (a domain such as data pipelines or legal review) goes through
 either branch, then the domain questions below.
@@ -70,7 +72,7 @@ version are given; the human decides what changes, and the blueprint records why
    an element changes sections 1 and 3 too.
 4. Add a row to section 5 per change: the planned version, the change, and the report and
    finding it comes from. Commit the blueprint.
-5. Write the plan, the note the author and the critic work from:
+5. Write the plan, the artifact `plan` the author and the critic work from:
 
 ```
 Kit <name> <version now> → <planned version>; report <path> (commit <the commit it evaluated>); blueprint <commit>
@@ -93,6 +95,9 @@ Pick what the answers so far leave open; skip what the material already says.
 - **People.** Which decisions are only yours? What must never happen without you?
 - **Risk.** What is hard to undo: merge, deploy, publish, send, delete, spend money?
 - **Checking.** Who checks the work today, against what? What does a bad result look like?
+- **Results.** Which results of a step are read later, and by whom: a later step, you at a
+  gate, you from afar? Each becomes an artifact named in your words; what only the next
+  step needs to know is a note.
 - **Loops.** When a check fails, what happens? How many tries before you want to step in?
 - **Tools.** Which commands, test suites, services or MCP servers does the work need?
 - **Domain.** Which rules, terms or standards must every agent know? Where are they written?
@@ -108,7 +113,7 @@ section) so the blueprint can cite it.
 |---|---|---|
 | `CLAUDE.md`, `AGENTS.md`, contributor docs | standing rules, commands, conventions | the repository's own file stays where it is; a rule every role needs goes into a skill, not into each role |
 | the human's own skills or prompt files | reusable know-how | a kit skill (copied when it is theirs) or a `dependencies.skills` entry (when it is published) |
-| a written process (wiki, runbook, checklist) | steps, owners, artifacts, sign-offs | flow states, roles, notes, gates |
+| a written process (wiki, runbook, checklist) | steps, owners, artifacts, sign-offs | flow states, roles, artifacts, gates |
 | tracker statuses (e.g. To do, In progress, Review, QA, Done) | the states work passes through and who moves it | a status where someone works is a work state; a status where someone signs off is a gate or a review state; a status nobody acts in (Blocked, Backlog) is not a state |
 | team roles (developer, QA, tech lead) | who does what with which rights | a role only if its work, rights or context differ; same work, different person is one role |
 
@@ -133,6 +138,6 @@ The flow skeletons in section 2 are what the human approves at the gate, so they
 whole graph: every state, every outcome and where it goes, as the author must build it.
 Each time you change one, draw it again with the `kit-budget` flow script,
 `--out blueprint-flows` at the same root, and commit the SVGs with `BLUEPRINT.md`; your
-note gives the human their paths. A blueprint without skeletons, restored or written
+note carries them as your role says. A blueprint without skeletons, restored or written
 before them, gets skeletons of the kit's flows as they are; the plan's changes to a flow
 change its skeleton.

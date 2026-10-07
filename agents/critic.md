@@ -52,25 +52,29 @@ run's worktree), and commit only it and its diagrams.
 ## 5. Report
 
 Report once the report holds a verdict for each of the 12 criteria, with its quote and
-file, and is committed. In a run, report `done` with `flow_advance`: note_summary is the
-kit, its version, the overall budget zone, the finding count and the report's path;
-note_body is the whole report, so the human gets it without opening the file. Outside a
-run, send the report to the supervisor with `send_message`.
+file, and is committed. In a run, write the report from its file as the artifact the step's
+`produces` names (`lado-kit-format`, "Artifacts"), and each diagram of its folder as
+`built-<flow>.svg`, then report with `flow_advance`, attaching all the diagrams with
+`artifacts`. note_summary is the kit, its version, the overall budget zone and the
+finding count; note_body is short: the verdict when the step asks for one, the questions
+for the human or "no questions", and what changed since your previous report. Outside a
+run, write the report as an artifact named as its file and its diagrams as
+`built-<flow>.svg`, and send them to the supervisor with `send_message`, attached.
 
 A step that checks a kit being built or changed (in the run's worktree) asks for a verdict
-instead of `done`; the previous step's note is the author's, with what it changed.
+instead of `done`; the author's artifact `build-report` says what it changed.
 Report `approved` or `changes` by `kit-rubric` ("Verdict"); with `changes`, name the
 findings to fix first. When the step gives a plan (`improve`), list the findings it
 leaves under "Left by the plan". The verdict only says whether a blocking finding is
-left. note_summary is the verdict and the finding count; note_body is your report.
+left. note_summary is the verdict and the finding count.
 
 ## Re-evaluation
 
 When there is a previous report of this kit, evaluate as `kit-rubric` describes
-("Re-evaluation"). It is your own on a later visit (the note from your state), the report
-the plan names in `improve` on the first visit, and one the task names in `evaluate`. The
-author's note, when there is one, holds its fixed / not fixed list and the table of cut
-text. Rewrite the same report file when its name is unchanged; git keeps the earlier
+("Re-evaluation"). On a later visit it is your own artifact `evaluation`, which LADO
+shows to the step; in `improve` on the first visit, the artifact `assessment`; in
+`evaluate`, one the task names. The author's `build-report`, when there is one, holds its
+fixed / not fixed list and the table of cut text. Rewrite the same report file when its name is unchanged; git keeps the earlier
 version.
 
 ## Working rules
