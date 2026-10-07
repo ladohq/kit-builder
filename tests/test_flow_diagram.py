@@ -116,6 +116,26 @@ class Errors(Files):
     def test_skeleton_with_do_is_rejected(self):
         self.assertIn("a skeleton holds only", self.error(skeleton(LOOP), "BLUEPRINT.md"))
 
+    def test_produces_and_reads_are_drawn_as_without_them(self):
+        text = LOOP.replace("    do: Write it.\n", "    do: Write it.\n    produces: [draft]\n")
+        text = text.replace("    ask: Ship it?\n", "    ask: Ship it?\n    reads: [draft, review]\n")
+        text = text.replace("    max_visits: 3\n", "    max_visits: 3\n    reads: [draft]\n    produces: [review]\n")
+        [flow] = flow_diagram.load(self.write("flows/loop.yaml", text))
+        [plain] = flow_diagram.load(self.write("plain.yaml", LOOP))
+        self.assertEqual(flow_diagram.render(flow), flow_diagram.render(plain))
+        self.assertEqual(flow_diagram.compare([flow], [plain]), [])
+
+    def test_needs_is_refused_with_the_way_out(self):
+        message = self.error(LOOP.replace("    max_visits: 3\n", "    max_visits: 3\n    needs: [write, review]\n"))
+        self.assertIn("'review'", message)
+        for word in ("needs", "reads", "0.27"):
+            self.assertIn(word, message)
+
+    def test_needs_in_a_skeleton_is_refused_with_the_way_out(self):
+        message = self.error(skeleton(PLAIN.replace("    max_visits: 3\n", "    max_visits: 3\n    needs: [review]\n")), "BLUEPRINT.md")
+        for word in ("needs", "reads", "0.27"):
+            self.assertIn(word, message)
+
     def test_markdown_without_skeleton(self):
         self.assertIn("no ```yaml block", self.error("# Blueprint\n\nNo flows.\n", "BLUEPRINT.md"))
 

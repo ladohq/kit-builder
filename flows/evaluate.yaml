@@ -8,10 +8,11 @@ start: evaluate
 states:
   evaluate:
     agent: critic
+    produces: [evaluation]
     do: |
       Evaluate the kit the task names (a folder path or the name of an installed kit),
-      read-only, as your role describes, commit the report on the run's branch and report
-      `done` with the note your role describes ("5. Report").
+      read-only, as your role describes, commit the report on the run's branch, write it
+      as the artifact `evaluation` and report `done` as your role describes ("5. Report").
     outcomes: {done: done}
   done:
     end: true

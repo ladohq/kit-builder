@@ -10,6 +10,7 @@ start: assess
 states:
   assess:
     agent: critic
+    produces: [assessment]
     do: |
       Evaluate the whole kit in the run's worktree as it is now, in full, never as a
       re-evaluation: later steps read only the change, so what this step misses no one
@@ -20,14 +21,16 @@ states:
       evaluated, other than the `version:` line of `kit.yaml`, use it instead of
       evaluating again: copy it into the worktree's `kit-reports/` and commit it if it is
       not there. Any other report is only background: evaluate anew.
-      Report `done` with the note your role describes ("5. Report").
+      Write the report as the artifact `assessment` and report `done` as your role
+      describes ("5. Report").
     outcomes: {done: triage}
   triage:
     agent: supervisor
-    needs: [assess, triage]
+    reads: [assessment]
+    produces: [plan, blueprint]
     do: |
-      Decide with the human what to change, from the critic's report (the note from
-      assess), as `kit-interview` describes (branch "Existing kit"): restore
+      Decide with the human what to change, from the critic's report (the artifact
+      `assessment`), as `kit-interview` describes (branch "Existing kit"): restore
       `BLUEPRINT.md` first when the kit has none, give it flow skeletons when it has none
       (`kit-interview`, "The blueprint"), then go through the findings, the
       critic's "Questions for the human" and every measure over green. Commit only
@@ -35,55 +38,61 @@ states:
       path is in `flow_status` for the run).
       On a later visit the previous step's note says why you are back: the human's reason
       for rejecting the plan, or what the author could not build. Settle it with the
-      human, starting from your own previous plan and the committed `BLUEPRINT.md`. Once
+      human, starting from your own previous `plan` and the committed `BLUEPRINT.md`. Once
       the author has built a plan, each new plan starts with "Changed since the plan the
       author last built: …"; after a rejected plan, keep its list and add to it, since the
       author never built that one.
       Done when every finding and question has a decision and the blueprint is committed.
+      Write the plan, whole and in the form `kit-interview` gives, as the artifact `plan`,
+      and the artifact `blueprint` from the committed file, then report as your role
+      describes ("Artifacts and notes").
       Report `ready`: note_summary is the kit, the planned version and the number of
-      findings to fix; note_body is the whole plan, in the form `kit-interview` gives, so
-      it stands alone for the human, the author and the critic. When you restored
-      `BLUEPRINT.md`, the note carries it whole after the plan: the human approves it at
-      the gate.
-      Report `nothing` when the human decides to change nothing; when the run ends, merge
-      its branch as `lado-kit-format` says ("A report-only run").
+      findings to fix; when you restored `BLUEPRINT.md`, the note says so: the human
+      approves it at the gate.
+      Report `nothing` when the human decides to change nothing, after the same two
+      artifacts: the plan says "nothing changes" with the human's decisions, the blueprint
+      is as committed. When the run ends, merge its branch as `lado-kit-format` says ("A
+      report-only run").
     outcomes: {ready: plan_ok, nothing: done}
   plan_ok:
     gate: approval
+    reads: [plan, blueprint]
     ask: >-
       Approve the plan, the blueprint when it was restored, and the flow diagrams it
-      changes (`blueprint-flows/`)? The author changes the kit by them.
+      changes? The author changes the kit by them.
     outcomes: {approved: build, rejected: triage}
   build:
     agent: author
-    needs: [triage]
+    reads: [plan, blueprint]
+    produces: [build-report]
     do: |
-      Change only what the plan (the note from triage) lists, and section 4 of
-      `BLUEPRINT.md` as your role says; a finding the plan leaves is not yours to fix. On a
-      later visit also fix what the previous note brings back, as your role describes.
-      After `blocked`, the previous note is the revised plan: change what its "Changed
-      since the plan the author last built" lists.
+      Change only what the artifact `plan` lists, and section 4 of `BLUEPRINT.md` as your
+      role says; a finding the plan leaves is not yours to fix. On a later visit also fix
+      what the previous note brings back, as your role describes.
+      After `blocked`, the plan is revised: change what its "Changed since the plan the
+      author last built" lists.
     outcomes: {done: evaluate, blocked: triage}
   evaluate:
     agent: critic
     max_visits: 3
-    needs: [triage, evaluate]
+    reads: [plan, assessment, blueprint, build-report]
+    produces: [evaluation]
     do: |
-      Check the changed kit against the plan (the note from triage) and `BLUEPRINT.md`.
+      Check the changed kit against the artifact `plan` and `BLUEPRINT.md`.
     outcomes: {approved: release_ok, changes: build}
   release_ok:
     gate: approval
-    needs: [triage]
+    reads: [plan, evaluation]
     ask: >-
       Release the kit? The supervisor sets the version from the plan, checks it, merges the
       run's branch into the branch the run started from and tags it locally.
     outcomes: {approved: release, rejected: build}
   release:
     agent: supervisor
-    needs: [triage]
+    reads: [plan]
     do: |
-      Release the kit as `lado-kit-format` describes ("Releasing"), with the version the plan
-      (the note from triage) names unless the human changes it.
+      Release the kit as `lado-kit-format` describes ("Releasing"), with the version the
+      artifact `plan` names unless the human changes it.
     outcomes: {released: done, failed: build}
   done:
     end: true

@@ -11,7 +11,9 @@ Usage:
 <input> and <plan> are a flow file (flows/<name>.yaml), a folder (its flows/*.yaml, or
 *.yaml when it has no flows/), or a Markdown file (BLUEPRINT.md) whose ```yaml blocks with
 `states:` are flow skeletons. Exit status: 0 done, 1 the flows differ from the plan,
-2 an input is missing or a flow is not valid. The layout is ported from the Tessera
+2 an input is missing or a flow is not valid. A state's `produces` and `reads` are not
+drawn or checked (`lado kits check` does that); `needs`, gone since LADO 0.27, is refused.
+The layout is ported from the Tessera
 kit-builder's render_workflow_diagram.py: layered, deterministic, no other dependencies.
 """
 
@@ -125,6 +127,11 @@ def parse(data, source: str, skeleton: bool = False) -> Flow:
         where = f"{source}: state {key!r}"
         if not isinstance(s, dict):
             raise FlowError(f"{where}: expected a mapping")
+        if "needs" in s:
+            raise FlowError(
+                f"{where}: needs is gone since LADO 0.27; a step names the artifacts it reads in "
+                "reads and the ones it writes in produces"
+            )
         kinds = [k for k in ("agent", "gate", "end") if s.get(k)]
         if len(kinds) != 1:
             raise FlowError(f"{where}: needs exactly one of agent, gate or end: true")
