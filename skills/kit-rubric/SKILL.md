@@ -46,7 +46,9 @@ For a kit given as a folder, the pack's clone is in LADO's git cache once the ki
 checked or installed: the folder `cache` of LADO's home (`$LADO_HOME`, by default `.lado`
 in your home folder), as `<repository name>-<hash>`, then the `<ref>` after the `@` of the
 pack's `from`. The skill is in one of the `folders` its `dependencies.skills` entry
-names. A dependency skill you cannot find: say so under "Passes" and in criterion 10.
+names. A skill from `expects.skills` is part of the role's text too: read it in the kit the
+README names as bringing it, through `lado kits show <that kit>` when it is installed. A
+dependency or expected skill you cannot find: say so under "Passes" and in criterion 10.
 
 ## Known holes
 
@@ -163,7 +165,11 @@ Violation: a description without "when"; two skills whose descriptions trigger o
 same case; a skill in a role's `skills:` that nothing in the role or its steps calls for; a skill
 from outside the kit not declared by its own folder, or a declared folder no role uses
 (`lado-kit-format`);
-a skill's text pasted into a prompt instead of listed.
+a skill in `expects.skills` whose kit the README does not name, one that is in fact
+published as a package (it belongs in `dependencies.skills`), or `expects` with
+`dependencies.lado` below `">=0.29"` (`lado-kit-format`, "Skills from outside the kit");
+a skill's text pasted into a prompt instead of listed. A role's skill that no kit declares
+is `lado kits check`'s to report, not yours to check by hand.
 
 **11. Provider neutrality.** The kit runs under any agent CLI LADO supports (see
 `lado-kit-format`).

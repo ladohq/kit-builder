@@ -51,6 +51,8 @@ candidate for removal; keep it only with a reason in the last column.
 | `<flow>.<state>` | work step | R2 | <...>; produces `<artifact>`, reads `<artifact>` |
 | `<flow>.<gate>` | gate | R4 | <what is irreversible or only the human's call>; reads `<artifact>` |
 | `<skill>` | skill | R3 | <...> |
+| `<pack>` (`<skill>`) | skill dependency | R3 | <...>; `dependencies.skills` |
+| `<skill>` | expected skill | R3 | <...>; `expects.skills`, brought by `<kit>` |
 | `<server>` | MCP server | R5 | <...> |
 
 Then the reverse check, one line per requirement: which elements cover it. A requirement

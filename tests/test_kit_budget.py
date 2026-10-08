@@ -331,6 +331,26 @@ class Run(unittest.TestCase):
         kit = Kit(self, agents={"a": "---\n- one\n---\nYou work.\n"})
         self.assertEqual(self.run_script(kit).returncode, 2)
 
+    def test_kit_with_expects_measured_and_drawn(self):
+        """A role names a skill another kit brings (`expects.skills`): it is not counted."""
+        meta = {"name": "fixture", "version": "0.1.0", "description": "A fixture kit.",
+                "expects": {"skills": ["tracker"]}, "dependencies": {"lado": ">=0.29"}}
+        worker = agent("worker").replace("skills: []", "skills:\n- tracker\n- own")
+        kit = Kit(self, agents={"worker": worker}, flows={"f": flow("f")}, skills=["own"])
+        (kit.path / "kit.yaml").write_text(yaml.safe_dump(meta))
+        self.assertEqual(kit.measure("own_skills"), {"kit": (1, "green")})
+        result = self.run_script(kit)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Overall: green", result.stdout)
+        diagram = SCRIPT.with_name("flow_diagram.py")
+        out = kit.path / "drawn"
+        result = subprocess.run(
+            [sys.executable, str(diagram), str(kit.path), "--out", str(out)],
+            capture_output=True, text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((out / "f.svg").is_file())
+
     def test_not_a_kit_exits_2(self):
         with tempfile.TemporaryDirectory() as empty:
             result = subprocess.run(

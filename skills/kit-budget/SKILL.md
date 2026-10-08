@@ -49,7 +49,8 @@ How each is counted:
   "Worker roles"). The lead gets a higher green limit: it runs the session and the flows
   and talks to the human, so it carries more rules than one worker.
 - **Own skills**: folders `skills/<name>/` that hold a `SKILL.md`. Skills from
-  `dependencies.skills` are not counted: they are shared, not the kit's text.
+  `dependencies.skills` and `expects.skills` are not counted: they are shared, not the
+  kit's text.
 - **MCP servers**: distinct server names under `mcp:` in the frontmatter of all
   `agents/*.md` (the only place a kit declares MCP servers); a server two roles use counts once.
 

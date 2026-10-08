@@ -1,6 +1,6 @@
 ---
 name: lado-kit-format
-description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit, paths, one lead, artifacts (produces, reads, artifact or note), gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
+description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit (dependencies.skills, expects.skills), paths, one lead, artifacts (produces, reads, artifact or note), gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
 ---
 
 # LADO kit format
@@ -24,7 +24,8 @@ LADO's README and in `lado kits show <kit>`.
 A kit, in short:
 
 ```
-kit.yaml              name, version, description, supervisor, dependencies (lado, skills)
+kit.yaml              name, version, description, supervisor, dependencies (lado, skills),
+                      expects (skills)
 agents/<role>.md      frontmatter name, description, skills, mcp; the body is the role prompt
 flows/<name>.yaml     states: work (agent, do, outcomes, reads, produces), gate (reads), end
 skills/<name>/        SKILL.md and its files, always moved as a whole
@@ -40,10 +41,19 @@ tool name. Skills come in through `skills:` and MCP servers through `mcp:`; neve
 skill's text into a prompt.
 
 **Skills from outside the kit.** `kit.yaml` cannot list the kit's own skills: LADO finds
-them in `skills/`. So every other skill a role lists in `skills:` is declared in
-`dependencies.skills`, by its own folder (the one holding its SKILL.md) in `folders`, from
-a pack pinned to a tag or commit. A folder above the skill installs every skill under it,
-and the ones no role uses only add noise to the session.
+them in `skills/`. So every other skill a role lists in `skills:` is declared in one of two
+places:
+- Published as a package: in `dependencies.skills`, by its own folder (the one holding its
+  SKILL.md) in `folders`, from a pack pinned to a tag or commit. A folder above the skill
+  installs every skill under it, and the ones no role uses only add noise to the session.
+- Brought by another kit of the session (a companion kit without agents, such as a
+  tracker kit's `tracker`): in `expects.skills`, by name; roles list it in `skills:` as
+  usual. The kit is then not tied to one companion: any kit with a skill of that name fits,
+  and a session where no kit brings it does not start. A kit with `expects` needs
+  `dependencies.lado: ">=0.29"`, the first LADO that reads the key; an older one refuses it
+  without saying to upgrade. Its README names the kit that brings each expected skill and
+  gives the `lado start` command with that kit (`lado start . --kit <this kit> --kit <that
+  kit>`), since nothing else tells the human what to add.
 
 **Paths.** Roles and MCP commands reach kit files through `${KIT_DIR}`; a skill reaches its
 own files through `${SKILL_DIR}` (only inside a skill). The command scans only SKILL.md of a
