@@ -167,3 +167,17 @@ where to find a dependency's text.
   (seen in the lado-dev reports). No skill or role says so. That is the gap behind the
   recall finding above: `kit-rubric` should say where to find a dependency's text
   (`lado kits show <kit>` prints each one's folder).
+- `kit-budget`'s `flow_diagram.py` has no case for a kit without `flows/` (a skill-only
+  kit such as tracker-jira-server): it globs the kit root, reads `kit.yaml` as a flow and
+  exits 2 with `error: kit.yaml: states must be a non-empty mapping`, with `--out` and with
+  `--compare`. It should say "no flows" and exit 0; the `create` step text could then
+  drop the supervisor's "not applicable" ruling. Found in session kit-tracker-jira-server,
+  run create/tracker-jira-server, 2026-10-08.
+- `lado-kit-format` ("Publishing") says "Name the kit's repository `lado-kit-<name>`" with
+  no exception, but the official marketplace's README ("Propose a kit", 4) names kits of
+  the ladohq organisation `kit-<name>`. The critic took the rule as written and filed
+  F12.4 "rename `ladohq/kit-tracker-jira-server` to `lado-kit-…`"; the supervisor
+  accepted it, the author changed the README's URL, and the human withdrew it at the
+  release step, which cost one more triage, build and evaluate round. The skill should
+  quote the marketplace's rule whole, the ladohq exception included. Found in session
+  kit-tracker-jira-server, run improve/tracker-jira-server, 2026-10-08.
