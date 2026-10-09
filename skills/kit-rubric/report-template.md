@@ -30,7 +30,8 @@ full evaluation are not comparable.
 ```
 
 Expects: <the `expects …` lines of the output, quoted (`expects skills: …`,
-`expects commands: …`, and each `warning: … expects command …`), or "none">.
+`expects commands: …`, each `warning: … expects command …` and the warning `expects.<key>
+needs LADO <version> or newer; add dependencies.lado …`), or "none">.
 
 ### Budget script (exit status <n>)
 
