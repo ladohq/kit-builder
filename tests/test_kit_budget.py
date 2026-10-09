@@ -332,9 +332,11 @@ class Run(unittest.TestCase):
         self.assertEqual(self.run_script(kit).returncode, 2)
 
     def test_kit_with_expects_measured_and_drawn(self):
-        """A role names a skill another kit brings (`expects.skills`): it is not counted."""
+        """A role names a skill another kit brings (`expects.skills`) and the kit needs a CLI
+        (`expects.commands`): neither is counted."""
         meta = {"name": "fixture", "version": "0.1.0", "description": "A fixture kit.",
-                "expects": {"skills": ["tracker"]}, "dependencies": {"lado": ">=0.29"}}
+                "expects": {"skills": ["tracker"], "commands": ["uv", "gh"]},
+                "dependencies": {"lado": ">=0.30"}}
         worker = agent("worker").replace("skills: []", "skills:\n- tracker\n- own")
         kit = Kit(self, agents={"worker": worker}, flows={"f": flow("f")}, skills=["own"])
         (kit.path / "kit.yaml").write_text(yaml.safe_dump(meta))

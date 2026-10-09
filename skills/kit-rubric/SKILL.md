@@ -68,6 +68,13 @@ that shows the kit handles it.
 5. A dependency skill that writes files, commits or asks the user, listed on a role that
    must not (a read-only role, a worker when only the lead talks to the human).
    Criteria 1, 5.
+6. Commands out of step with `expects.commands` (`lado-kit-format`, "Commands from outside
+   the kit"); the `expects …` lines of `lado kits check` list what the kit declares:
+   (a) a command the kit's roles or skills always run, or its README requires, that
+   `expects.commands` lacks (sdlc 0.1.1 with `openspec`), criterion 10; (b) a command in `expects.commands` that only some projects need
+   (`gh` when the code host comes from the project's settings): every other project gets a
+   false start error, criterion 11; (c) `expects.commands` with `dependencies.lado` below
+   `">=0.30"`, criterion 10.
 
 ## Finding format
 
@@ -108,7 +115,7 @@ Violation: a step works from something ("the design", "the plan") that is neithe
 previous note nor in its `reads`; a result a later step or a gate needs handed on as note
 text, "as above", "see the chat" or a local path; a `do` silent on what its artifact
 holds, or on what it holds for an outcome without a result. A flow with `needs` does not
-load in LADO 0.27: a high finding, fix: replace `needs` with `reads` of the artifacts the
+load in LADO 0.27 or newer: a high finding, fix: replace `needs` with `reads` of the artifacts the
 step works from, and name them in `produces` of the states that write them.
 
 **3. Done and outcomes.** Each work state's `do` says when the step is done and the
@@ -166,10 +173,12 @@ same case; a skill in a role's `skills:` that nothing in the role or its steps c
 from outside the kit not declared by its own folder, or a declared folder no role uses
 (`lado-kit-format`);
 a skill in `expects.skills` whose kit the README does not name, one that is in fact
-published as a package (it belongs in `dependencies.skills`), or `expects` with
+published as a package (it belongs in `dependencies.skills`), or `expects.skills` with
 `dependencies.lado` below `">=0.29"` (`lado-kit-format`, "Skills from outside the kit");
 a skill's text pasted into a prompt instead of listed. A role's skill that no kit declares
-is `lado kits check`'s to report, not yours to check by hand.
+(a skill of another kit missing from `expects.skills`) is `lado kits check`'s to report,
+not yours to check by hand: quote its line (`skill "<name>" is not visible to agent
+"<role>"`) as the finding's evidence.
 
 **11. Provider neutrality.** The kit runs under any agent CLI LADO supports (see
 `lado-kit-format`).

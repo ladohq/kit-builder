@@ -227,10 +227,11 @@ states:
 | `evaluate.evaluate` | work step | R6, R7, R8, R13 | The one critic step; no gate, since it only adds a report file, which the supervisor merges when the run's diff touches only `kit-reports/`; produces `evaluation`. |
 | `kit-interview` | skill | R2, R4, R11, R12, R13 | Round format (independent questions batched in one round, dependent ones one by one), branches (with "Existing kit": restoring a blueprint, going through a report, the plan's form), question bank (with which results are read later, and by whom), mapping the human's material (with where a skill from outside the kit goes), the blueprint template with its flow skeletons and what each step produces and reads. |
 | `kit-archetypes` | skill | R3, R9, R13 | The nine shapes, Solo first, as practices to take, combine or depart from, and the checks every shape passes. |
-| `lado-kit-format` | skill | R1, R6, R8, R10, R13 | The format, the rules `lado kits check` does not prove (provider neutrality, skills from outside the kit in `dependencies.skills` or `expects.skills`, paths, one lead, artifacts with `produces`, `reads` and "artifact or note", gates, `max_visits`), the release procedure (with a report-only run, which takes only its own report files, and the author's fix of a failed release), the one rule for telling an environment failure from a kit fault, which every role points to, and what a marketplace pull request needs; every role writes or reads kits, and the author reruns the release's failing command. The artifact rules are here, not in each role: every role writes and reads artifacts, and the user's kits follow the same rules. |
+| `lado-kit-format` | skill | R1, R6, R8, R10, R13 | The format, the rules `lado kits check` does not prove (provider neutrality, skills from outside the kit in `dependencies.skills` or `expects.skills`, commands every project needs in `expects.commands`, paths, one lead, artifacts with `produces`, `reads` and "artifact or note", gates, `max_visits`), the release procedure (with a report-only run, which takes only its own report files, and the author's fix of a failed release), the one rule for telling an environment failure from a kit fault, which every role points to, and what a marketplace pull request needs; every role writes or reads kits, and the author reruns the release's failing command. The artifact rules are here, not in each role: every role writes and reads artifacts, and the user's kits follow the same rules. |
 | `kit-budget` | skill | R5, R9, R12 | The budget table and the script `scripts/kit_budget.py`; used by the author before reporting, the critic in layer a and the supervisor for the planned budget. Also `scripts/flow_diagram.py`, which draws the skeletons and the flows and compares them (R12), and refuses `needs`: in this skill rather than a sixth one, since both are scripts over the kit's shape that every role already runs, and a sixth skill makes the kit yellow. |
 | `kit-rubric` | skill | R6, R7, R8, R12, R13 | The 12 criteria, the known holes, where to read dependency and expected skills, the finding format, the three-pass rule, re-evaluation against a previous report, the one verdict rule (a flow differing from its skeleton blocks; a check failing for an environment cause gives no verdict) with the stop rule as advice, and the report template (in the run's human language). On the critic, and on the author and the supervisor, who fix and weigh findings named by its criteria. |
-| `mattpocock-skills` (`grilling`, `writing-for-agents`) | skill dependency | R1, R2 | `grilling` finds what is still the human's to decide in the interview, with `kit-interview`'s round format and scope winning where they differ; `writing-for-agents` makes the blueprint and the kit's prompts readable by agents that never saw the interview. Shared, so not copied (decision in `docs/mvp-brief.md`). `kit.yaml` cannot list the kit's own skills (LADO finds them in `skills/`), so the rule is: every skill from outside the kit that a role uses is declared, a published one in `dependencies.skills` by its own folder, one another kit of the session brings in `expects.skills` (`lado-kit-format`); kit-builder expects none, and `folders` names only these two, so no unused skill is installed. |
+| `mattpocock-skills` (`grilling`, `writing-for-agents`) | skill dependency | R1, R2 | `grilling` finds what is still the human's to decide in the interview, with `kit-interview`'s round format and scope winning where they differ; `writing-for-agents` makes the blueprint and the kit's prompts readable by agents that never saw the interview. Shared, so not copied (decision in `docs/mvp-brief.md`). `kit.yaml` cannot list the kit's own skills (LADO finds them in `skills/`), so the rule is: every skill from outside the kit that a role uses is declared, a published one in `dependencies.skills` by its own folder, one another kit of the session brings in `expects.skills` (`lado-kit-format`); kit-builder expects no skill, and `folders` names only these two, so no unused skill is installed. |
+| `uv` | command (expects) | R5, R9, R12 | `kit-budget`'s scripts run with `uv run --script` on every kit and every project, so a session without `uv` fails at the first budget or diagram; in `expects.commands`, LADO refuses to start the session instead. `lado` and `git` need no entry: LADO itself runs them. |
 | — | MCP server | — | None: the work is files and the `lado` and `git` commands. |
 
 Reverse check:
@@ -241,7 +242,7 @@ Reverse check:
 - R3: `supervisor`, `create.design`, `kit-archetypes`.
 - R4: `supervisor`, `create`, `create.design`, `create.design_ok`, `improve`,
   `improve.triage`, `kit-interview`.
-- R5: `critic`, `kit-budget`.
+- R5: `critic`, `kit-budget`, `uv`.
 - R6: `supervisor`, `critic`, `create.evaluate`, `improve.assess`, `improve.evaluate`,
   `evaluate`, `evaluate.evaluate`, `lado-kit-format`, `kit-rubric`.
 - R7: `critic`, `evaluate`, `evaluate.evaluate`, `kit-rubric`.
@@ -250,7 +251,7 @@ Reverse check:
   `kit-rubric`.
 - R9: `create.evaluate`, `improve.evaluate`, `kit-archetypes`, `kit-budget`, and this
   blueprint's budget below.
-- R10: `lado-kit-format` (provider neutrality); the README and `dependencies.lado: ">=0.27"`
+- R10: `lado-kit-format` (provider neutrality); the README and `dependencies.lado: ">=0.30"`
   in `kit.yaml` (not kit elements in the sense of section 3).
 - R11: `supervisor`, `author`, `critic`, `improve` and its seven states, `kit-interview`.
 - R12: `supervisor`, `author`, `critic`, `create.design`, `create.design_ok`,
@@ -258,18 +259,18 @@ Reverse check:
 - R13: `supervisor`, `author`, `critic`, the three flows and every work state and gate in
   them (each produces or reads an artifact; the gates read what they ask about),
   `lado-kit-format`, `kit-rubric`, `kit-interview`, `kit-archetypes`, and
-  `dependencies.lado: ">=0.27"` in `kit.yaml`.
+  `dependencies.lado: ">=0.30"` in `kit.yaml` (0.27 brought the artifacts).
 
 ## 4. Complexity budget
 
 Output of `uv run --script skills/kit-budget/scripts/kit_budget.py .` at the repository
-root (exit status 0), for 0.6.0: after the changes for 0.3.0 (known holes, dependency skills, the full
+root (exit status 0), for 0.7.0: after the changes for 0.3.0 (known holes, dependency skills, the full
 pass and one verdict rule in `kit-rubric`; `kit-rubric` on the author and the supervisor),
 the flow diagram (R12), the fixes of `kit-reports/kit-builder-0.4.0-2026-10-06.md` and
-the artifacts of LADO 0.27 (R13), and for 0.6.0 `expects.skills` of LADO 0.29 (no measure changed):
+the artifacts of LADO 0.27 (R13), for 0.6.0 `expects.skills` of LADO 0.29 (no measure changed), and for 0.7.0 `expects.commands` of LADO 0.30 (the author and critic prompts grew):
 
 ```
-# Complexity budget: kit-builder 0.6.0
+# Complexity budget: kit-builder 0.7.0
 
 | Measure | Where | Value | Green / yellow up to | Zone |
 |---|---|---|---|---|
@@ -280,8 +281,8 @@ the artifacts of LADO 0.27 (R13), and for 0.6.0 `expects.skills` of LADO 0.29 (n
 | Gates in a flow | flows/create.yaml | 2 | 2 / 3 | green |
 | Gates in a flow | flows/evaluate.yaml | 0 | 2 / 3 | green |
 | Gates in a flow | flows/improve.yaml | 2 | 2 / 3 | green |
-| Words in a role prompt | agents/author.md | 768 | 800 / 1500 | green |
-| Words in a role prompt | agents/critic.md | 721 | 800 / 1500 | green |
+| Words in a role prompt | agents/author.md | 796 | 800 / 1500 | green |
+| Words in a role prompt | agents/critic.md | 749 | 800 / 1500 | green |
 | Words in the lead's prompt | agents/supervisor.md | 893 | 1000 / 1500 | green |
 | Own skills | kit | 5 | 5 / 10 | green |
 | MCP servers | kit | 0 | 2 / 4 | green |
@@ -307,11 +308,12 @@ below, was near it until 0.4.0:
   other, since the critic's check sits between them.
 - Own skills (5 of 5): each holds what more than one role needs or what would bloat a
   prompt (section 3); a sixth makes the kit yellow.
-- Words in the author's prompt (768 of 800): the author writes, fixes by plan and report,
+- Words in the author's prompt (796 of 800): the author writes, fixes by plan and report,
   and handles a failed release. Its release and failure rules point to `lado-kit-format`
   rather than restate them; for 0.5.0 its `build-report` and the rewrite of `blueprint`
   pushed the fix of a failed release (merge conflict, merged kit text) into
-  `lado-kit-format` ("Releasing"). A rule added to it should push another one into a skill.
+  `lado-kit-format` ("Releasing"), and for 0.7.0 how `expects` comes from the blueprint
+  went there too, leaving a one-line pointer. A rule added to it should push another one into a skill.
 - Words in the lead's prompt (893 of 1000): the supervisor runs three flows, the interview
   and the gates' conversation, and from 0.5.0 writes `blueprint` and `plan` from the run's
   worktree with the diagrams attached (section "Artifacts and notes"). Rules it alone needs
@@ -325,6 +327,7 @@ Filled by `improve`, newest first.
 
 | Date | Version | Change | ← Fact (session, run, metric or report) |
 |---|---|---|---|
+| 2026-10-09 | 0.7.0 | `expects.commands` of LADO 0.30 for the kits kit-builder writes and checks: `lado-kit-format` ("Commands from outside the kit") puts a CLI every project needs in `expects.commands` and a project-dependent one (e.g. `gh` with the host from settings) in the project's settings, which the kit's text checks; "The LADO a kit with `expects` needs" (`>=0.30` with commands, `>=0.29` with only skills) and how the author takes `expects` from blueprint section 3 and keeps README in step; a kit expects no skill it declares; the `0.27` bindings say "from 0.27 on". `kit-interview` maps the **Tools** answer, the blueprint template has "command (expects)" and "skill of another kit (expects)"; `kit-rubric` known hole 6 (a command run but not expected, one expected that only some projects need, `>=0.30` missing), criterion 10 quotes `lado kits check` for a skill of another kit not expected; the critic quotes the check's `expects …` lines; `kit-budget` does not count `expects.commands`. kit-builder itself expects `uv` and needs `lado: ">=0.30"` | LADO 0.30 (`expects.commands`, LADO commit dce4397); the human's requirements K1–K6 (2026-10-08) and decision on K6 (2026-10-09); the run `fix/expects-commands` |
 | 2026-10-08 | 0.6.0 | `expects.skills` of LADO 0.29 for the kits kit-builder writes and checks: `lado-kit-format` says a published skill goes in `dependencies.skills` and one another kit of the session brings (a companion kit without agents, e.g. a tracker) in `expects.skills`, which needs `lado: ">=0.29"` and a README that names the bringing kit with its `lado start` command; `kit-rubric` criterion 10 finds an expected skill with no kit named, one that is a published package, and `expects` under `>=0.29`, and a pass reads an expected skill from the kit the README names; the blueprint template and `kit-interview` map a skill of another kit to `expects.skills`; `kit-budget` does not count it. kit-builder itself stays on `>=0.27` | LADO 0.29 (`expects` in `kit.yaml`, LADO commit 68b5a10); the human's task "kit-builder: поддержка `expects`"; the run `fix/expects` (review: 9 of 9 ACs, no findings) |
 | 2026-10-08 | 0.5.0 | The format of LADO 0.27 (R13), for LADO 0.27 only (`dependencies.lado: ">=0.27"`): the flows name artifacts in `produces` and `reads` instead of `needs` (`blueprint`, `plan`, `assessment`, `build-report`, `evaluation`; `improve.evaluate` reads `assessment` as the base of its first re-evaluation); `BLUEPRINT.md` and the reports stay files and their artifacts are written from the committed file, by whoever commits a change to it (the author after section 4); the lead passes the file by its absolute path in the run's worktree; the blueprint's diagrams (`blueprint-<flow>.svg`) and the built flows' (`built-<flow>.svg`) are attached on every report; notes are short. `lado-kit-format` replaces "Notes and `needs`" with "Artifacts" (artifact or note, names from the user's process) and takes the author's fix of a failed release; `kit-rubric` criteria 2, 4, 8 in artifacts, `needs` a high finding with its migration; `kit-interview` asks which results are read later and by whom, the template names each step's `produces` and `reads`; `kit-archetypes` are practices to take, combine or depart from; `flow_diagram.py` refuses `needs` | LADO 0.27 replaces `needs` with `reads` (`docs/design/artifacts.md` of LADO, "Flows"; the brief `kits-artifacts.md` of LADO, section kit-builder); the design of the run `feature/artifacts-format` and the human's six decisions in it, with the architect's review |
 | 2026-10-06 | 0.4.0 | Flow diagram (R12): `kit-budget/scripts/flow_diagram.py` draws each flow as SVG and compares `flows/` with flow skeletons in `BLUEPRINT.md` section 2 (template in `kit-interview`); the supervisor commits the drawn skeletons in `blueprint-flows/` and points the human to them at `design_ok` and `plan_ok`; the author compares before reporting; the critic draws the built flows into its report and lists each difference under "Not traced". In `kit-budget`, not a sixth skill, to keep "Own skills" green. Then the fixes of the self-evaluation of 0.4.0 (R8, R11, R12): the release procedure moved from the supervisor into `lado-kit-format` ("Releasing"), where a failure the environment causes goes to the human with bounded retries and only a kit fault goes to the author, a refused fast-forward is read by its cause, kit text the start branch brings in at release goes back through `evaluate`, and a report-only run is merged only when it touches `kit-reports/` alone (else the report alone, or the human's yes); the verdict blocks on a `--compare` difference, counts a similar pair as a criterion-6 finding and gives no verdict on an environment failure; `triage` gives skeletons to every blueprint without them, shows a restored one whole at `plan_ok` and starts a revised plan with what changed; `kit-interview` wins over `grilling` on round format and scope; a red measure goes to the human through the lead; repeats cut in the critic and history in `kit-budget` | The supervisor's task for the flow diagram; ported from the Tessera kit-builder's `render_workflow_diagram.py`; `kit-reports/kit-builder-0.4.0-2026-10-06.md`: F3.1 high, F2.1, F2.2, F3.2, F3.3, F4.1, F4.2, F5.1, F5.2, F12.1 medium, F3.4, F6.1, F7.1, F9.1 low, and the human's answers to its five questions. Round 2, from the re-evaluation: the rule for a failure from outside the kit's files is one section of `lado-kit-format` ("When a check or command fails") that the author, the critic (every check, `assess` included) and the release point to, with no copy in `kit-rubric`; a release stopped by the environment or at the retry bound stays in `release` (finish by hand with `lado flow-set … done`, or cancel); an existing tag sends the version back to step 1; the merged-text test uses `kit-rubric`'s kit text; a report-only run takes only its own report paths and commits only those, and a conflict there goes to the human; "Changed since the plan the author last built"; the author changes no merged kit text and reports `blocked` when it contradicts the blueprint; the supervisor looks facts up itself, never through a sub-agent; README's `evaluate` merge; R8 on `author` and `evaluate.evaluate` | `kit-reports/kit-builder-0.4.0-2026-10-06.md` (re-evaluation of 2bc37d1): F2.2 still open, F3.5, F3.6, F3.8, F5.3, F7.2, F12.2 medium, F3.7, F6.2 low, F3.9, F3.10, F12.3 missed earlier, the R8 trace note, and the human's answers to its three questions |

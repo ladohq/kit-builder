@@ -113,6 +113,7 @@ section) so the blueprint can cite it.
 |---|---|---|
 | `CLAUDE.md`, `AGENTS.md`, contributor docs | standing rules, commands, conventions | the repository's own file stays where it is; a rule every role needs goes into a skill, not into each role |
 | the human's own skills or prompt files | reusable know-how | a kit skill (copied when it is theirs), a `dependencies.skills` entry (when it is published) or an `expects.skills` entry (when another kit of their sessions brings it, such as a tracker kit; `lado-kit-format`, "Skills from outside the kit") |
+| the answer to **Tools** | the commands and skills the work cannot do without | a command every project needs: an `expects.commands` entry; a skill another kit brings: an `expects.skills` entry; a command only some projects need (the code host's or tracker's CLI, e.g. `gh` when the host comes from the project's settings): the project's settings, which the kit's text checks (`lado-kit-format`, "Commands from outside the kit") |
 | a written process (wiki, runbook, checklist) | steps, owners, artifacts, sign-offs | flow states, roles, artifacts, gates |
 | tracker statuses (e.g. To do, In progress, Review, QA, Done) | the states work passes through and who moves it | a status where someone works is a work state; a status where someone signs off is a gate or a review state; a status nobody acts in (Blocked, Backlog) is not a state |
 | team roles (developer, QA, tech lead) | who does what with which rights | a role only if its work, rights or context differ; same work, different person is one role |

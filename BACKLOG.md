@@ -33,19 +33,6 @@ friction in LADO itself, to move to the LADO repository.
 - Rubric criterion 6 is the only check for a rule restated inside a longer paragraph
   (`kit-budget` misses them, 38–45% similar). If such repeats keep coming back in reports,
   try comparing sentences, not only paragraphs.
-- Waiting for LADO with `expects.commands` (2026-10-08, the human's requirements "Требования к
-  kit-builder: `expects` (skills и commands)", K1–K6): then one `fix` run and release 0.7.0.
-  What 0.6.0 left for skills: a kit does not expect a skill it declares itself; the `0.27`
-  bindings in `lado-kit-format` and `kit-rubric`; the interview's **Tools** question maps a
-  command to `expects.commands`, a skill of another kit to `expects.skills`, a
-  project-dependent command to the project's settings; the author takes `expects` from
-  blueprint section 3 and keeps README and `expects` in step; the critic quotes the
-  `expects …` lines of `lado kits check`. For commands: the rubric finds a command the kit
-  always runs and README requires but `expects.commands` misses (sdlc 0.1.1: `openspec`),
-  and one in it that only some projects need (`gh` with the host from settings). To settle
-  in the brief: K3's "another kit's skill not in `expects.skills`" against 0.6.0's "do not
-  check by hand, `lado kits check` catches it"; and whether kit-builder declares
-  `expects.commands: [uv]` (recommended: yes).
 
 ### The human's notes on the lado-dev session (2026-10-06), what is left
 

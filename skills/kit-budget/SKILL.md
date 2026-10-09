@@ -50,7 +50,7 @@ How each is counted:
   and talks to the human, so it carries more rules than one worker.
 - **Own skills**: folders `skills/<name>/` that hold a `SKILL.md`. Skills from
   `dependencies.skills` and `expects.skills` are not counted: they are shared, not the
-  kit's text.
+  kit's text. Nor is `expects.commands`: a CLI the kit needs is not a part of the kit.
 - **MCP servers**: distinct server names under `mcp:` in the frontmatter of all
   `agents/*.md` (the only place a kit declares MCP servers); a server two roles use counts once.
 

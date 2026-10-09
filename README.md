@@ -22,8 +22,11 @@ Each step's result (the blueprint, the plan, the author's report, the critic's r
 the flow diagrams) is an artifact you read in LADO's UI, also from another machine; the
 blueprint and the reports are files of the repository as well.
 
-Requires LADO 0.27 or newer (flows name the artifacts a step writes and reads, `produces`
-and `reads`, from 0.27 on). A kit kit-builder writes or checks uses the same format.
+Requires LADO 0.30 or newer: kit-builder declares `expects.commands: [uv]`, which LADO reads
+from 0.30 on and checks at every session start, since the budget and flow scripts run with
+`uv run --script`. A kit kit-builder writes or checks uses the same format.
+
+Required on the agents' PATH: `uv` (LADO refuses to start the session without it).
 
 ## Install and start
 

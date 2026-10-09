@@ -1,6 +1,6 @@
 ---
 name: lado-kit-format
-description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit (dependencies.skills, expects.skills), paths, one lead, artifacts (produces, reads, artifact or note), gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
+description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit (dependencies.skills, expects.skills), commands from outside the kit (expects.commands), paths, one lead, artifacts (produces, reads, artifact or note), gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
 ---
 
 # LADO kit format
@@ -25,7 +25,7 @@ A kit, in short:
 
 ```
 kit.yaml              name, version, description, supervisor, dependencies (lado, skills),
-                      expects (skills)
+                      expects (skills, commands)
 agents/<role>.md      frontmatter name, description, skills, mcp; the body is the role prompt
 flows/<name>.yaml     states: work (agent, do, outcomes, reads, produces), gate (reads), end
 skills/<name>/        SKILL.md and its files, always moved as a whole
@@ -49,11 +49,28 @@ places:
 - Brought by another kit of the session (a companion kit without agents, such as a
   tracker kit's `tracker`): in `expects.skills`, by name; roles list it in `skills:` as
   usual. The kit is then not tied to one companion: any kit with a skill of that name fits,
-  and a session where no kit brings it does not start. A kit with `expects` needs
-  `dependencies.lado: ">=0.29"`, the first LADO that reads the key; an older one refuses it
-  without saying to upgrade. Its README names the kit that brings each expected skill and
-  gives the `lado start` command with that kit (`lado start . --kit <this kit> --kit <that
-  kit>`), since nothing else tells the human what to add.
+  and a session where no kit brings it does not start. A kit never expects a skill it
+  declares itself (its own or a pack's). Its README names the kit that brings each
+  expected skill and gives the `lado start` command with that kit (`lado start . --kit
+  <this kit> --kit <that kit>`), since nothing else tells the human what to add.
+
+**Commands from outside the kit.** `expects.commands` lists, by the name PATH finds, each
+CLI the kit cannot work without on any project: one its roles or skills always run (a
+script runner, a spec tool every step uses). A session start, resume or new worker is
+refused while one is missing from the agents' PATH, so the human learns it before a step
+fails halfway. A CLI only some projects need does not go there: the code host's or the
+tracker's (`gh` when the host comes from the project's settings) would refuse every
+session on another host. The kit's text checks for such a CLI against the project's
+settings, when it reads them. The README lists the commands of `expects.commands` as
+required, and requires no other command for every project.
+
+**The LADO a kit with `expects` needs.** Each key of `expects` needs the first LADO that
+reads it in `dependencies.lado`; an older LADO refuses the key without saying to upgrade.
+With `expects.commands`: `">=0.30"`; with only `expects.skills`: `">=0.29"`. Whoever writes
+the kit takes `expects` from section 3 of its blueprint: each "command (expects)" goes into
+`expects.commands`, each "skill of another kit (expects)" into `expects.skills`. Then no
+command the README requires for every project is missing from `expects.commands`, and none
+there is missing from the README.
 
 **Paths.** Roles and MCP commands reach kit files through `${KIT_DIR}`; a skill reaches its
 own files through `${SKILL_DIR}` (only inside a skill). The command scans only SKILL.md of a
@@ -63,7 +80,7 @@ skill, so keep scripts and other files of a skill free of absolute and home path
 that adds roles or skills to another kit has no supervisor, so adding it never changes who
 leads. A supervisor's step in a flow goes to whoever leads the session.
 
-**Artifacts: `produces`, `reads`, artifact or note.** LADO 0.27 has no `needs`; a step's
+**Artifacts: `produces`, `reads`, artifact or note.** LADO has no `needs` (from 0.27 on); a step's
 result reaches later steps and the human as an artifact.
 - Artifact or note. An artifact is a step's result that someone reads later: a later step,
   or the human at a gate, also from afar in LADO's UI (a design, a plan, a review, a

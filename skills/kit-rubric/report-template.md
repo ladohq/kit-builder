@@ -29,6 +29,9 @@ full evaluation are not comparable.
 <whole output>
 ```
 
+Expects: <the `expects …` lines of the output, quoted (`expects skills: …`,
+`expects commands: …`, and each `warning: … expects command …`), or "none">.
+
 ### Budget script (exit status <n>)
 
 ```
@@ -97,6 +100,7 @@ shows the kit handles it, or "not applicable" and why. -->
 | 3. Path outside the run's worktree | |
 | 4. Verdict without a severity threshold | |
 | 5. Dependency skill that writes or asks where its role must not | |
+| 6. Commands out of step with `expects.commands` | |
 
 ## Not traced
 

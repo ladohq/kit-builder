@@ -52,7 +52,8 @@ candidate for removal; keep it only with a reason in the last column.
 | `<flow>.<gate>` | gate | R4 | <what is irreversible or only the human's call>; reads `<artifact>` |
 | `<skill>` | skill | R3 | <...> |
 | `<pack>` (`<skill>`) | skill dependency | R3 | <...>; `dependencies.skills` |
-| `<skill>` | expected skill | R3 | <...>; `expects.skills`, brought by `<kit>` |
+| `<skill>` | skill of another kit (expects) | R3 | <...>; `expects.skills`, brought by `<kit>` |
+| `<command>` | command (expects) | R5 | <which step runs it on every project>; `expects.commands` |
 | `<server>` | MCP server | R5 | <...> |
 
 Then the reverse check, one line per requirement: which elements cover it. A requirement

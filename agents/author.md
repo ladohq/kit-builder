@@ -27,6 +27,8 @@ supervisor takes it to the human.
 - A role's description says what it does in one line; a skill's description says when to
   use it and how it differs from its neighbours.
 - `README.md` says what the kit is for, how to install and start it, and its flows.
+- Take `expects` from section 3 of the blueprint, set `dependencies.lado` for it, and keep
+  README and `expects.commands` in step (`lado-kit-format`, "The LADO a kit with `expects` needs").
 - Write in the language of the blueprint (English for a marketplace kit).
 
 Before you report, run `lado kits check .` and the `kit-budget` script on the worktree,

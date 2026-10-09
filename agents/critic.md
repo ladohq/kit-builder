@@ -28,7 +28,9 @@ Read every file of the kit: `kit.yaml`, `agents/*.md`, `flows/*.yaml`, each
 
 ## 2. Layer a: static checks
 
-1. Run `lado kits check <folder>` and keep its whole output.
+1. Run `lado kits check <folder>` and keep its whole output; quote its `expects …` lines
+   under "Expects" in the report: they are what the kit declares, which known hole 6 of
+   `kit-rubric` checks against what the kit runs.
 2. Run the budget script of `kit-budget` on the folder and keep its whole output and exit
    status.
 3. Draw the kit's flows with the flow script of `kit-budget` into the report's folder of
