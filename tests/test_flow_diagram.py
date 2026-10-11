@@ -74,6 +74,23 @@ class Parse(Files):
         self.write("flows/a.yaml", LOOP.replace("name: loop", "name: a"))
         self.assertEqual([f.name for f in flow_diagram.load(self.path)], ["a", "b"])
 
+    def test_kit_without_flows_has_none_and_kit_yaml_is_not_a_flow(self):
+        self.write("kit.yaml", "name: k\nversion: 0.1.0\n")
+        self.write("skills/s/SKILL.md", "---\nname: s\n---\n")
+        self.write("other.yaml", LOOP)  # outside flows/: never a flow
+        self.assertEqual(flow_diagram.load(self.path), [])
+
+    def test_empty_flows_folder_has_none(self):
+        (self.path / "flows").mkdir()
+        self.assertEqual(flow_diagram.load(self.path), [])
+
+    def test_flows_folder_itself(self):
+        self.write("flows/loop.yaml", LOOP)
+        self.assertEqual([f.name for f in flow_diagram.load(self.path / "flows")], ["loop"])
+
+    def test_markdown_without_skeleton_has_none(self):
+        self.assertEqual(flow_diagram.load(self.write("BLUEPRINT.md", "# Blueprint\n\nNo flows.\n")), [])
+
     def test_markdown_skeletons_only_yaml_blocks_with_states(self):
         text = skeleton(PLAIN)
         text += "\n```yaml\nname: not-a-flow\n```\n\n```\nstates: plain block\n```\n"
@@ -135,9 +152,6 @@ class Errors(Files):
         message = self.error(skeleton(PLAIN.replace("    max_visits: 3\n", "    max_visits: 3\n    needs: [review]\n")), "BLUEPRINT.md")
         for word in ("needs", "reads", "0.27"):
             self.assertIn(word, message)
-
-    def test_markdown_without_skeleton(self):
-        self.assertIn("no ```yaml block", self.error("# Blueprint\n\nNo flows.\n", "BLUEPRINT.md"))
 
     def test_not_a_mapping(self):
         self.assertIn("expected a YAML mapping", self.error("- a\n- b\n"))
@@ -247,6 +261,41 @@ class Run(Files):
         self.assertEqual(result.returncode, 1)
         self.assertIn("agent reviewer, planned agent critic", result.stdout)
         self.assertEqual(self.run_script(plan, "--compare", plan).returncode, 0)
+
+    def skill_only_kit(self):
+        self.write("kit.yaml", "name: k\nversion: 0.1.0\n")
+        self.write("skills/s/SKILL.md", "---\nname: s\n---\n")
+        return self.write("BLUEPRINT.md", "# Blueprint\n\nNo flows.\n")
+
+    def test_kit_without_flows_out_says_no_flows(self):
+        blueprint = self.skill_only_kit()
+        out = self.path / "svg"
+        for source in (self.path, blueprint):
+            result = self.run_script(source, "--out", out)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("no flows", result.stdout)
+            self.assertFalse(out.exists())
+
+    def test_kit_without_flows_compare_says_no_flows(self):
+        blueprint = self.skill_only_kit()
+        for plan in (blueprint, self.path):
+            result = self.run_script(self.path, "--compare", plan)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("no flows", result.stdout)
+
+    def test_kit_without_flows_against_skeletons_differs(self):
+        self.skill_only_kit()
+        plan = self.write("PLAN.md", skeleton(PLAIN))
+        result = self.run_script(self.path, "--compare", plan)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("flow loop: planned, not built", result.stdout)
+
+    def test_flows_against_a_blueprint_without_skeletons_exits_2(self):
+        blueprint = self.skill_only_kit()
+        self.write("flows/loop.yaml", LOOP)
+        result = self.run_script(self.path, "--compare", blueprint)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("no ```yaml block with states:", result.stderr)
 
 
 if __name__ == "__main__":

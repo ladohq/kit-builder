@@ -8,10 +8,12 @@ Usage:
   uv run --script flow_diagram.py <input> --out <folder>     one <flow name>.svg per flow
   uv run --script flow_diagram.py <input> --compare <plan>   differences, flow by flow
 
-<input> and <plan> are a flow file (flows/<name>.yaml), a folder (its flows/*.yaml, or
-*.yaml when it has no flows/), or a Markdown file (BLUEPRINT.md) whose ```yaml blocks with
-`states:` are flow skeletons. Exit status: 0 done, 1 the flows differ from the plan,
-2 an input is missing or a flow is not valid. A state's `produces` and `reads` are not
+<input> and <plan> are a flow file (flows/<name>.yaml), a folder (a kit's flows/*.yaml, or
+*.yaml of a folder named flows), or a Markdown file (BLUEPRINT.md) whose ```yaml blocks with
+`states:` are flow skeletons. No other file is read as a flow: a kit without flows/ (a
+skill-only kit) has no flows, and then both modes print "no flows" and exit 0. Exit status:
+0 done, or no flows; 1 the flows differ from the plan; 2 an input is missing, a flow is
+not valid, or the kit has flows and the plan none. A state's `produces` and `reads` are not
 drawn or checked (`lado kits check` does that); `needs`, gone since LADO 0.27, is refused.
 The layout is ported from the Tessera
 kit-builder's render_workflow_diagram.py: layered, deterministic, no other dependencies.
@@ -73,12 +75,11 @@ class Flow:
 
 
 def load(path: Path) -> list[Flow]:
-    """The flows of a flow file, a folder or a Markdown file, validated."""
+    """The flows of a flow file, a folder or a Markdown file, validated; none for a kit
+    without flows/ or a Markdown file without skeletons."""
     if path.is_dir():
-        folder = path / "flows" if (path / "flows").is_dir() else path
-        files = sorted(folder.glob("*.yaml"))
-        if not files:
-            raise FlowError(f"{path}: no flow files (*.yaml)")
+        folder = path / "flows" if (path / "flows").is_dir() else path if path.resolve().name == "flows" else None
+        files = sorted(folder.glob("*.yaml")) if folder else []
         return [parse(_read(f), f.as_posix()) for f in files]
     if not path.is_file():
         raise FlowError(f"{path}: no such file or folder")
@@ -98,8 +99,6 @@ def skeletons(markdown: str, source: str) -> list[Flow]:
             raise FlowError(f"{source}:{line}: not valid YAML: {exc}") from exc
         if isinstance(data, dict) and "states" in data:
             flows.append(parse(data, f"{source}:{line}", skeleton=True))
-    if not flows:
-        raise FlowError(f"{source}: no ```yaml block with states:")
     names = [f.name for f in flows]
     for name in names:
         if names.count(name) > 1:
@@ -415,6 +414,13 @@ def main(argv: list[str]) -> int:
         planned = load(args.compare) if args.compare else None
     except FlowError as exc:
         print(f"error: {exc}", file=sys.stderr)
+        return 2
+    if not flows and not planned:
+        print(f"no flows in {args.input}" + (f" or {args.compare}" if args.compare else "") + ": nothing to do")
+        return 0
+    if flows and planned == []:
+        what = "```yaml block with states:" if args.compare.suffix.lower() in (".md", ".markdown") else "flows"
+        print(f"error: {args.compare}: no {what} to compare the flows of {args.input} with", file=sys.stderr)
         return 2
     if planned is not None:
         diffs = compare(flows, planned)
