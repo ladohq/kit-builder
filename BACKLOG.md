@@ -178,6 +178,9 @@ where to find a dependency's text.
   `--compare`. It should say "no flows" and exit 0; the `create` step text could then
   drop the supervisor's "not applicable" ruling. Found in session kit-tracker-jira-server,
   run create/tracker-jira-server, 2026-10-08.
+  *Done in 0.8.1:* the script reads flows only from `flows/`; a kit without them and a
+  blueprint without skeletons print `no flows in …` and exit 0 in both modes. No step or
+  role text had a "not applicable" ruling to drop: the supervisor made it on its own.
 - `lado-kit-format` ("Publishing") says "Name the kit's repository `lado-kit-<name>`" with
   no exception, but the official marketplace's README ("Propose a kit", 4) names kits of
   the ladohq organisation `kit-<name>`. The critic took the rule as written and filed
@@ -186,3 +189,5 @@ where to find a dependency's text.
   release step, which cost one more triage, build and evaluate round. The skill should
   quote the marketplace's rule whole, the ladohq exception included. Found in session
   kit-tracker-jira-server, run improve/tracker-jira-server, 2026-10-08.
+  *Done in 0.8.1:* `lado-kit-format` ("Publishing") quotes item 4 whole; no other text of
+  the kit repeated the rule.
