@@ -47,6 +47,7 @@ candidate for removal; keep it only with a reason in the last column.
 |---|---|---|---|
 | `supervisor` | role (lead) | R1 | <...> |
 | `<role>` | role | R2, R3 | <...> |
+| `<role>` | role (read-only) | R4 | <what it checks; why it changes no file>; `read_only: true` |
 | `<flow>` | flow | R1 | <...> |
 | `<flow>.<state>` | work step | R2 | <...>; produces `<artifact>`, reads `<artifact>` |
 | `<flow>.<gate>` | gate | R4 | <what is irreversible or only the human's call>; reads `<artifact>` |

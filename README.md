@@ -24,7 +24,11 @@ blueprint and the reports are files of the repository as well.
 
 Requires LADO 0.30 or newer: kit-builder declares `expects.commands: [uv]`, which LADO reads
 from 0.30 on and checks at every session start, since the budget and flow scripts run with
-`uv run --script`. A kit kit-builder writes or checks uses the same format.
+`uv run --script`. A kit kit-builder writes or checks uses the same format, up to the
+read-only roles of LADO 0.34 (`read_only: true` on a reviewer or checker that changes no
+file): kit-builder gives them to a kit that needs them, with `lado: ">=0.34"` and a README
+that says such a kit does not run on Codex CLI. kit-builder's own roles are not read-only
+(its critic commits its reports), so it runs on every CLI LADO supports.
 
 Required on the agents' PATH: `uv` (LADO refuses to start the session without it).
 

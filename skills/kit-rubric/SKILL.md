@@ -74,9 +74,19 @@ that shows the kit handles it.
    `expects.commands` lacks (sdlc 0.1.1 with `openspec`), criterion 10; (b) a command in `expects.commands` that only some projects need
    (`gh` when the code host comes from the project's settings): every other project gets a
    false start error, criterion 11; (c) `expects.commands` with `dependencies.lado` below
-   `">=0.30"` (`lado-kit-format`, "The LADO a kit with `expects` needs"), criterion 10:
+   `">=0.30"` (`lado-kit-format`, "The LADO a kit with `expects` or `read_only` needs"), criterion 10:
    `lado kits check` reports it, so quote its warning (`expects.commands needs LADO 0.30
    or newer; add dependencies.lado …`) as the evidence instead of comparing versions.
+7. Read-only roles out of step with what they do (`lado-kit-format`, "Read-only roles");
+   the `read-only roles: …` line of `lado kits check` names them: (a) a role whose text
+   says it only reviews, checks or reports, and writes and commits no file, without
+   `read_only: true`: nothing but its prose keeps it from editing, criterion 12; (b)
+   `read_only` on a role whose task needs a file edit or commit (a report kept in the
+   repository, a fix) or that spawns workers or starts runs: its agent cannot do it,
+   criterion 5; (c) `read_only` with `dependencies.lado` below `">=0.34"`: LADO 0.33 or
+   older refuses the role's file, and `lado kits check` does not warn, unlike hole 6, so
+   compare the versions by hand, criterion 10; (d) a read-only role and a README that does
+   not say the kit does not run on Codex CLI, criterion 11.
 
 ## Finding format
 
@@ -177,7 +187,7 @@ from outside the kit not declared by its own folder, or a declared folder no rol
 a skill in `expects.skills` whose kit the README does not name, one that is in fact
 published as a package (it belongs in `dependencies.skills`), or `expects.skills` with
 `dependencies.lado` below `">=0.29"` (`lado-kit-format`, "The LADO a kit with `expects`
-needs"); a skill's text pasted into a prompt instead of listed. A role's skill that no kit
+or `read_only` needs"); a skill's text pasted into a prompt instead of listed. A role's skill that no kit
 declares (a skill of another kit missing from `expects.skills`) and a `dependencies.lado`
 below what `expects` needs are `lado kits check`'s to report, not yours to check by hand:
 quote its line (`skill "<name>" is not visible to agent "<role>"`, `expects.skills needs

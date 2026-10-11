@@ -1,6 +1,6 @@
 ---
 name: lado-kit-format
-description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit (dependencies.skills, expects.skills), commands from outside the kit (expects.commands), paths, one lead, artifacts (produces, reads, artifact or note), gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
+description: The LADO kit format and the rules a kit must follow that `lado kits check` does not prove — provider neutrality, skills from outside the kit (dependencies.skills, expects.skills), commands from outside the kit (expects.commands), read-only roles (read_only), paths, one lead, artifacts (produces, reads, artifact or note), gates, max_visits — what to do when a check fails, and how a kit is released and published. Use when writing kit.yaml, a role, a flow or a skill of a kit, or checking it against the format, or releasing it; for judging a kit's text against review criteria use kit-rubric.
 ---
 
 # LADO kit format
@@ -26,7 +26,8 @@ A kit, in short:
 ```
 kit.yaml              name, version, description, supervisor, dependencies (lado, skills),
                       expects (skills, commands)
-agents/<role>.md      frontmatter name, description, skills, mcp; the body is the role prompt
+agents/<role>.md      frontmatter name, description, skills, mcp, read_only; the body is
+                      the role prompt
 flows/<name>.yaml     states: work (agent, do, outcomes, reads, produces), gate (reads), end
 skills/<name>/        SKILL.md and its files, always moved as a whole
 BLUEPRINT.md          not LADO's: why each part exists, with flow skeletons (kit-interview)
@@ -64,9 +65,26 @@ session on another host. The kit's text checks for such a CLI against the projec
 settings, when it reads them. The README lists the commands of `expects.commands` as
 required, and requires no other command for every project.
 
-**The LADO a kit with `expects` needs.** Each key of `expects` needs the first LADO that
-reads it in `dependencies.lado`; an older LADO refuses the key without saying to upgrade.
-With `expects.commands`: `">=0.30"`; with only `expects.skills`: `">=0.29"`. Whoever writes
+**Read-only roles.** `read_only: true` in a role's frontmatter takes the file-editing
+tools away from its agent's CLI and, on a supervisor, LADO's tools that start or end
+workers, runs and sessions; LADO compares the repository at each of the agent's turns and
+tells the lead (the human, for a read-only supervisor) when it changed. Give it to a role
+that only reads, runs checks and reports through artifacts and notes: a reviewer, a
+checker, a supervisor that only watches. `write_artifact`, `send_message` and
+`flow_advance` are not file edits, so such a role can still report. Never to a role that
+writes or commits any file (a report kept in the repository, a fix) or a lead that spawns
+workers or starts runs: its agent could not do its task. On a kit's supervisor that does
+not lead the session it has no effect (`lado start` and `lado kits show` warn). It is no sandbox: the shell stays, for
+`git diff`, linters and tests, so the role's text still says what it must not change.
+The price is provider neutrality: LADO refuses a read-only agent on Codex CLI, which
+cannot take the tools away, so the README says the kit does not run there. Whoever writes
+the kit sets `read_only` on each "role (read-only)" of section 3 of its blueprint.
+
+**The LADO a kit with `expects` or `read_only` needs.** Each key of `expects` and
+`read_only` needs the first LADO that reads it in `dependencies.lado`; an older LADO
+refuses the key without saying to upgrade. Take the highest that applies: `">=0.34"` with
+a read-only role, which `lado kits check` does not warn about, so compare it by hand;
+`">=0.30"` with `expects.commands`; `">=0.29"` with `expects.skills`. Whoever writes
 the kit takes `expects` from section 3 of its blueprint: each "command (expects)" goes into
 `expects.commands`, each "skill of another kit (expects)" into `expects.skills`. Then no
 command the README requires for every project is missing from `expects.commands`, and none

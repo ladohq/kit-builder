@@ -353,6 +353,32 @@ class Run(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((out / "f.svg").is_file())
 
+    def test_read_only_role_measured_and_drawn(self):
+        """A role with `read_only: true` (LADO 0.34) counts as a worker role like any other,
+        and its frontmatter is not part of its prompt."""
+        meta = {"name": "fixture", "version": "0.1.0", "description": "A fixture kit.",
+                "supervisor": "supervisor", "dependencies": {"lado": ">=0.34"}}
+        reviewer = agent("reviewer", body=words(10)).replace(
+            "skills: []", "skills: []\nread_only: true"
+        )
+        agents = {"supervisor": agent("supervisor"), "worker": agent("worker"),
+                  "reviewer": reviewer}
+        kit = Kit(self, agents=agents, flows={"f": flow("f")})
+        (kit.path / "kit.yaml").write_text(yaml.safe_dump(meta))
+        self.assertEqual(kit.measure("worker_roles"), {"kit": (2, "green")})
+        self.assertEqual(kit.measure("prompt_words")["agents/reviewer.md"], (10, "green"))
+        result = self.run_script(kit)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Overall: green", result.stdout)
+        diagram = SCRIPT.with_name("flow_diagram.py")
+        out = kit.path / "drawn"
+        result = subprocess.run(
+            [sys.executable, str(diagram), str(kit.path), "--out", str(out)],
+            capture_output=True, text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((out / "f.svg").is_file())
+
     def test_not_a_kit_exits_2(self):
         with tempfile.TemporaryDirectory() as empty:
             result = subprocess.run(
