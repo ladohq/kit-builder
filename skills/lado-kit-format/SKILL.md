@@ -227,5 +227,12 @@ pull request needs:
 - a title and a short body: what the kit does, its flows, the output of
   `lado kits check . --tag vX.Y.Z`.
 
-Name the kit's repository `lado-kit-<name>` and give it the GitHub topic `lado-kit`, so
-people find it.
+Name the repository as the official marketplace's README says ("Propose a kit", 4), the
+ladohq exception included:
+
+> **Name the repository** `lado-kit-<name>` and give it the GitHub topic `lado-kit`, so
+> people find it (kits of the ladohq organisation are named `kit-<name>`). This is a
+> convention: LADO takes the kit's name from `kit.yaml`.
+
+So `ladohq/kit-<name>` is right, not a finding; another marketplace's README may name
+repositories otherwise, and its rule wins for a pull request to it.
