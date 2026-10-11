@@ -33,6 +33,9 @@ Expects: <the `expects …` lines of the output, quoted (`expects skills: …`,
 `expects commands: …`, each `warning: … expects command …` and the warning `expects.<key>
 needs LADO <version> or newer; add dependencies.lado …`), or "none">.
 
+Read-only: <the `read-only roles: …` line of the output, quoted, and the kit's
+`dependencies.lado`, or "none">.
+
 ### Budget script (exit status <n>)
 
 ```
@@ -102,6 +105,7 @@ shows the kit handles it, or "not applicable" and why. -->
 | 4. Verdict without a severity threshold | |
 | 5. Dependency skill that writes or asks where its role must not | |
 | 6. Commands out of step with `expects.commands` | |
+| 7. Read-only roles out of step with what they do | |
 
 ## Not traced
 

@@ -3,6 +3,11 @@
 Found while building kit-builder, outside the task at hand. Items marked `[lado]` are bugs or
 friction in LADO itself, to move to the LADO repository.
 
+- `[lado]` `lado kits check` does not warn that a role's `read_only` needs LADO 0.34 when
+  `dependencies.lado` is lower (or missing), as it does for `expects` ("expects.commands
+  needs LADO 0.30 or newer; add dependencies.lado …"); LADO 0.33 or older then refuses the
+  role's file as an unknown key, without saying to upgrade. `lado-kit-format` and
+  `kit-rubric` (known hole 7 c) have it checked by hand until LADO warns.
 - `[lado]` `lado kits check` scans only SKILL.md of a skill for hardcoded paths, not the
   skill's other files (scripts, references), although they travel with the kit.
 - `[lado]` A work step after a gate gets the human's answer together with the note that led

@@ -51,6 +51,8 @@ How each is counted:
 - **Own skills**: folders `skills/<name>/` that hold a `SKILL.md`. Skills from
   `dependencies.skills` and `expects.skills` are not counted: they are shared, not the
   kit's text. Nor is `expects.commands`: a CLI the kit needs is not a part of the kit.
+  A role's `read_only` is not counted either: a read-only role is a worker role like any
+  other, and its frontmatter is not part of its prompt.
 - **MCP servers**: distinct server names under `mcp:` in the frontmatter of all
   `agents/*.md` (the only place a kit declares MCP servers); a server two roles use counts once.
 
